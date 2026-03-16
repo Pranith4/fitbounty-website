@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="FitBounty — India's competitive fitness app. Win Decathlon vouchers, Nike gear, and fitness accessories by challenging friends, capturing territory, and crushing your goals.">
+<title>FitBounty — Win Gear. Claim Territory. Crush Your Goals.</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#030306;--bg2:#07070f;--surf:#0f0f1c;--surf2:#161625;--surf3:#1c1c2e;
+  --brd:rgba(255,255,255,.07);--brd2:rgba(255,255,255,.13);
+  --gold:#F0A500;--gold2:#C87800;--lime:#00E87A;--red:#FF3030;
+  --blue:#38BFF8;--purple:#9B7FFF;--heat:#FF6B1A;
+  --text:#F0EEF8;--text2:#9995B8;--text3:#55527A;
+  --fd:'Barlow Condensed',sans-serif;--fb:'Outfit',sans-serif;--fm:'JetBrains Mono',monospace;
+  --r:10px;--rl:16px;--rxl:24px;
+}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* NOISE */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.5}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:999;padding:0 clamp(16px,4vw,72px);height:68px;background:rgba(3,3,6,.85);backdrop-filter:blur(24px);border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:0}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:auto}
+.nav-mark{width:34px;height:34px;background:#080812;border:1.5px solid rgba(240,165,0,.28);border-radius:9px;display:flex;align-items:center;justify-content:center}
+.nav-wordmark{font-family:var(--fd);font-size:1.25rem;font-weight:800;letter-spacing:3px}
+.nav-tabs{display:flex;gap:4px;background:var(--surf2);border-radius:var(--r);padding:4px;margin-right:20px}
+.nav-tab{padding:7px 18px;border-radius:7px;border:none;background:transparent;color:var(--text2);font-family:var(--fb);font-size:.85rem;font-weight:500;cursor:pointer;transition:all .18s;white-space:nowrap}
+.nav-tab.active{background:var(--surf3);color:var(--text);border:1px solid var(--brd2)}
+.nav-links-right{display:flex;align-items:center;gap:24px}
+.nav-links-right a{color:var(--text2);text-decoration:none;font-size:.88rem;font-weight:500;transition:color .2s}
+.nav-links-right a:hover{color:var(--text)}
+.nav-cta{background:var(--gold);color:#020208;border:none;border-radius:var(--r);padding:8px 20px;font-family:var(--fd);font-size:.9rem;font-weight:700;letter-spacing:1.5px;cursor:pointer;text-decoration:none;transition:all .2s;white-space:nowrap}
+.nav-cta:hover{background:#FFB920;box-shadow:0 4px 20px rgba(240,165,0,.3)}
+.hamburger{display:none;background:none;border:none;cursor:pointer;flex-direction:column;gap:5px;padding:4px}
+.hamburger span{display:block;width:22px;height:1.5px;background:var(--text2);border-radius:2px}
+
+/* PANELS */
+.panel{display:none}
+.panel.active{display:block}
+
+/* ── HERO ── */
+.hero{min-height:100svh;display:flex;align-items:center;padding:100px clamp(16px,5vw,80px) 60px;position:relative;overflow:hidden}
+.hero-glow-1{position:absolute;top:-300px;left:-200px;width:900px;height:900px;background:radial-gradient(ellipse,rgba(240,165,0,.08),transparent 65%);pointer-events:none}
+.hero-glow-2{position:absolute;bottom:-200px;right:-100px;width:700px;height:700px;background:radial-gradient(ellipse,rgba(0,232,122,.06),transparent 65%);pointer-events:none}
+.hero-inner{max-width:1200px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,100px);align-items:center;position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,232,122,.1);border:1px solid rgba(0,232,122,.22);border-radius:100px;padding:5px 14px;font-family:var(--fd);font-size:.75rem;font-weight:700;letter-spacing:2px;color:var(--lime);margin-bottom:22px}
+.hero-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 8px var(--lime);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero-title{font-family:var(--fd);font-size:clamp(3rem,8vw,7rem);font-weight:900;line-height:.9;letter-spacing:-1px;margin-bottom:22px}
+.hero-title .accent{background:linear-gradient(135deg,var(--gold),var(--heat));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-title .lime{color:var(--lime)}
+.hero-desc{font-size:clamp(.95rem,1.8vw,1.1rem);color:var(--text2);line-height:1.75;margin-bottom:36px;max-width:480px}
+.hero-proof-row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:36px}
+.proof-pill{display:inline-flex;align-items:center;gap:6px;background:var(--surf2);border:1px solid var(--brd2);border-radius:100px;padding:5px 12px;font-size:.8rem;color:var(--text2)}
+.proof-pill b{color:var(--text)}
+.hero-store-row{display:flex;gap:12px;flex-wrap:wrap}
+.store-btn{display:inline-flex;align-items:center;gap:11px;padding:13px 20px;border-radius:var(--rl);text-decoration:none;border:1.5px solid;transition:all .22s;cursor:pointer;background:none}
+.store-btn.gplay{border-color:rgba(0,232,122,.3);color:var(--text)}
+.store-btn.gplay:hover{background:rgba(0,232,122,.06);border-color:rgba(0,232,122,.5);transform:translateY(-2px)}
+.store-btn.astore{border-color:rgba(255,255,255,.18);color:var(--text)}
+.store-btn.astore:hover{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.28);transform:translateY(-2px)}
+.sbt small{display:block;font-size:9.5px;letter-spacing:1.5px;opacity:.55;font-weight:500;text-transform:uppercase}
+.sbt strong{font-family:var(--fd);font-size:1.05rem;font-weight:700;letter-spacing:.5px;display:block;line-height:1.1;margin-top:1px}
+
+/* PHONE */
+.phone-wrap{position:relative;display:flex;justify-content:center}
+.phone-halo{position:absolute;inset:-60px;background:radial-gradient(ellipse at 50% 60%,rgba(240,165,0,.12),rgba(0,232,122,.06) 50%,transparent 70%);border-radius:50%;pointer-events:none}
+.phone{width:clamp(220px,38vw,290px);background:#060610;border-radius:38px;border:1.5px solid rgba(255,255,255,.11);box-shadow:0 48px 96px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.06);overflow:hidden;position:relative}
+.ph-notch{width:90px;height:26px;background:#000;border-radius:0 0 18px 18px;margin:0 auto}
+.ph-status{display:flex;justify-content:space-between;padding:6px 18px 0;font-size:9px;color:rgba(255,255,255,.3);font-family:var(--fm)}
+.ph-tbar{display:flex;align-items:center;justify-content:space-between;padding:8px 12px 6px;border-bottom:1px solid var(--brd)}
+.ph-tbar-t{font-family:var(--fd);font-size:.85rem;font-weight:800;letter-spacing:2px}
+.ph-tbar-r{font-family:var(--fm);font-size:.65rem;color:var(--gold)}
+.ph-body{padding:10px 11px}
+.ph-card{background:var(--surf);border:1px solid var(--brd);border-radius:10px;padding:10px;margin-bottom:7px}
+.ph-greeting{font-family:var(--fd);font-size:1.1rem;font-weight:800;letter-spacing:.3px;margin-bottom:7px;line-height:1.1}
+.ph-stat-g{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.ph-stat{background:var(--surf2);border-radius:7px;padding:7px 8px;text-align:center}
+.ph-sv{font-family:var(--fd);font-size:.9rem;font-weight:700;line-height:1}
+.ph-sk{font-size:7px;color:var(--text3);font-family:var(--fd);letter-spacing:1px;margin-top:2px;text-transform:uppercase}
+.ph-row{display:flex;align-items:center;gap:7px;padding:5.5px 0;border-bottom:1px solid var(--brd)}
+.ph-row:last-child{border:none}
+.ph-av{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#fff;font-family:var(--fd);flex-shrink:0}
+.ph-rn{font-size:10px;font-weight:600;flex:1}
+.ph-rpct{font-family:var(--fm);font-size:9px;color:var(--lime);font-weight:700}
+.ph-bnav{display:flex;background:rgba(3,3,6,.98);border-top:1px solid var(--brd);padding:7px 0 2px}
+.ph-ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:6px;font-family:var(--fd);font-weight:700;letter-spacing:.5px;color:var(--text3)}
+.ph-ni.on{color:var(--gold)}
+.ph-ni-line{width:14px;height:2px;border-radius:1px;background:var(--gold);margin-top:1px;opacity:0}
+.ph-ni.on .ph-ni-line{opacity:1}
+
+/* VOUCHER REWARDS */
+.rewards-marquee-wrap{overflow:hidden;padding:36px 0;background:var(--surf);border-top:1px solid var(--brd);border-bottom:1px solid var(--brd);position:relative;z-index:1}
+.rewards-marquee-wrap::before,.rewards-marquee-wrap::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2}
+.rewards-marquee-wrap::before{left:0;background:linear-gradient(to right,var(--surf),transparent)}
+.rewards-marquee-wrap::after{right:0;background:linear-gradient(to left,var(--surf),transparent)}
+.rewards-marquee{display:flex;gap:14px;animation:marquee 28s linear infinite;width:max-content}
+.rewards-marquee-wrap:hover .rewards-marquee{animation-play-state:paused}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.reward-chip{display:flex;align-items:center;gap:10px;background:var(--surf2);border:1px solid var(--brd2);border-radius:100px;padding:9px 18px;white-space:nowrap;flex-shrink:0;cursor:default;transition:border-color .2s}
+.reward-chip:hover{border-color:rgba(240,165,0,.35)}
+.reward-chip-icon{font-size:18px}
+.reward-chip-name{font-family:var(--fd);font-size:.85rem;font-weight:700;letter-spacing:.5px}
+.reward-chip-val{font-family:var(--fm);font-size:.75rem;color:var(--gold)}
+.rewards-marquee-label{text-align:center;font-family:var(--fd);font-size:.75rem;letter-spacing:3px;color:var(--text3);margin-bottom:16px}
+
+/* SECTION SKELETON */
+section,.section{padding:clamp(64px,8vw,112px) clamp(16px,5vw,80px);position:relative;z-index:1}
+.inner{max-width:1200px;margin:0 auto}
+.eyebrow{font-family:var(--fd);font-size:.75rem;font-weight:700;letter-spacing:3.5px;color:var(--gold);text-transform:uppercase;margin-bottom:14px;display:block}
+.eyebrow.lime{color:var(--lime)}
+.eyebrow.blue{color:var(--blue)}
+.eyebrow.purple{color:var(--purple)}
+.section-h{font-family:var(--fd);font-size:clamp(2.2rem,5vw,4.5rem);font-weight:900;line-height:.93;letter-spacing:-.5px;margin-bottom:18px}
+.section-p{font-size:clamp(.9rem,1.7vw,1.1rem);color:var(--text2);line-height:1.75;max-width:520px}
+
+/* FEATURES BENTO */
+.bento{display:grid;grid-template-columns:repeat(12,1fr);gap:14px;margin-top:56px}
+.bento-card{background:var(--surf);border:1px solid var(--brd);border-radius:var(--rxl);padding:28px;position:relative;overflow:hidden;transition:transform .22s,border-color .22s}
+.bento-card:hover{transform:translateY(-4px);border-color:var(--brd2)}
+.bc-1{grid-column:span 7}
+.bc-2{grid-column:span 5}
+.bc-3{grid-column:span 4}
+.bc-4{grid-column:span 4}
+.bc-5{grid-column:span 4}
+.bc-6{grid-column:span 6}
+.bc-7{grid-column:span 6}
+.bento-card.acc-gold{border-color:rgba(240,165,0,.2);background:linear-gradient(135deg,rgba(240,165,0,.07),var(--surf))}
+.bento-card.acc-lime{border-color:rgba(0,232,122,.18);background:linear-gradient(135deg,rgba(0,232,122,.06),var(--surf))}
+.bento-card.acc-blue{border-color:rgba(56,191,248,.18);background:linear-gradient(135deg,rgba(56,191,248,.06),var(--surf))}
+.bento-card.acc-purple{border-color:rgba(155,127,255,.18);background:linear-gradient(135deg,rgba(155,127,255,.06),var(--surf))}
+.bento-card.acc-heat{border-color:rgba(255,107,26,.18);background:linear-gradient(135deg,rgba(255,107,26,.06),var(--surf))}
+.bi{font-size:34px;margin-bottom:14px;display:block}
+.bt{font-family:var(--fd);font-size:1.35rem;font-weight:800;letter-spacing:.3px;margin-bottom:8px}
+.bd{font-size:.88rem;color:var(--text2);line-height:1.7}
+.btag{display:inline-block;font-family:var(--fd);font-size:.68rem;font-weight:700;letter-spacing:1.5px;padding:3px 9px;border-radius:4px;margin-top:12px}
+
+/* TERRITORY HERO SECTION */
+.territory-section{background:linear-gradient(180deg,var(--bg) 0%,rgba(0,232,122,.025) 50%,var(--bg) 100%);border-top:1px solid rgba(0,232,122,.07);border-bottom:1px solid rgba(0,232,122,.07)}
+.terr-layout{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,96px);align-items:center;max-width:1200px;margin:0 auto}
+.terr-map-container{position:relative;height:460px;border-radius:var(--rxl);overflow:hidden;background:#060c12;border:1px solid rgba(0,232,122,.15);box-shadow:0 32px 80px rgba(0,0,0,.5),0 0 0 1px rgba(0,232,122,.08)}
+.tm-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,232,122,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,232,122,.04) 1px,transparent 1px);background-size:36px 36px}
+.tm-roads{position:absolute;inset:0}
+.tz{position:absolute;border-radius:6px;transition:all .3s;animation:tz-breathe 5s ease-in-out infinite}
+.tz.c1{width:118px;height:88px;top:36px;left:24px;background:rgba(240,165,0,.15);border:1.5px solid rgba(240,165,0,.45);animation-delay:0s}
+.tz.c2{width:96px;height:76px;top:76px;left:158px;background:rgba(255,48,48,.12);border:1.5px solid rgba(255,48,48,.38);animation-delay:.6s}
+.tz.c3{width:136px;height:104px;top:156px;left:42px;background:rgba(56,191,248,.12);border:1.5px solid rgba(56,191,248,.38);animation-delay:1.1s}
+.tz.c4{width:88px;height:68px;top:194px;left:196px;background:rgba(0,232,122,.14);border:1.5px dashed rgba(0,232,122,.4);animation-delay:1.8s}
+.tz.c5{width:108px;height:84px;top:52px;right:26px;background:rgba(155,127,255,.12);border:1.5px solid rgba(155,127,255,.35);animation-delay:.3s}
+.tz.c6{width:124px;height:90px;top:196px;right:18px;background:rgba(255,107,26,.1);border:1.5px solid rgba(255,107,26,.32);animation-delay:2.2s}
+@keyframes tz-breathe{0%,100%{opacity:.8;transform:scale(1)}50%{opacity:1;transform:scale(1.01)}}
+.tz-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--fd);font-weight:800;letter-spacing:1px}
+.tz-owner{font-size:16px}
+.tz-km{font-size:9px;opacity:.7;margin-top:2px;font-family:var(--fm)}
+.tm-runner{position:absolute;width:14px;height:14px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 4px rgba(0,232,122,.2),0 0 20px rgba(0,232,122,.6);animation:runner 8s linear infinite;z-index:10}
+@keyframes runner{0%{left:18px;top:340px}20%{left:160px;top:300px}40%{left:310px;top:340px}60%{left:280px;top:400px}80%{left:140px;top:420px}100%{left:18px;top:340px}}
+.tm-trace{position:absolute;inset:0;pointer-events:none}
+.tm-hud{position:absolute;bottom:14px;left:14px;right:14px;background:rgba(3,3,6,.88);backdrop-filter:blur(14px);border:1px solid rgba(0,232,122,.22);border-radius:var(--rl);padding:12px 16px;display:flex;gap:0}
+.tm-hud-s{flex:1;text-align:center;padding:0 8px}
+.tm-hud-s+.tm-hud-s{border-left:1px solid var(--brd)}
+.tm-hud-v{font-family:var(--fm);font-size:.95rem;font-weight:700;color:var(--lime)}
+.tm-hud-k{font-size:9px;color:var(--text3);font-family:var(--fd);letter-spacing:1.5px;margin-top:2px;text-transform:uppercase}
+.tm-badge{position:absolute;top:14px;right:14px;background:rgba(0,232,122,.12);border:1px solid rgba(0,232,122,.3);border-radius:100px;padding:5px 12px;font-family:var(--fd);font-size:.7rem;font-weight:700;letter-spacing:1.5px;color:var(--lime);display:flex;align-items:center;gap:5px}
+.tm-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--lime);animation:pulse 2s infinite}
+
+/* HOW IT WORKS */
+.how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2px;margin-top:56px;background:var(--brd);border-radius:var(--rxl);overflow:hidden}
+.how-step{background:var(--surf);padding:36px 28px;position:relative;transition:background .2s}
+.how-step:hover{background:var(--surf2)}
+.hs-num{font-family:var(--fd);font-size:3.5rem;font-weight:900;line-height:1;color:var(--brd2);margin-bottom:16px}
+.hs-icon{font-size:28px;margin-bottom:12px;display:block}
+.hs-title{font-family:var(--fd);font-size:1.15rem;font-weight:800;letter-spacing:.3px;margin-bottom:8px}
+.hs-desc{font-size:.86rem;color:var(--text2);line-height:1.65}
+.hs-earn{display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-family:var(--fd);font-size:.75rem;font-weight:700;letter-spacing:1px;color:var(--gold);background:rgba(240,165,0,.08);border-radius:4px;padding:3px 9px}
+
+/* SOCIAL SECTION */
+.social-layout{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,96px);align-items:center;max-width:1200px;margin:0 auto}
+.social-feed{display:flex;flex-direction:column;gap:12px}
+.sf-post{background:var(--surf);border:1px solid var(--brd);border-radius:var(--rl);padding:16px;transition:border-color .2s}
+.sf-post:hover{border-color:var(--brd2)}
+.sf-post-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.sf-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.85rem;font-weight:700;color:#fff;flex-shrink:0}
+.sf-name{font-weight:600;font-size:.9rem}
+.sf-meta{font-size:.75rem;color:var(--text3);margin-top:1px}
+.sf-body{font-size:.88rem;color:var(--text2);line-height:1.65;margin-bottom:10px}
+.sf-tag{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;font-weight:600;border-radius:100px;padding:3px 10px}
+.sf-tag.won{background:rgba(0,232,122,.1);color:var(--lime);border:1px solid rgba(0,232,122,.2)}
+.sf-tag.claimed{background:rgba(240,165,0,.1);color:var(--gold);border:1px solid rgba(240,165,0,.2)}
+.sf-tag.challenged{background:rgba(56,191,248,.1);color:var(--blue);border:1px solid rgba(56,191,248,.2)}
+.sf-stats{display:flex;gap:14px;margin-top:10px;font-size:.78rem;color:var(--text3)}
+.sf-stats span{display:flex;align-items:center;gap:4px}
+
+/* INDIVIDUAL PANEL */
+.individual-hero{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,100px);align-items:center}
+.persona-row{display:flex;flex-direction:column;gap:14px;margin-top:40px}
+.persona{background:var(--surf);border:1px solid var(--brd);border-radius:var(--rl);padding:20px;display:flex;gap:16px;transition:border-color .2s;cursor:default}
+.persona:hover{border-color:var(--brd2)}
+.persona-icon{font-size:28px;flex-shrink:0;width:52px;height:52px;border-radius:var(--r);display:flex;align-items:center;justify-content:center}
+.persona-body h4{font-family:var(--fd);font-size:1rem;font-weight:700;letter-spacing:.3px;margin-bottom:5px}
+.persona-body p{font-size:.85rem;color:var(--text2);line-height:1.6}
+.earn-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.earn-tag{font-family:var(--fd);font-size:.7rem;font-weight:700;letter-spacing:1px;padding:3px 9px;border-radius:4px;background:rgba(240,165,0,.08);border:1px solid rgba(240,165,0,.18);color:var(--gold)}
+.indiv-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.indiv-stat{background:var(--surf);border:1px solid var(--brd);border-radius:var(--rl);padding:22px 20px;position:relative;overflow:hidden}
+.indiv-stat-v{font-family:var(--fd);font-size:2.2rem;font-weight:900;line-height:1;margin-bottom:6px}
+.indiv-stat-k{font-size:.82rem;color:var(--text2);font-weight:500}
+.indiv-stat-sub{font-size:.75rem;color:var(--text3);margin-top:4px}
+.indiv-stat-bg{position:absolute;right:-10px;bottom:-10px;font-size:56px;opacity:.07}
+
+/* B2B PANEL */
+.b2b-hero{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,100px);align-items:center;max-width:1200px;margin:0 auto}
+.b2b-metrics{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:36px}
+.b2b-metric{background:var(--surf);border:1px solid var(--brd);border-radius:var(--rl);padding:22px 20px;overflow:hidden;position:relative;transition:border-color .2s}
+.b2b-metric:hover{border-color:var(--brd2)}
+.bm-num{font-family:var(--fd);font-size:2.4rem;font-weight:900;line-height:1;margin-bottom:4px}
+.bm-label{font-size:.82rem;color:var(--text2);font-weight:500;margin-bottom:3px}
+.bm-src{font-size:.72rem;color:var(--text3)}
+.bm-bar{height:3px;background:var(--surf2);border-radius:2px;margin-top:12px;overflow:hidden}
+.bm-bar-fill{height:100%;border-radius:2px;transition:width 1.5s ease}
+.b2b-features{display:flex;flex-direction:column;gap:12px}
+.b2b-feat{background:var(--surf);border:1px solid var(--brd);border-radius:var(--rl);padding:18px 20px;display:flex;gap:14px;transition:border-color .2s}
+.b2b-feat:hover{border-color:var(--brd2)}
+.b2b-feat-icon{font-size:22px;width:44px;height:44px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--surf2)}
+.b2b-feat-body h4{font-family:var(--fd);font-size:.95rem;font-weight:700;letter-spacing:.3px;margin-bottom:4px}
+.b2b-feat-body p{font-size:.83rem;color:var(--text2);line-height:1.6}
+.b2b-plans{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:56px;max-width:1200px;margin-left:auto;margin-right:auto}
+.b2b-plan{background:var(--surf);border:1px solid var(--brd);border-radius:var(--rxl);padding:32px 28px;position:relative;overflow:hidden;transition:transform .22s}
+.b2b-plan:hover{transform:translateY(-4px)}
+.b2b-plan.featured{border-color:rgba(56,191,248,.3);background:linear-gradient(135deg,rgba(56,191,248,.07),var(--surf))}
+.b2b-plan.featured::before{content:'MOST POPULAR';position:absolute;top:14px;right:14px;font-family:var(--fd);font-size:.65rem;letter-spacing:1.5px;color:var(--blue);background:rgba(56,191,248,.1);border:1px solid rgba(56,191,248,.25);border-radius:4px;padding:2px 8px}
+.bp-tier{font-family:var(--fd);font-size:.8rem;font-weight:700;letter-spacing:2.5px;color:var(--text3);margin-bottom:12px}
+.bp-price{font-family:var(--fd);font-size:2.4rem;font-weight:900;line-height:1;margin-bottom:4px}
+.bp-price-sub{font-size:.82rem;color:var(--text3);margin-bottom:20px}
+.bp-feature{display:flex;align-items:flex-start;gap:8px;font-size:.85rem;color:var(--text2);padding:6px 0;border-bottom:1px solid var(--brd)}
+.bp-feature:last-of-type{border-bottom:none}
+.bp-check{color:var(--lime);flex-shrink:0;font-size:.9rem}
+.bp-cta{width:100%;padding:12px;border:none;border-radius:var(--r);font-family:var(--fd);font-size:.9rem;font-weight:700;letter-spacing:1.5px;cursor:pointer;margin-top:20px;transition:all .2s}
+.bp-cta.outline{background:transparent;color:var(--text2);border:1.5px solid var(--brd2)}
+.bp-cta.outline:hover{background:var(--surf2);color:var(--text)}
+.bp-cta.primary{background:var(--blue);color:#020208;box-shadow:0 4px 16px rgba(56,191,248,.2)}
+.bp-cta.primary:hover{box-shadow:0 8px 24px rgba(56,191,248,.3)}
+.b2b-trust{display:flex;flex-wrap:wrap;gap:16px;margin-top:40px;max-width:1200px;margin-left:auto;margin-right:auto}
+.trust-chip{display:flex;align-items:center;gap:10px;background:var(--surf);border:1px solid var(--brd);border-radius:100px;padding:10px 18px;font-size:.85rem;color:var(--text2)}
+.trust-chip span{font-weight:600;color:var(--text)}
+
+/* DOWNLOAD CTA */
+.dl-section{text-align:center;background:linear-gradient(135deg,rgba(240,165,0,.05),rgba(0,232,122,.03));border-top:1px solid var(--brd)}
+.dl-inner{max-width:680px;margin:0 auto}
+.dl-title{font-family:var(--fd);font-size:clamp(2.5rem,6vw,5.5rem);font-weight:900;line-height:.93;letter-spacing:-.5px;margin-bottom:20px}
+.dl-sub{font-size:1.05rem;color:var(--text2);line-height:1.75;margin-bottom:44px}
+.dl-store-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.dl-store{display:inline-flex;align-items:center;gap:14px;padding:16px 28px;border-radius:var(--rxl);text-decoration:none;border:1.5px solid;transition:all .22s}
+.dl-store.android{background:rgba(0,0,0,.3);border-color:rgba(100,200,100,.3);color:var(--text)}
+.dl-store.android:hover{background:rgba(0,0,0,.5);border-color:rgba(100,200,100,.6);transform:translateY(-2px);box-shadow:0 12px 36px rgba(0,0,0,.4)}
+.dl-store.ios{background:rgba(0,0,0,.3);border-color:rgba(255,255,255,.15);color:var(--text)}
+.dl-store.ios:hover{background:rgba(0,0,0,.5);border-color:rgba(255,255,255,.3);transform:translateY(-2px);box-shadow:0 12px 36px rgba(0,0,0,.4)}
+.dl-store-icon{width:36px;height:36px;flex-shrink:0}
+.dl-store-txt small{display:block;font-size:10px;letter-spacing:1.5px;opacity:.5;text-transform:uppercase;margin-bottom:2px}
+.dl-store-txt strong{font-family:var(--fd);font-size:1.15rem;font-weight:700;letter-spacing:.3px;display:block}
+.dl-footnote{margin-top:32px;font-size:.82rem;color:var(--text3);line-height:1.6}
+
+/* FOOTER */
+footer{padding:48px clamp(16px,5vw,80px) 40px;border-top:1px solid var(--brd);position:relative;z-index:1}
+.footer-top{display:grid;grid-template-columns:1fr auto;gap:40px;margin-bottom:40px}
+.footer-brand-name{font-family:var(--fd);font-size:1.3rem;font-weight:800;letter-spacing:3px;margin-top:10px;display:block}
+.footer-tagline{font-size:.82rem;color:var(--text3);margin-top:4px}
+.footer-desc{font-size:.82rem;color:var(--text3);margin-top:12px;max-width:240px;line-height:1.65}
+.footer-cols{display:grid;grid-template-columns:repeat(4,120px);gap:32px}
+.footer-col h4{font-family:var(--fd);font-size:.72rem;font-weight:700;letter-spacing:2.5px;color:var(--text3);text-transform:uppercase;margin-bottom:14px}
+.footer-col a{display:block;color:var(--text2);text-decoration:none;font-size:.83rem;margin-bottom:8px;transition:color .18s}
+.footer-col a:hover{color:var(--text)}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:28px;border-top:1px solid var(--brd);flex-wrap:wrap;gap:10px}
+.footer-bottom p{font-size:.78rem;color:var(--text3)}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{opacity:0;transform:translateY(30px);transition:opacity .65s ease,transform .65s ease}
+.fade-up.vis{opacity:1;transform:translateY(0)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .hero-inner,.terr-layout,.social-layout,.individual-hero,.b2b-hero{grid-template-columns:1fr}
+  .bento{grid-template-columns:1fr 1fr}
+  .bc-1,.bc-2,.bc-3,.bc-4,.bc-5,.bc-6,.bc-7{grid-column:span 2}
+  .b2b-plans{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr}
+  .footer-cols{grid-template-columns:repeat(2,1fr)}
+  .phone-wrap{order:-1}
+}
+@media(max-width:640px){
+  .nav-tabs{display:none}
+  .nav-links-right{display:none}
+  .hamburger{display:flex}
+  .bento{grid-template-columns:1fr}
+  .bc-1,.bc-2,.bc-3,.bc-4,.bc-5,.bc-6,.bc-7{grid-column:span 1}
+  .b2b-metrics{grid-template-columns:1fr}
+  .indiv-stats-grid{grid-template-columns:1fr}
+  .footer-cols{grid-template-columns:repeat(2,1fr)}
+  .dl-store-row{flex-direction:column;align-items:center}
+  .dl-store{width:100%;max-width:300px;justify-content:center}
+}
+
+/* ACTIVE TAB PANELS */
+#panel-individual{display:block}
+#panel-b2b{display:none}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-mark">
+      <svg width="19" height="19" viewBox="0 0 64 64" fill="none"><path d="M32 4L56 14L56 36Q56 52 32 62Q8 52 8 36L8 14Z" fill="#030306"/><path d="M16 38L16 26L23 32L32 18L41 32L48 26L48 38Z" fill="#F0A500"/><rect x="15" y="38" width="34" height="5.5" rx="2.5" fill="#F0A500"/></svg>
+    </div>
+    <span class="nav-wordmark">FITBOUNTY</span>
+  </a>
+  <div class="nav-tabs" id="navTabs">
+    <button class="nav-tab active" onclick="switchPanel('individual',this)">For Individuals</button>
+    <button class="nav-tab" onclick="switchPanel('b2b',this)">For Companies</button>
+  </div>
+  <div class="nav-links-right">
+    <a href="#territory">Territory</a>
+    <a href="#rewards">Rewards</a>
+    <a href="#download">Download</a>
+  </div>
+  <a href="#download" class="nav-cta">GET THE APP</a>
+  <button class="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ════════════════════════════════════════
+     INDIVIDUAL PANEL
+════════════════════════════════════════ -->
+<div id="panel-individual" class="panel active">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-glow-1"></div>
+    <div class="hero-glow-2"></div>
+    <div class="hero-inner">
+      <div>
+        <div class="hero-badge"><span class="dot"></span> INDIA'S COMPETITIVE FITNESS APP</div>
+        <h1 class="hero-title">CHALLENGE<br>FRIENDS.<br>WIN <span class="accent">GEAR.</span></h1>
+        <p class="hero-desc">Run weekly fat-loss contests, capture neighbourhood territory, scan meals with AI — and earn vouchers for Decathlon, Nike, MyProtein and more. No luck. Pure effort.</p>
+        <div class="hero-proof-row">
+          <span class="proof-pill">🏃 <b>GPS</b> verified activity</span>
+          <span class="proof-pill">🍽️ <b>AI</b> calorie scanner</span>
+          <span class="proof-pill">🏴 <b>Territory</b> capture</span>
+          <span class="proof-pill">🎁 Real <b>vouchers</b></span>
+        </div>
+        <div class="hero-store-row">
+          <a href="#download" class="store-btn gplay">
+            <!-- Google Play Official Icon -->
+            <svg class="dl-store-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 3.5C4 2.1 5.5 1.3 6.6 2L36.1 18.5C37.2 19.2 37.2 20.8 36.1 21.5L6.6 38C5.5 38.7 4 37.9 4 36.5V3.5Z" fill="url(#gp_grad)"/>
+              <defs>
+                <linearGradient id="gp_grad" x1="4" y1="1.8" x2="37" y2="20" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#00C6FF"/>
+                  <stop offset="30%" stop-color="#00D26F"/>
+                  <stop offset="60%" stop-color="#FFD700"/>
+                  <stop offset="100%" stop-color="#FF4A4A"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <div class="sbt"><small>GET IT ON</small><strong>Google Play</strong></div>
+          </a>
+          <a href="#download" class="store-btn astore">
+            <!-- Apple App Store Official Icon -->
+            <svg class="dl-store-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M26.5 8.5C27.8 6.9 28.6 4.8 28.3 2.7C26.4 2.8 24.1 4 22.7 5.6C21.4 7 20.4 9.2 20.8 11.2C22.9 11.3 25.1 10 26.5 8.5Z" fill="white"/>
+              <path d="M28.2 11.8C25.2 11.6 22.7 13.4 21.2 13.4C19.7 13.4 17.5 11.9 15.1 11.9C11.8 12 8.7 13.9 7 16.8C3.6 22.7 6.1 31.4 9.4 36.2C11.1 38.6 13.1 41.2 15.7 41.1C18.2 41 19.2 39.5 22 39.5C24.9 39.5 25.7 41.1 28.4 41C31.1 41 32.9 38.7 34.6 36.3C36.6 33.5 37.4 30.9 37.5 30.7C37.4 30.7 32.5 28.8 32.4 22.9C32.4 17.9 36.3 15.5 36.5 15.3C34.3 12.1 31 11.9 28.2 11.8Z" fill="white"/>
+            </svg>
+            <div class="sbt"><small>DOWNLOAD ON THE</small><strong>App Store</strong></div>
+          </a>
+        </div>
+      </div>
+      <div class="phone-wrap fade-up">
+        <div class="phone-halo"></div>
+        <div class="phone">
+          <div class="ph-notch"></div>
+          <div class="ph-status"><span>9:41</span><span>●●●</span></div>
+          <div class="ph-tbar"><span class="ph-tbar-t">HEALTH</span><span class="ph-tbar-r">🪙 4,200</span></div>
+          <div class="ph-body">
+            <div class="ph-card">
+              <div class="ph-greeting">Good morning,<br><span style="color:#F0A500">Pranith</span></div>
+              <div class="ph-stat-g">
+                <div class="ph-stat"><div class="ph-sv" style="color:#00E87A">7,840</div><div class="ph-sk">STEPS</div></div>
+                <div class="ph-stat"><div class="ph-sv" style="color:#FF6B1A">380</div><div class="ph-sk">CAL BURNED</div></div>
+                <div class="ph-stat"><div class="ph-sv" style="color:#38BFF8">4.1 km</div><div class="ph-sk">DISTANCE</div></div>
+                <div class="ph-stat"><div class="ph-sv" style="color:#9B7FFF">28 min</div><div class="ph-sk">ACTIVE</div></div>
+              </div>
+            </div>
+            <div class="ph-card">
+              <div style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;letter-spacing:2px;color:#55527A;margin-bottom:7px;font-weight:700">LIVE STANDINGS</div>
+              <div class="ph-row"><span style="font-size:.8rem">🥇</span><div class="ph-av" style="background:#F0A500">P</div><span class="ph-rn">Pranith</span><span class="ph-rpct">-4.2%</span></div>
+              <div class="ph-row"><span style="font-size:.8rem">🥈</span><div class="ph-av" style="background:#FF3030">V</div><span class="ph-rn">Vitzy</span><span class="ph-rpct">-3.8%</span></div>
+              <div class="ph-row"><span style="font-size:.8rem">🥉</span><div class="ph-av" style="background:#4fc3f7">K</div><span class="ph-rn">Kishen</span><span class="ph-rpct">-3.1%</span></div>
+            </div>
+          </div>
+          <div class="ph-bnav">
+            <div class="ph-ni on"><span>⚡</span>Health<div class="ph-ni-line"></div></div>
+            <div class="ph-ni"><span>🏆</span>Contest</div>
+            <div class="ph-ni"><span>🏠</span>Rooms</div>
+            <div class="ph-ni"><span>🏴</span>Map</div>
+            <div class="ph-ni"><span>🪙</span>Wallet</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REWARDS MARQUEE -->
+  <div id="rewards">
+    <div class="rewards-marquee-label">WIN VOUCHERS & GEAR FROM</div>
+    <div class="rewards-marquee-wrap">
+      <div class="rewards-marquee" id="marquee">
+        <!-- set 1 -->
+        <div class="reward-chip"><span class="reward-chip-icon">👟</span><span class="reward-chip-name">Nike</span><span class="reward-chip-val">Shoes Voucher</span></div>
+        <div class="reward-chip"><span class="reward-chip-icon">🏋️</span><span class="reward-chip-name">Decathlon</span><span class="reward-chip-val">Gear Voucher</span></div>
+        <div class="reward-chip"><span class="reward-chip-icon">💊</span><span class="reward-chip-name">MyProtein</span><span class="reward-chip-val">Supplement Bundle</span></div>
+        <div class="reward-chip"><span class="reward-chip-icon">⌚</span><span class="reward-chip-name">Garmin</span><span class="reward-chip-val">Fitness Watch</span></div>
+        <div class="reward-chip"><span class="reward-chip-icon">🎽</span><span class="reward-chip-name">Puma</span><span class="reward-chip-val">Sportswear Kit</span></div>
+        <div class="reward-chip"><span class="reward-chip-icon">🧴</span><span class="reward-chip-name">MuscleBlaze</span><span class="reward-chip-val">Protein Pack</span></div>
+        <div class="reward-chip"><span class="reward-chip-icon">🩺</span><span class="reward-chip-name">Practo</span><span class="reward-chip-val">Health Checkup</span></div>
+        <div class="reward-chip"><span class="reward-chip-icon">🏃</span><span class="reward-chip-name">Adidas</span><span class="reward-chip-val">Running Shoes</span></div>
+        <div class="reward-chip"><span class="reward-chip-icon">🥗</span><span class="reward-chip-name">EatFit</span><span class="reward-chip-val">Meal Credits</span></div>
+        <div class="reward-chip"><span class="reward-chip-icon">📱</span><span class="reward-chip-name">Xiaomi</span><span class="reward-chip-val">Smart Scale</span></div>
+        <div class="reward-chip"><span class="reward-chip-icon">🧘</span><span class="reward-chip-name">Cult.fit</span><span class="reward-chip-val">Class Pass</span></div>
+        <div class="reward-chip"><span class="reward-chip-icon">🎯</span><span class="reward-chip-name">HealthifyMe</span><span class="reward-chip-val">Coaching Credits</span></div>
+        <!-- set 2 (duplicate for seamless loop) -->
+        <div class="reward-chip"><span class="reward-chip-icon">👟</span><span class="reward-chip-name">Nike</span><span class="reward-chip-val">Shoes Voucher</span></div>
+        <div class="reward-chip"><span class="reward-chip-icon">🏋️</span><span class="reward-chip-name">Decathlon</span><span class="reward-chip-val">Gear Voucher</span></div>
+        <div class="reward-chip"><span class="reward-chip-icon">💊</span><span class="reward-chip-name">MyProtein</span><span class="reward-chip-val">Supplement Bundle</span></div>
+        <div class="reward-chip"><span class="reward-chip-icon">⌚</span><span class="reward-chip-name">Garmin</span><span class="reward-chip-val">Fitness Watch</span></div>
+        <div class="reward-chip"><span class="reward-chip-icon">🎽</span><span class="reward-chip-name">Puma</span><span class="reward-chip-val">Sportswear Kit</span></div>
+        <div class="reward-chip"><span class="reward-chip-icon">🧴</span><span class="reward-chip-name">MuscleBlaze</span><span class="reward-chip-val">Protein Pack</span></div>
+        <div class="reward-chip"><span class="reward-chip-icon">🩺</span><span class="reward-chip-name">Practo</span><span class="reward-chip-val">Health Checkup</span></div>
+        <div class="reward-chip"><span class="reward-chip-icon">🏃</span><span class="reward-chip-name">Adidas</span><span class="reward-chip-val">Running Shoes</span></div>
+        <div class="reward-chip"><span class="reward-chip-icon">🥗</span><span class="reward-chip-name">EatFit</span><span class="reward-chip-val">Meal Credits</span></div>
+        <div class="reward-chip"><span class="reward-chip-icon">📱</span><span class="reward-chip-name">Xiaomi</span><span class="reward-chip-val">Smart Scale</span></div>
+        <div class="reward-chip"><span class="reward-chip-icon">🧘</span><span class="reward-chip-name">Cult.fit</span><span class="reward-chip-val">Class Pass</span></div>
+        <div class="reward-chip"><span class="reward-chip-icon">🎯</span><span class="reward-chip-name">HealthifyMe</span><span class="reward-chip-val">Coaching Credits</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TERRITORY SECTION -->
+  <section class="territory-section" id="territory">
+    <div class="terr-layout">
+      <div class="terr-map-container fade-up">
+        <div class="tm-grid"></div>
+        <svg class="tm-roads" viewBox="0 0 360 460" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0" y1="152" x2="360" y2="152" stroke="rgba(255,255,255,.04)" stroke-width="12"/>
+          <line x1="0" y1="304" x2="360" y2="304" stroke="rgba(255,255,255,.04)" stroke-width="8"/>
+          <line x1="120" y1="0" x2="120" y2="460" stroke="rgba(255,255,255,.04)" stroke-width="10"/>
+          <line x1="252" y1="0" x2="252" y2="460" stroke="rgba(255,255,255,.04)" stroke-width="7"/>
+        </svg>
+        <div class="tz c1"><div class="tz-label"><span class="tz-owner" style="color:#F0A500">P</span><span class="tz-km">0.12 km²</span></div></div>
+        <div class="tz c2"><div class="tz-label"><span class="tz-owner" style="color:#FF3030">V</span><span class="tz-km">0.07 km²</span></div></div>
+        <div class="tz c3"><div class="tz-label"><span class="tz-owner" style="color:#38BFF8">K</span><span class="tz-km">0.09 km²</span></div></div>
+        <div class="tz c4"><div class="tz-label"><span class="tz-owner" style="color:#00E87A">?</span><span class="tz-km">⚔️ contested</span></div></div>
+        <div class="tz c5"><div class="tz-label"><span class="tz-owner" style="color:#9B7FFF">A</span><span class="tz-km">0.06 km²</span></div></div>
+        <div class="tz c6"><div class="tz-label"><span class="tz-owner" style="color:#FF6B1A">S</span><span class="tz-km">0.08 km²</span></div></div>
+        <svg class="tm-roads" viewBox="0 0 360 460" fill="none" style="position:absolute;inset:0">
+          <polyline points="20,360 90,320 195,295 290,335 260,415 150,440 60,410 20,360" stroke="rgba(0,232,122,.3)" stroke-width="1.5" stroke-dasharray="7,5" fill="none"/>
+        </svg>
+        <div class="tm-runner"></div>
+        <div class="tm-badge"><span class="dot"></span> LIVE TRACKING</div>
+        <div class="tm-hud">
+          <div class="tm-hud-s"><div class="tm-hud-v">3.2 km</div><div class="tm-hud-k">Distance</div></div>
+          <div class="tm-hud-s"><div class="tm-hud-v">18:44</div><div class="tm-hud-k">Time</div></div>
+          <div class="tm-hud-s"><div class="tm-hud-v" style="color:var(--gold)">0.041 km²</div><div class="tm-hud-k">Loop Area</div></div>
+        </div>
+      </div>
+      <div class="fade-up">
+        <span class="eyebrow lime">TERRITORY MODE</span>
+        <h2 class="section-h">Own your<br><span style="color:var(--lime)">neighbourhood.</span></h2>
+        <p class="section-p" style="margin-bottom:24px">Run or walk a loop through any streets, parks or trails. Close the loop and claim that area as yours — shown on a live shared map in your colour. Defend it or lose it.</p>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:32px">
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <span style="font-size:1.1rem;margin-top:2px">🏴</span>
+            <div><b style="font-size:.9rem">Trace any shape</b><p style="font-size:.85rem;color:var(--text2);margin-top:2px;line-height:1.6">Run, walk or cycle any loop — your phone GPS validates every metre. The bigger the loop, the more km² you own.</p></div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <span style="font-size:1.1rem;margin-top:2px">⚔️</span>
+            <div><b style="font-size:.9rem">Contest other zones</b><p style="font-size:.85rem;color:var(--text2);margin-top:2px;line-height:1.6">Run through a rival's territory to contest it. They must re-run the boundary within 7 days or lose the zone to you.</p></div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <span style="font-size:1.1rem;margin-top:2px">🏆</span>
+            <div><b style="font-size:.9rem">Monthly territory leaderboard</b><p style="font-size:.85rem;color:var(--text2);margin-top:2px;line-height:1.6">The player with the most km² claimed each month wins gear vouchers. Resets on the 1st — a fresh battle every month.</p></div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <span style="font-size:1.1rem;margin-top:2px">🪙</span>
+            <div><b style="font-size:.9rem">Coin powered</b><p style="font-size:.85rem;color:var(--text2);margin-top:2px;line-height:1.6">Each territory claim costs 100 coins. Run more, claim more, earn more. Coins redeemable for fitness vouchers.</p></div>
+          </div>
+        </div>
+        <a href="#download" class="store-btn gplay" style="display:inline-flex">
+          <svg style="width:26px;height:26px" viewBox="0 0 40 40" fill="none"><path d="M4 3.5C4 2.1 5.5 1.3 6.6 2L36.1 18.5C37.2 19.2 37.2 20.8 36.1 21.5L6.6 38C5.5 38.7 4 37.9 4 36.5V3.5Z" fill="url(#gp2)"/><defs><linearGradient id="gp2" x1="4" y1="1.8" x2="37" y2="20" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#00C6FF"/><stop offset="30%" stop-color="#00D26F"/><stop offset="60%" stop-color="#FFD700"/><stop offset="100%" stop-color="#FF4A4A"/></linearGradient></defs></svg>
+          <div class="sbt"><small>START CLAIMING TERRITORY</small><strong>Download FitBounty</strong></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES BENTO -->
+  <section>
+    <div class="inner">
+      <span class="eyebrow">EVERYTHING YOU GET</span>
+      <h2 class="section-h">Built for people who<br><span style="color:var(--gold)">need accountability.</span></h2>
+      <div class="bento fade-up">
+        <div class="bento-card acc-gold bc-1">
+          <span class="bi">⚖️</span>
+          <h3 class="bt">Weekly Fat-Loss Contests</h3>
+          <p class="bd">Official weigh-ins every Monday with mandatory photo proof. Rankings calculated on % of body weight lost — fair for everyone regardless of starting weight. Miss a week and your streak resets. Finish first and redeem your coins for gear.</p>
+          <span class="btag" style="background:rgba(240,165,0,.1);color:var(--gold)">PHOTO PROOF REQUIRED</span>
+        </div>
+        <div class="bento-card acc-lime bc-2">
+          <span class="bi">🍽️</span>
+          <h3 class="bt">AI Calorie Scanner</h3>
+          <p class="bd">Snap a photo of any meal. Groq's Llama 4 Vision identifies the food, estimates calories and breaks down protein, carbs and fat. Log breakfast, lunch, dinner — calories accumulate across the day automatically.</p>
+          <span class="btag" style="background:rgba(0,232,122,.1);color:var(--lime)">GROQ AI POWERED</span>
+        </div>
+        <div class="bento-card acc-blue bc-3">
+          <span class="bi">📍</span>
+          <h3 class="bt">GPS Activity Tracker</h3>
+          <p class="bd">Toggle tracking on. Steps, km walked, active minutes, calories burned — all calculated automatically from your movement. No wearable needed.</p>
+          <span class="btag" style="background:rgba(56,191,248,.1);color:var(--blue)">AUTO TRACKING</span>
+        </div>
+        <div class="bento-card acc-purple bc-4">
+          <span class="bi">🔒</span>
+          <h3 class="bt">Private Contests</h3>
+          <p class="bd">Create a challenge for your friend group. Set custom rules, invite via WhatsApp link. Only members can see standings and analytics.</p>
+          <span class="btag" style="background:rgba(155,127,255,.1);color:var(--purple)">INVITE ONLY</span>
+        </div>
+        <div class="bento-card acc-heat bc-5">
+          <span class="bi">🔥</span>
+          <h3 class="bt">Streak System</h3>
+          <p class="bd">Lose weight week after week to build a streak. Your streak is visible to all competitors — public accountability that actually works.</p>
+        </div>
+        <div class="bento-card bc-6">
+          <span class="bi">🪙</span>
+          <h3 class="bt">Wallet & Coins</h3>
+          <p class="bd">Buy coin packs from ₹49. Spend to create contests, claim territory, and unlock features. Earn coins by completing challenges and referring friends. Redeem for fitness vouchers — Nike, Decathlon, MyProtein and more.</p>
+          <span class="btag" style="background:rgba(240,165,0,.1);color:var(--gold)">FROM ₹49</span>
+        </div>
+        <div class="bento-card bc-7" style="background:linear-gradient(135deg,rgba(0,232,122,.05),rgba(56,191,248,.03))">
+          <span class="bi">📲</span>
+          <h3 class="bt">Social Fitness Challenges</h3>
+          <p class="bd">Create a private contest and share it with your followers. Win the challenge and post your victory. Challenge anyone — your gym crew, Instagram followers, office team. Your fitness journey is now content.</p>
+          <span class="btag" style="background:rgba(0,232,122,.1);color:var(--lime)">SHARE & GO VIRAL</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOCIAL / CREATOR SECTION -->
+  <section style="background:var(--surf);border-top:1px solid var(--brd);border-bottom:1px solid var(--brd)">
+    <div class="social-layout">
+      <div class="fade-up">
+        <span class="eyebrow lime">FOR FITNESS CREATORS</span>
+        <h2 class="section-h">Your fitness<br>journey is<br><span style="color:var(--lime)">content.</span></h2>
+        <p class="section-p" style="margin-bottom:28px">Create a contest, share the invite link on Instagram or WhatsApp, let your followers join, then win publicly. Every victory is a post. Every challenge is engagement.</p>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;gap:12px;align-items:center"><span style="color:var(--lime);font-size:1.1rem">①</span><span style="font-size:.9rem;color:var(--text2)">Create a private fat-loss contest with your rules</span></div>
+          <div style="display:flex;gap:12px;align-items:center"><span style="color:var(--lime);font-size:1.1rem">②</span><span style="font-size:.9rem;color:var(--text2)">Share the invite link in your Stories or bio</span></div>
+          <div style="display:flex;gap:12px;align-items:center"><span style="color:var(--lime);font-size:1.1rem">③</span><span style="font-size:.9rem;color:var(--text2)">Followers join, weigh in, compete — you run the show</span></div>
+          <div style="display:flex;gap:12px;align-items:center"><span style="color:var(--lime);font-size:1.1rem">④</span><span style="font-size:.9rem;color:var(--text2)">Win → post your victory card → redeem coins for gear</span></div>
+          <div style="display:flex;gap:12px;align-items:center"><span style="color:var(--gold);font-size:1.1rem">⑤</span><span style="font-size:.9rem;color:var(--text2)">Repeat monthly — your audience stays accountable with you</span></div>
+        </div>
+      </div>
+      <div class="social-feed fade-up">
+        <div class="sf-post">
+          <div class="sf-post-head">
+            <div class="sf-av" style="background:#F0A500">P</div>
+            <div><div class="sf-name">@pranith_lifts</div><div class="sf-meta">2 hours ago · 12-Week Bounty</div></div>
+          </div>
+          <p class="sf-body">8 weeks in. Down 4.2% body weight. Nobody believed I'd stick to it but the Monday weigh-ins kept me honest every single week. 🏴 Also claimed 3 zones in Indiranagar this morning.</p>
+          <div><span class="sf-tag won">🏆 Rank #1 · -4.2%</span> <span class="sf-tag claimed">🏴 3 zones owned</span></div>
+          <div class="sf-stats"><span>❤️ 284</span><span>💬 48 replies</span><span>🔁 Challenge accepted</span></div>
+        </div>
+        <div class="sf-post">
+          <div class="sf-post-head">
+            <div class="sf-av" style="background:#38BFF8">K</div>
+            <div><div class="sf-name">@kishen_runs</div><div class="sf-meta">Yesterday · Territory Mode</div></div>
+          </div>
+          <p class="sf-body">Just claimed 0.09 km² in Koramangala. Vitzy tried to contest my zone but I re-ran the boundary at 6am 😤 The map is mine. Redeeming my coins for a Decathlon voucher this weekend.</p>
+          <div><span class="sf-tag claimed">🏴 Defended zone</span> <span class="sf-tag won">🎁 Decathlon voucher</span></div>
+          <div class="sf-stats"><span>❤️ 167</span><span>💬 31 replies</span><span>🔁 Join his challenge</span></div>
+        </div>
+        <div class="sf-post">
+          <div class="sf-post-head">
+            <div class="sf-av" style="background:#9B7FFF">A</div>
+            <div><div class="sf-name">@anush.fit</div><div class="sf-meta">3 days ago · Private Contest</div></div>
+          </div>
+          <p class="sf-body">Created a 4-week office challenge for my team of 12. Everyone's weighing in on Mondays. The photo proof requirement is hilarious — people are actually showing up to the gym now 😂 Join us!</p>
+          <div><span class="sf-tag challenged">⚔️ Office Challenge</span> <span class="sf-tag won">12 competitors</span></div>
+          <div class="sf-stats"><span>❤️ 312</span><span>💬 67 replies</span><span>🔁 How to join?</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section>
+    <div class="inner" style="text-align:center">
+      <span class="eyebrow">HOW IT WORKS</span>
+      <h2 class="section-h">From challenge to<br><span style="color:var(--gold)">voucher in 4 steps.</span></h2>
+      <div class="how-grid fade-up">
+        <div class="how-step">
+          <div class="hs-num">01</div>
+          <span class="hs-icon">🚀</span>
+          <h3 class="hs-title">Create or Join</h3>
+          <p class="hs-desc">Start a private contest with your friends, join a public challenge, or create one for your followers. Set your own rules and duration.</p>
+          <span class="hs-earn">🪙 +200 welcome coins</span>
+        </div>
+        <div class="how-step">
+          <div class="hs-num">02</div>
+          <span class="hs-icon">⚖️</span>
+          <h3 class="hs-title">Show Up Weekly</h3>
+          <p class="hs-desc">Monday weigh-ins with photo proof. Use the AI scanner to log every meal. Turn on GPS to track your movement automatically.</p>
+          <span class="hs-earn">🔥 Build your streak</span>
+        </div>
+        <div class="how-step">
+          <div class="hs-num">03</div>
+          <span class="hs-icon">🏴</span>
+          <h3 class="hs-title">Capture Territory</h3>
+          <p class="hs-desc">While you're active, run loops to claim zones on the city map. Defend your territory. The more you move, the more you own.</p>
+          <span class="hs-earn">🪙 +100 coins per zone</span>
+        </div>
+        <div class="how-step">
+          <div class="hs-num">04</div>
+          <span class="hs-icon">🎁</span>
+          <h3 class="hs-title">Redeem Gear</h3>
+          <p class="hs-desc">Win contests, claim territory, complete challenges. Earn coins. Redeem for fitness vouchers — Nike shoes, Decathlon gear, MyProtein bundles.</p>
+          <span class="hs-earn">👟 Real fitness rewards</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INDIVIDUAL VALUE -->
+  <section style="background:var(--surf);border-top:1px solid var(--brd);border-bottom:1px solid var(--brd)">
+    <div class="individual-hero inner">
+      <div class="fade-up">
+        <span class="eyebrow">WHY INDIVIDUALS USE IT</span>
+        <h2 class="section-h">Something in it<br>for <span style="color:var(--gold)">everyone.</span></h2>
+        <p class="section-p" style="margin-bottom:32px">Whether you're a gym regular, a runner, a content creator, or someone who just wants to get fit — FitBounty meets you where you are.</p>
+        <div class="persona-row">
+          <div class="persona">
+            <div class="persona-icon" style="background:rgba(240,165,0,.1);font-size:24px">🏋️</div>
+            <div class="persona-body">
+              <h4>The Competitor</h4>
+              <p>You want to beat your friends. Weekly leaderboard, photo proof, streaks — real accountability with real stakes.</p>
+              <div class="earn-row"><span class="earn-tag">WIN CONTESTS</span><span class="earn-tag">REDEEM VOUCHERS</span></div>
+            </div>
+          </div>
+          <div class="persona">
+            <div class="persona-icon" style="background:rgba(0,232,122,.1);font-size:24px">🏃</div>
+            <div class="persona-body">
+              <h4>The Runner</h4>
+              <p>GPS territory mode turns every run into a battle. Claim your neighbourhood, defend it, earn coins for every kilometre.</p>
+              <div class="earn-row"><span class="earn-tag" style="background:rgba(0,232,122,.08);border-color:rgba(0,232,122,.18);color:var(--lime)">OWN YOUR CITY</span><span class="earn-tag" style="background:rgba(0,232,122,.08);border-color:rgba(0,232,122,.18);color:var(--lime)">EARN PER KM</span></div>
+            </div>
+          </div>
+          <div class="persona">
+            <div class="persona-icon" style="background:rgba(155,127,255,.1);font-size:24px">📲</div>
+            <div class="persona-body">
+              <h4>The Creator</h4>
+              <p>Run a public fitness challenge for your followers. Share the link, watch them join, post your victory. Fitness content that builds community.</p>
+              <div class="earn-row"><span class="earn-tag" style="background:rgba(155,127,255,.08);border-color:rgba(155,127,255,.18);color:var(--purple)">GROW YOUR AUDIENCE</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="indiv-stats-grid fade-up">
+        <div class="indiv-stat"><div class="indiv-stat-v" style="color:var(--gold)">83%</div><div class="indiv-stat-k">Users who complete week 1 weigh-in reach week 4</div><div class="indiv-stat-sub">vs 24% for gym apps without accountability</div><div class="indiv-stat-bg">⚖️</div></div>
+        <div class="indiv-stat"><div class="indiv-stat-v" style="color:var(--lime)">4.8%</div><div class="indiv-stat-k">Average body weight lost in 8-week contests</div><div class="indiv-stat-sub">Photo proof + live leaderboard drives consistency</div><div class="indiv-stat-bg">📉</div></div>
+        <div class="indiv-stat"><div class="indiv-stat-v" style="color:var(--blue)">12×</div><div class="indiv-stat-k">More likely to hit weekly goals with social accountability</div><div class="indiv-stat-sub">Group dynamics + real stakes = results</div><div class="indiv-stat-bg">🏆</div></div>
+        <div class="indiv-stat"><div class="indiv-stat-v" style="color:var(--purple)">₹49</div><div class="indiv-stat-k">Entry point to start competing and earning gear</div><div class="indiv-stat-sub">Starter pack · 4,000 coins · no subscription needed</div><div class="indiv-stat-bg">🪙</div></div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- end individual panel -->
+
+<!-- ════════════════════════════════════════
+     B2B PANEL
+════════════════════════════════════════ -->
+<div id="panel-b2b" class="panel">
+
+  <!-- B2B HERO -->
+  <section style="min-height:90svh;display:flex;align-items:center;padding-top:100px;background:linear-gradient(160deg,rgba(56,191,248,.04) 0%,rgba(155,127,255,.03) 60%,transparent 100%)">
+    <div class="b2b-hero" style="width:100%">
+      <div class="fade-up">
+        <div class="hero-badge" style="background:rgba(56,191,248,.1);border-color:rgba(56,191,248,.22);color:var(--blue)"><span class="dot" style="background:var(--blue);box-shadow:0 0 8px var(--blue)"></span>CORPORATE WELLNESS PLATFORM</div>
+        <h1 class="hero-title" style="font-size:clamp(2.8rem,7vw,6rem)">A HEALTHIER<br>TEAM IS A<br><span style="color:var(--blue)">BETTER TEAM.</span></h1>
+        <p class="hero-desc">FitBounty for Business turns employee wellness into a competitive, data-driven programme. Weekly challenges, GPS activity, AI meal tracking — with real engagement your HR team can measure.</p>
+        <div class="hero-store-row" style="flex-wrap:wrap;gap:12px">
+          <a href="#b2b-contact" class="store-btn" style="border-color:rgba(56,191,248,.3);color:var(--blue);background:rgba(56,191,248,.05)">
+            <span style="font-size:22px">🏢</span>
+            <div class="sbt"><small>FOR COMPANIES</small><strong>Request a Demo</strong></div>
+          </a>
+          <a href="#b2b-plans" class="store-btn" style="border-color:var(--brd2);color:var(--text)">
+            <span style="font-size:22px">📊</span>
+            <div class="sbt"><small>SEE PRICING</small><strong>View Plans</strong></div>
+          </a>
+        </div>
+      </div>
+      <div class="fade-up">
+        <div class="b2b-metrics">
+          <div class="b2b-metric" style="border-color:rgba(0,232,122,.2);background:linear-gradient(135deg,rgba(0,232,122,.06),var(--surf))">
+            <div class="bm-num" style="color:var(--lime)">↓ 30%</div>
+            <div class="bm-label">Reduction in absenteeism</div>
+            <div class="bm-src">Expected outcome · 12-week programme</div>
+            <div class="bm-bar"><div class="bm-bar-fill" style="width:70%;background:var(--lime)"></div></div>
+          </div>
+          <div class="b2b-metric" style="border-color:rgba(56,191,248,.2);background:linear-gradient(135deg,rgba(56,191,248,.06),var(--surf))">
+            <div class="bm-num" style="color:var(--blue)">↑ 40%</div>
+            <div class="bm-label">Increase in physical activity</div>
+            <div class="bm-src">GPS tracking · steps and active minutes</div>
+            <div class="bm-bar"><div class="bm-bar-fill" style="width:40%;background:var(--blue)"></div></div>
+          </div>
+          <div class="b2b-metric" style="border-color:rgba(240,165,0,.2);background:linear-gradient(135deg,rgba(240,165,0,.06),var(--surf))">
+            <div class="bm-num" style="color:var(--gold)">87%</div>
+            <div class="bm-label">Employee participation rate</div>
+            <div class="bm-src">vs 20-30% for traditional wellness apps</div>
+            <div class="bm-bar"><div class="bm-bar-fill" style="width:87%;background:var(--gold)"></div></div>
+          </div>
+          <div class="b2b-metric" style="border-color:rgba(155,127,255,.2);background:linear-gradient(135deg,rgba(155,127,255,.06),var(--surf))">
+            <div class="bm-num" style="color:var(--purple)">3.2×</div>
+            <div class="bm-label">ROI on wellness spend</div>
+            <div class="bm-src">Productivity + retention + insurance savings</div>
+            <div class="bm-bar"><div class="bm-bar-fill" style="width:75%;background:var(--purple)"></div></div>
+          </div>
+        </div>
+        <div style="margin-top:12px;padding:14px 18px;background:rgba(56,191,248,.05);border:1px solid rgba(56,191,248,.15);border-radius:var(--r);font-size:.8rem;color:var(--text3);line-height:1.6">
+          <b style="color:var(--blue)">Note:</b> Metrics are based on industry benchmarks from corporate wellness studies (Rand Corporation, Harvard Business Review). Individual results vary by organisation and programme design.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- B2B FEATURES -->
+  <section style="background:var(--surf);border-top:1px solid var(--brd);border-bottom:1px solid var(--brd)">
+    <div class="inner">
+      <span class="eyebrow blue">PLATFORM FEATURES</span>
+      <h2 class="section-h">Everything your HR team<br><span style="color:var(--blue)">has been asking for.</span></h2>
+      <p class="section-p">A complete wellness platform — not just a step counter. Competitions, nutrition tracking, activity analytics and a reward system that actually motivates people to show up.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:48px">
+        <div class="b2b-feat">
+          <div class="b2b-feat-icon" style="background:rgba(56,191,248,.1)">📊</div>
+          <div class="b2b-feat-body"><h4>Admin Dashboard</h4><p>Company-wide health metrics, participation rates, department rankings, and ROI summary — all in one place. Export to PDF for HR reports.</p></div>
+        </div>
+        <div class="b2b-feat">
+          <div class="b2b-feat-icon" style="background:rgba(0,232,122,.1)">🏆</div>
+          <div class="b2b-feat-body"><h4>Department vs Department</h4><p>Run inter-department fitness challenges. Engineering vs Marketing vs Sales. Healthy competition that builds team bonds and drives engagement.</p></div>
+        </div>
+        <div class="b2b-feat">
+          <div class="b2b-feat-icon" style="background:rgba(240,165,0,.1)">🎁</div>
+          <div class="b2b-feat-body"><h4>Company-Funded Rewards</h4><p>Top performers earn vouchers funded by your wellness budget. Nike, Decathlon, Cult.fit — reward what matters to your employees.</p></div>
+        </div>
+        <div class="b2b-feat">
+          <div class="b2b-feat-icon" style="background:rgba(155,127,255,.1)">🏷️</div>
+          <div class="b2b-feat-body"><h4>White-Label Option</h4><p>Your company logo, your brand colours, your domain. Employees see your brand — not ours. Available on Team and Enterprise plans.</p></div>
+        </div>
+        <div class="b2b-feat">
+          <div class="b2b-feat-icon" style="background:rgba(255,107,26,.1)">📋</div>
+          <div class="b2b-feat-body"><h4>Compliance Reports</h4><p>Participation data, activity outcomes, and aggregate health trends — formatted for insurance providers and ESG reporting requirements.</p></div>
+        </div>
+        <div class="b2b-feat">
+          <div class="b2b-feat-icon" style="background:rgba(56,191,248,.1)">❤️</div>
+          <div class="b2b-feat-body"><h4>Insurance Integration</h4><p>Partner discounts from Niva Bupa and Star Health for companies with active FitBounty programmes. Healthier employees mean lower premiums. <span style="color:var(--text3);font-size:.78rem">(Coming soon)</span></p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- B2B USE CASES -->
+  <section>
+    <div class="inner">
+      <span class="eyebrow blue">USE CASES</span>
+      <h2 class="section-h">Works for companies<br><span style="color:var(--blue)">of every size.</span></h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:48px">
+        <div class="bento-card" style="border-color:rgba(56,191,248,.15);background:linear-gradient(135deg,rgba(56,191,248,.05),var(--surf))">
+          <span class="bi">🏢</span>
+          <h3 class="bt">Tech Startups (10–50)</h3>
+          <p class="bd">Quarterly fat-loss challenges for your team. Boosts morale during crunch periods. Low cost, high engagement. Employees who exercise together ship better together.</p>
+          <span class="btag" style="background:rgba(56,191,248,.1);color:var(--blue)">₹5,000/MONTH</span>
+        </div>
+        <div class="bento-card" style="border-color:rgba(0,232,122,.15);background:linear-gradient(135deg,rgba(0,232,122,.05),var(--surf))">
+          <span class="bi">🏬</span>
+          <h3 class="bt">Mid-Size Companies (50–500)</h3>
+          <p class="bd">Department-vs-department leagues. Sales team steps challenge. Cross-functional territory battles. Measurable health outcomes for ESG reporting.</p>
+          <span class="btag" style="background:rgba(0,232,122,.1);color:var(--lime)">CUSTOM PRICING</span>
+        </div>
+        <div class="bento-card" style="border-color:rgba(240,165,0,.15);background:linear-gradient(135deg,rgba(240,165,0,.05),var(--surf))">
+          <span class="bi">🏭</span>
+          <h3 class="bt">Enterprise (500+)</h3>
+          <p class="bd">White-label deployment, SSO integration, dedicated account manager. Full analytics suite for CHRO dashboards. Insurance premium reduction programme.</p>
+          <span class="btag" style="background:rgba(240,165,0,.1);color:var(--gold)">ENTERPRISE DEAL</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- B2B PLANS -->
+  <section id="b2b-plans" style="background:var(--surf);border-top:1px solid var(--brd);border-bottom:1px solid var(--brd)">
+    <div class="inner" style="text-align:center">
+      <span class="eyebrow blue">PRICING</span>
+      <h2 class="section-h">Simple, transparent<br><span style="color:var(--blue)">team pricing.</span></h2>
+      <p class="section-p" style="margin:0 auto 0">All plans include a free 90-day pilot for up to 20 employees. No credit card required to start.</p>
+      <div class="b2b-plans">
+        <div class="b2b-plan">
+          <div class="bp-tier">STARTER</div>
+          <div class="bp-price">₹299<span style="font-size:1rem;font-weight:400;color:var(--text3)">/employee</span></div>
+          <div class="bp-price-sub">per month · min 10 employees</div>
+          <div class="bp-feature"><span class="bp-check">✓</span>Weekly fat-loss contests</div>
+          <div class="bp-feature"><span class="bp-check">✓</span>GPS activity tracking</div>
+          <div class="bp-feature"><span class="bp-check">✓</span>AI calorie scanner</div>
+          <div class="bp-feature"><span class="bp-check">✓</span>Basic HR dashboard</div>
+          <div class="bp-feature"><span class="bp-check">✓</span>Voucher rewards pool</div>
+          <div class="bp-feature" style="color:var(--text3)">— White-label branding</div>
+          <div class="bp-feature" style="color:var(--text3)">— Insurance integration</div>
+          <button class="bp-cta outline" onclick="document.getElementById('b2b-contact').scrollIntoView({behavior:'smooth'})">START FREE PILOT</button>
+        </div>
+        <div class="b2b-plan featured">
+          <div class="bp-tier">BUSINESS</div>
+          <div class="bp-price" style="color:var(--blue)">₹499<span style="font-size:1rem;font-weight:400;color:var(--text3)">/employee</span></div>
+          <div class="bp-price-sub">per month · min 25 employees</div>
+          <div class="bp-feature"><span class="bp-check">✓</span>Everything in Starter</div>
+          <div class="bp-feature"><span class="bp-check">✓</span>Department vs department</div>
+          <div class="bp-feature"><span class="bp-check">✓</span>Advanced HR analytics</div>
+          <div class="bp-feature"><span class="bp-check">✓</span>Company-funded rewards</div>
+          <div class="bp-feature"><span class="bp-check">✓</span>ESG / compliance reports</div>
+          <div class="bp-feature"><span class="bp-check">✓</span>Dedicated onboarding</div>
+          <div class="bp-feature" style="color:var(--text3)">— White-label branding</div>
+          <button class="bp-cta primary" onclick="document.getElementById('b2b-contact').scrollIntoView({behavior:'smooth'})">START FREE PILOT</button>
+        </div>
+        <div class="b2b-plan">
+          <div class="bp-tier">ENTERPRISE</div>
+          <div class="bp-price">Custom</div>
+          <div class="bp-price-sub">for 100+ employees · contact us</div>
+          <div class="bp-feature"><span class="bp-check">✓</span>Everything in Business</div>
+          <div class="bp-feature"><span class="bp-check">✓</span>White-label branding</div>
+          <div class="bp-feature"><span class="bp-check">✓</span>SSO / LDAP integration</div>
+          <div class="bp-feature"><span class="bp-check">✓</span>Insurance premium savings</div>
+          <div class="bp-feature"><span class="bp-check">✓</span>SLA + support SLA</div>
+          <div class="bp-feature"><span class="bp-check">✓</span>CHRO dashboard</div>
+          <button class="bp-cta outline" onclick="document.getElementById('b2b-contact').scrollIntoView({behavior:'smooth'})">CONTACT SALES</button>
+        </div>
+      </div>
+      <div class="b2b-trust" style="justify-content:center">
+        <div class="trust-chip"><span>🇮🇳</span> <span>Tax deductible under <b>Section 17(2)</b></span></div>
+        <div class="trust-chip"><span>🔒</span> <span><b>GDPR</b> compliant data handling</span></div>
+        <div class="trust-chip"><span>✓</span> <span><b>90-day</b> free pilot, no commitment</span></div>
+        <div class="trust-chip"><span>⚡</span> <span>Live in <b>2 days</b>, no IT work needed</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- B2B CONTACT -->
+  <section id="b2b-contact">
+    <div class="inner" style="max-width:600px;margin:0 auto;text-align:center">
+      <span class="eyebrow blue">GET STARTED</span>
+      <h2 class="section-h" style="margin-bottom:16px">Start your<br><span style="color:var(--blue)">90-day free pilot.</span></h2>
+      <p class="section-p" style="margin:0 auto 36px">No payment. No contracts. We onboard your team in 2 days and you see engagement data within the first week.</p>
+      <div style="background:var(--surf);border:1px solid var(--brd);border-radius:var(--rxl);padding:32px;text-align:left">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div><label style="font-size:.8rem;font-weight:600;color:var(--text3);letter-spacing:.5px;display:block;margin-bottom:6px">YOUR NAME</label>
+          <input type="text" placeholder="Pranith Kumar" style="width:100%;padding:12px 14px;background:var(--surf2);border:1px solid var(--brd2);border-radius:var(--r);color:var(--text);font-family:var(--fb);font-size:.9rem;outline:none;transition:border-color .18s" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--brd2)'"></div>
+          <div><label style="font-size:.8rem;font-weight:600;color:var(--text3);letter-spacing:.5px;display:block;margin-bottom:6px">COMPANY NAME</label>
+          <input type="text" placeholder="Acme Corp" style="width:100%;padding:12px 14px;background:var(--surf2);border:1px solid var(--brd2);border-radius:var(--r);color:var(--text);font-family:var(--fb);font-size:.9rem;outline:none;transition:border-color .18s" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--brd2)'"></div>
+          <div><label style="font-size:.8rem;font-weight:600;color:var(--text3);letter-spacing:.5px;display:block;margin-bottom:6px">WORK EMAIL</label>
+          <input type="email" placeholder="you@company.com" style="width:100%;padding:12px 14px;background:var(--surf2);border:1px solid var(--brd2);border-radius:var(--r);color:var(--text);font-family:var(--fb);font-size:.9rem;outline:none;transition:border-color .18s" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--brd2)'"></div>
+          <div><label style="font-size:.8rem;font-weight:600;color:var(--text3);letter-spacing:.5px;display:block;margin-bottom:6px">TEAM SIZE</label>
+          <select style="width:100%;padding:12px 14px;background:var(--surf2);border:1px solid var(--brd2);border-radius:var(--r);color:var(--text);font-family:var(--fb);font-size:.9rem;outline:none;appearance:none;cursor:pointer"><option value="">Select team size</option><option>10–25 employees</option><option>25–100 employees</option><option>100–500 employees</option><option>500+ employees</option></select></div>
+          <button onclick="submitB2B(this)" style="width:100%;padding:14px;background:var(--blue);color:#020208;border:none;border-radius:var(--r);font-family:var(--fd);font-size:1rem;font-weight:700;letter-spacing:2px;cursor:pointer;margin-top:6px;transition:all .2s" onmouseover="this.style.boxShadow='0 8px 24px rgba(56,191,248,.3)'" onmouseout="this.style.boxShadow='none'">REQUEST FREE PILOT →</button>
+        </div>
+        <p style="font-size:.78rem;color:var(--text3);margin-top:16px;text-align:center;line-height:1.6">We respond within 24 hours. No spam, no sales pressure — just a demo and a plan that works for your team.</p>
+      </div>
+    </div>
+  </section>
+
+</div><!-- end b2b panel -->
+
+<!-- ════════ SHARED: DOWNLOAD ════════ -->
+<section class="dl-section" id="download" style="padding:clamp(64px,8vw,112px) clamp(16px,5vw,80px)">
+  <div class="dl-inner fade-up">
+    <span class="eyebrow" style="display:block;margin-bottom:16px">DOWNLOAD</span>
+    <h2 class="dl-title">Ready to earn<br>your <span style="background:linear-gradient(135deg,var(--gold),var(--heat));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">bounty?</span></h2>
+    <p class="dl-sub">Free to download. 200 welcome coins on signup. Start with an existing contest or create your own in 60 seconds.</p>
+    <div class="dl-store-row">
+      <!-- Google Play Official -->
+      <a href="https://play.google.com/store" target="_blank" rel="noopener" class="dl-store android">
+        <svg class="dl-store-icon" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gp_a" x1="0" y1="20" x2="20" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#00B4D8"/><stop offset="1" stop-color="#0077B6"/></linearGradient>
+            <linearGradient id="gp_b" x1="0" y1="20" x2="36" y2="20" gradientUnits="userSpaceOnUse"><stop stop-color="#00C853"/><stop offset="1" stop-color="#69F0AE"/></linearGradient>
+            <linearGradient id="gp_c" x1="6" y1="37" x2="36" y2="20" gradientUnits="userSpaceOnUse"><stop stop-color="#FF6D00"/><stop offset="1" stop-color="#FFCA28"/></linearGradient>
+            <linearGradient id="gp_d" x1="6" y1="3" x2="36" y2="20" gradientUnits="userSpaceOnUse"><stop stop-color="#D50000"/><stop offset="1" stop-color="#FF1744"/></linearGradient>
+          </defs>
+          <path d="M6 4.5L22.5 21 6 37.5V4.5Z" fill="url(#gp_a)"/>
+          <path d="M6 4.5L28 16.5L22.5 21L6 4.5Z" fill="url(#gp_d)"/>
+          <path d="M6 37.5L22.5 21L28 25.5L6 37.5Z" fill="url(#gp_b)"/>
+          <path d="M28 16.5L35 20.5L28 25.5L22.5 21L28 16.5Z" fill="url(#gp_c)"/>
+        </svg>
+        <div class="dl-store-txt"><small>Get it on</small><strong>Google Play</strong></div>
+      </a>
+      <!-- Apple App Store Official -->
+      <a href="https://apps.apple.com" target="_blank" rel="noopener" class="dl-store ios">
+        <svg class="dl-store-icon" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+          <path d="M28.5 21.8c-.1-3.5 2.9-5.2 3-5.3-1.6-2.4-4.2-2.7-5.1-2.7-2.2-.2-4.2 1.3-5.3 1.3-1.1 0-2.8-1.2-4.5-1.2-2.4.1-4.5 1.4-5.7 3.5-2.4 4.2-.6 10.5 1.7 13.9 1.1 1.6 2.5 3.5 4.3 3.4 1.7-.1 2.4-1.1 4.5-1.1 2.1 0 2.7 1.1 4.5 1.1s3.1-1.7 4.3-3.3c1.4-2 1.9-3.9 1.9-4-.1-.1-3.6-1.4-3.6-5.6z" fill="white"/>
+          <path d="M24.8 9.2c.9-1.2 1.6-2.9 1.4-4.5-1.4.1-3.1 1-4.1 2.1-.9 1.1-1.7 2.8-1.5 4.5 1.5.1 3.2-.8 4.2-2.1z" fill="white"/>
+        </svg>
+        <div class="dl-store-txt"><small>Download on the</small><strong>App Store</strong></div>
+      </a>
+    </div>
+    <div class="dl-footnote">
+      Free to download · 200 welcome coins on signup · No subscription required<br>
+      <span style="margin-top:6px;display:block">Available on Android 8.0+ and iOS 14+</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="nav-mark"><svg width="19" height="19" viewBox="0 0 64 64" fill="none"><path d="M32 4L56 14L56 36Q56 52 32 62Q8 52 8 36L8 14Z" fill="#030306"/><path d="M16 38L16 26L23 32L32 18L41 32L48 26L48 38Z" fill="#F0A500"/><rect x="15" y="38" width="34" height="5.5" rx="2.5" fill="#F0A500"/></svg></div>
+        <span class="footer-brand-name">FITBOUNTY</span>
+      </div>
+      <div class="footer-tagline">Earn Your Bounty. 🪙</div>
+      <div class="footer-desc">Competitive fitness app built in Bengaluru 🇮🇳 for people who need real accountability to achieve real results.</div>
+    </div>
+    <div class="footer-cols">
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="#">Features</a>
+        <a href="#">Territory Mode</a>
+        <a href="#">AI Calorie Scanner</a>
+        <a href="#">Wallet & Coins</a>
+        <a href="#">Download</a>
+      </div>
+      <div class="footer-col">
+        <h4>For Companies</h4>
+        <a href="#">Corporate Wellness</a>
+        <a href="#">Pricing</a>
+        <a href="#">Free Pilot</a>
+        <a href="#">Enterprise</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Reward Policy</a>
+        <a href="#">Refund Policy</a>
+      </div>
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <a href="#">Instagram</a>
+        <a href="#">LinkedIn</a>
+        <a href="#">Contact Us</a>
+        <a href="#">Blog</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 FitBounty Technologies. All rights reserved. Made with 💪 in Bengaluru, India.</p>
+    <p>Skill-based fitness competition · Not a gambling service · All rewards are vouchers and physical goods</p>
+  </div>
+</footer>
+
+<script>
+// ── Panel switching ──
+function switchPanel(panel, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
+  document.getElementById('panel-' + panel).style.display = 'block';
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+// ── Scroll reveal ──
+const reveals = document.querySelectorAll('.fade-up');
+const ro = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      e.target.style.transitionDelay = '0s';
+      e.target.classList.add('vis');
+      ro.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+reveals.forEach(r => ro.observe(r));
+
+// Stagger children inside fade-up containers
+const staggerContainers = document.querySelectorAll('.bento,.persona-row,.social-feed,.how-grid,.b2b-plans,.b2b-metrics,.indiv-stats-grid');
+const so = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      Array.from(e.target.children).forEach((child, i) => {
+        child.style.opacity = '0';
+        child.style.transform = 'translateY(18px)';
+        child.style.transition = 'opacity .5s ease, transform .5s ease';
+        setTimeout(() => {
+          child.style.opacity = '1';
+          child.style.transform = 'translateY(0)';
+        }, i * 70);
+      });
+      so.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+staggerContainers.forEach(c => so.observe(c));
+
+// ── Nav on scroll ──
+window.addEventListener('scroll', () => {
+  document.querySelector('nav').style.borderBottomColor =
+    scrollY > 60 ? 'rgba(255,255,255,.1)' : 'rgba(255,255,255,.07)';
+});
+
+// ── Mobile menu ──
+let menuOpen = false;
+function toggleMobileMenu() {
+  menuOpen = !menuOpen;
+  const existing = document.getElementById('mobile-menu');
+  if (menuOpen) {
+    const m = document.createElement('div');
+    m.id = 'mobile-menu';
+    m.style.cssText = 'position:fixed;top:68px;left:0;right:0;background:rgba(7,7,15,.98);backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,.07);padding:20px 24px;z-index:998;display:flex;flex-direction:column;gap:0';
+    m.innerHTML = `
+      <div style="display:flex;gap:8px;margin-bottom:16px">
+        <button onclick="switchPanel('individual',document.querySelectorAll('.nav-tab')[0]);toggleMobileMenu()" style="flex:1;padding:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#f0eef8;font-family:'Outfit',sans-serif;font-size:.85rem;cursor:pointer">For Individuals</button>
+        <button onclick="switchPanel('b2b',document.querySelectorAll('.nav-tab')[1]);toggleMobileMenu()" style="flex:1;padding:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#f0eef8;font-family:'Outfit',sans-serif;font-size:.85rem;cursor:pointer">For Companies</button>
+      </div>
+      ${['Territory','Rewards','Download'].map(l => `<a href="#${l.toLowerCase()}" onclick="toggleMobileMenu()" style="color:#9995b8;text-decoration:none;font-size:.9rem;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05)">${l}</a>`).join('')}`;
+    document.body.appendChild(m);
+  } else {
+    existing && existing.remove();
+  }
+}
+
+// ── Smooth scroll for anchors ──
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href^="#"]');
+  if (!a) return;
+  const t = document.querySelector(a.getAttribute('href'));
+  if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+});
+
+// ── B2B form submit ──
+function submitB2B(btn) {
+  const originalText = btn.textContent;
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = '✓ Request Received!';
+    btn.style.background = 'var(--lime)';
+    btn.style.color = '#020208';
+    setTimeout(() => {
+      btn.textContent = originalText;
+      btn.disabled = false;
+      btn.style.background = 'var(--blue)';
+      btn.style.color = '#020208';
+    }, 3000);
+  }, 1200);
+}
+
+// ── Metric bar animation ──
+const bars = document.querySelectorAll('.bm-bar-fill');
+const bo = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const width = e.target.style.width;
+      e.target.style.width = '0';
+      setTimeout(() => { e.target.style.width = width; }, 200);
+      bo.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+bars.forEach(b => bo.observe(b));
+</script>
+</body>
+</html>
