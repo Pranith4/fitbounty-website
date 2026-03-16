@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="description" content="FitBounty — India's competitive fitness app. Win Decathlon vouchers, Nike gear, and fitness accessories by challenging friends, capturing territory, and crushing your goals.">
 <title>FitBounty — Win Gear. Claim Territory. Crush Your Goals.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -305,9 +307,7 @@ footer{padding:48px clamp(16px,5vw,80px) 40px;border-top:1px solid var(--brd);po
   .dl-store{width:100%;max-width:300px;justify-content:center}
 }
 
-/* ACTIVE TAB PANELS */
-#panel-individual{display:block}
-#panel-b2b{display:none}
+/* panels controlled by .panel.active class and JS */
 </style>
 </head>
 <body>
@@ -981,11 +981,22 @@ footer{padding:48px clamp(16px,5vw,80px) 40px;border-top:1px solid var(--brd);po
 <script>
 // ── Panel switching ──
 function switchPanel(panel, btn) {
-  document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
-  document.getElementById('panel-' + panel).style.display = 'block';
+  document.querySelectorAll('.panel').forEach(p => {
+    p.classList.remove('active');
+    p.style.display = '';
+  });
+  const target = document.getElementById('panel-' + panel);
+  target.classList.add('active');
   document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+  if(btn) btn.classList.add('active');
   window.scrollTo({ top: 0, behavior: 'instant' });
+  // Re-trigger reveal animations on new panel
+  setTimeout(() => {
+    target.querySelectorAll('.fade-up').forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if(rect.top < window.innerHeight * 1.1) el.classList.add('vis');
+    });
+  }, 50);
 }
 
 // ── Scroll reveal ──
@@ -1038,8 +1049,8 @@ function toggleMobileMenu() {
     m.style.cssText = 'position:fixed;top:68px;left:0;right:0;background:rgba(7,7,15,.98);backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,.07);padding:20px 24px;z-index:998;display:flex;flex-direction:column;gap:0';
     m.innerHTML = `
       <div style="display:flex;gap:8px;margin-bottom:16px">
-        <button onclick="switchPanel('individual',document.querySelectorAll('.nav-tab')[0]);toggleMobileMenu()" style="flex:1;padding:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#f0eef8;font-family:'Outfit',sans-serif;font-size:.85rem;cursor:pointer">For Individuals</button>
-        <button onclick="switchPanel('b2b',document.querySelectorAll('.nav-tab')[1]);toggleMobileMenu()" style="flex:1;padding:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#f0eef8;font-family:'Outfit',sans-serif;font-size:.85rem;cursor:pointer">For Companies</button>
+        <button onclick="switchPanel('individual',null);toggleMobileMenu()" style="flex:1;padding:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#f0eef8;font-family:'Outfit',sans-serif;font-size:.85rem;cursor:pointer">For Individuals</button>
+        <button onclick="switchPanel('b2b',null);toggleMobileMenu()" style="flex:1;padding:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#f0eef8;font-family:'Outfit',sans-serif;font-size:.85rem;cursor:pointer">For Companies</button>
       </div>
       ${['Territory','Rewards','Download'].map(l => `<a href="#${l.toLowerCase()}" onclick="toggleMobileMenu()" style="color:#9995b8;text-decoration:none;font-size:.9rem;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05)">${l}</a>`).join('')}`;
     document.body.appendChild(m);
