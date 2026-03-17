@@ -22,38 +22,35 @@
 html{scroll-behavior:smooth;overflow-x:hidden}
 body{background:var(--bg);color:var(--text);font-family:var(--fb);-webkit-font-smoothing:antialiased;overflow-x:hidden}
 
-/* 3D BG */
-#bgCanvas{position:fixed;inset:0;z-index:-1;opacity:.35}
+/* 3D BACKGROUND — behind content */
+#bgCanvas{position:fixed;inset:0;z-index:-1;opacity:.25;pointer-events:none}
 
 /* NAV */
-nav{position:fixed;top:0;inset-x:0;z-index:900;height:60px;display:flex;align-items:center;padding:0 clamp(16px,4vw,64px);gap:16px;background:rgba(8,8,15,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--brd);transition:border-color.3s}
+nav{position:fixed;top:0;left:0;right:0;z-index:900;height:60px;display:flex;align-items:center;padding:0 clamp(16px,4vw,64px);gap:16px;background:rgba(8,8,15,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--brd)}
 .nav-logo{display:flex;align-items:center;gap:9px;text-decoration:none;margin-right:auto}
 .nav-mark{width:30px;height:30px;background:#0a0a18;border:1.5px solid rgba(240,165,0,.3);border-radius:8px;display:grid;place-items:center;flex-shrink:0}
 .nav-brand{font-family:var(--fh);font-size:1.4rem;letter-spacing:3px;color:var(--gold)}
 .nav-links{display:flex;gap:24px}
 .nav-links a{color:var(--t2);text-decoration:none;font-size:.83rem;font-weight:500;transition:color.18s;white-space:nowrap}
 .nav-links a:hover{color:var(--text)}
-.nav-cta{background:var(--gold);color:#000;padding:8px 18px;border-radius:var(--r);font-weight:700;text-decoration:none;box-shadow:0 0 20px rgba(240,165,0,.25);transition:transform.2s}
-.nav-cta:hover{transform:translateY(-2px)}
+.nav-cta{background:var(--gold);color:#000;padding:8px 18px;border-radius:var(--r);font-weight:700;text-decoration:none}
 
 /* PANELS */
-.panel{display:none;opacity:0;transition:opacity.4s}
-.panel.on{display:block;opacity:1}
+.panel{display:none}
+.panel.on{display:block}
 
 /* HERO */
-.hero{position:relative;min-height:100vh;display:grid;place-items:center;padding:120px 20px 80px;text-align:center;overflow:hidden}
+.hero{position:relative;min-height:100vh;display:grid;place-items:center;padding:120px 20px 80px;text-align:center}
 .hero-glow{position:absolute;inset:-40%;background:radial-gradient(600px 400px at 50% 30%,rgba(155,109,255,.25),transparent 60%);pointer-events:none;animation:pulse 6s ease-in-out infinite}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
 .hero-h1{font-family:var(--fh);font-size:clamp(2.8rem,9vw,7.2rem);line-height:.88;letter-spacing:-.5px}
-.hero-h1.static{display:block;color:var(--text)}
-.hero-h1.rotating-wrap{position:relative;display:inline-block;height:1em}
-.hero-h1.rword{position:absolute;inset:0;opacity:0;transform:translateY(100%);transition:all.6s ease}
-.hero-h1.rword.state-active{opacity:1;transform:translateY(0);color:var(--gold)}
+.rotating-wrap{position:relative;display:inline-block;height:1em}
+.rword{position:absolute;inset:0;opacity:0;transform:translateY(100%);transition:all.6s ease}
+.rword.state-active{opacity:1;transform:translateY(0);color:var(--gold)}
 .hero-sub{color:var(--t2);font-size:1rem;margin:18px auto 28px;max-width:560px}
 .hero-form{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .hero-input{padding:12px 16px;border-radius:var(--r);border:1px solid var(--brd);background:var(--s2);color:var(--text);min-width:260px}
-.hero-btn{background:var(--gold);color:#000;padding:12px 22px;border-radius:var(--r);font-weight:700;border:none;cursor:pointer;transition:transform.2s}
-.hero-btn:hover{transform:translateY(-2px) scale(1.03)}
+.hero-btn{background:var(--gold);color:#000;padding:12px 22px;border-radius:var(--r);font-weight:700;border:none;cursor:pointer}
 .hero-stats{display:flex;gap:32px;justify-content:center;margin-top:24px;flex-wrap:wrap}
 .hs{text-align:center}
 .hs-v{font-family:var(--fh);font-size:1.6rem;color:var(--blue)}
@@ -64,8 +61,8 @@ nav{position:fixed;top:0;inset-x:0;z-index:900;height:60px;display:flex;align-it
 .sec-h{font-family:var(--fh);font-size:clamp(1.8rem,4vw,3rem);text-align:center}
 .marquee-wrap{overflow:hidden;padding:24px 0}
 .marquee-track{display:flex;gap:16px;animation:scroll 45s linear infinite}
-.rchip{min-width:220px;background:rgba(18,18,32,.6);border:1px solid var(--brd);border-radius:var(--r);padding:16px;display:flex;gap:12px;align-items:center;backdrop-filter:blur(12px);transition:transform.3s,box-shadow.3s;transform-style:preserve-3d}
-.rchip:hover{transform:perspective(700px) rotateY(8deg) rotateX(4deg);box-shadow:0 20px 40px rgba(59,158,255,.25)}
+.rchip{min-width:220px;background:rgba(18,18,32,.6);border:1px solid var(--brd);border-radius:var(--r);padding:16px;display:flex;gap:12px;align-items:center;backdrop-filter:blur(12px);transition:transform.3s}
+.rchip:hover{transform:perspective(700px) rotateY(8deg) rotateX(4deg)}
 .rc-ico{font-size:1.5rem}
 .rc-brand{font-weight:600}
 .rc-type{font-size:.8rem;color:var(--t2)}
@@ -74,20 +71,18 @@ nav{position:fixed;top:0;inset-x:0;z-index:900;height:60px;display:flex;align-it
 /* TERRITORY */
 .terr{padding:80px 20px}
 .terr-inner{display:grid;grid-template-columns:1.1fr.9fr;gap:32px;align-items:center}
-.terr-map{height:360px;border-radius:var(--r);overflow:hidden;border:1px solid var(--brd);box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.terr-map{height:360px;border-radius:var(--r);overflow:hidden;border:1px solid var(--brd)}
 
 /* TESTIMONIALS */
 .testimonials{padding:80px 20px}
 .testi-head{text-align:center;margin-bottom:32px}
 .testi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
-.testi-card{background:rgba(18,18,32,.6);border:1px solid var(--brd);border-radius:var(--r);padding:20px;backdrop-filter:blur(12px);transition:transform.3s}
-.testi-card:hover{transform:perspective(700px) rotateY(-6deg)}
+.testi-card{background:rgba(18,18,32,.6);border:1px solid var(--brd);border-radius:var(--r);padding:20px}
 
 /* B2B */
 .b2b-inner{padding:80px 20px;display:grid;grid-template-columns:1.1fr.9fr;gap:32px;align-items:center}
 .b2b-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
-.bm{background:rgba(18,18,32,.6);border:1px solid var(--brd);border-radius:var(--r);padding:18px;text-align:center;transition:transform.3s}
-.bm:hover{transform:perspective(700px) rotateX(6deg)}
+.bm{background:rgba(18,18,32,.6);border:1px solid var(--brd);border-radius:var(--r);padding:18px;text-align:center}
 .bm-n{font-size:2rem;font-weight:700}
 .bm-l{color:var(--t2);font-size:.9rem}
 .bm-bar{height:6px;background:rgba(255,255,255,.08);border-radius:4px;margin-top:10px;overflow:hidden}
@@ -95,12 +90,11 @@ nav{position:fixed;top:0;inset-x:0;z-index:900;height:60px;display:flex;align-it
 
 /* B2B FORM */
 .b2b-form-wrap{padding:80px 20px}
-.form-card{max-width:520px;margin:0 auto;background:rgba(18,18,32,.6);border:1px solid var(--brd);border-radius:var(--r);padding:28px;backdrop-filter:blur(14px)}
+.form-card{max-width:520px;margin:0 auto;background:rgba(18,18,32,.6);border:1px solid var(--brd);border-radius:var(--r);padding:28px}
 .field{margin-bottom:16px}
 .field label{display:block;font-size:.85rem;color:var(--t2);margin-bottom:6px}
 .field input,.field select{width:100%;padding:12px;border-radius:var(--r);border:1px solid var(--brd);background:var(--s2);color:var(--text)}
-.submit-btn{width:100%;padding:14px;background:var(--blue);color:#000;border:none;border-radius:var(--r);font-weight:700;cursor:pointer;transition:transform.2s}
-.submit-btn:hover{transform:translateY(-2px)}
+.submit-btn{width:100%;padding:14px;background:var(--blue);color:#000;border:none;border-radius:var(--r);font-weight:700;cursor:pointer}
 
 /* FOOTER */
 footer{padding:40px 20px;border-top:1px solid var(--brd)}
@@ -153,9 +147,9 @@ footer{padding:40px 20px;border-top:1px solid var(--brd)}
         <span class="static">THE APP THAT MAKES YOU</span>
         <span class="rotating-wrap" id="rw">
           <span class="rword state-active">ACCOUNTABLE.</span>
-          <span class="rword state-above">COMPETITIVE.</span>
-          <span class="rword state-above">SHOW UP.</span>
-          <span class="rword state-above">ACTUALLY WIN.</span>
+          <span class="rword">COMPETITIVE.</span>
+          <span class="rword">SHOW UP.</span>
+          <span class="rword">ACTUALLY WIN.</span>
         </span>
       </h1>
       <p class="hero-sub">Weekly weight contests with your friends. Public leaderboard. Real gear prizes. Social pressure finally working <em>for</em> you.</p>
@@ -298,7 +292,7 @@ const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('bgCanvas
 renderer.setSize(innerWidth,innerHeight);
 camera.position.z=5;
 const particlesGeo=new THREE.BufferGeometry();
-const count=2000;
+const count=1500;
 const pos=new Float32Array(count*3);
 for(let i=0;i<count*3;i++)pos[i]=(Math.random()-0.5)*10;
 particlesGeo.setAttribute('position',new THREE.BufferAttribute(pos,'3'));
@@ -309,14 +303,23 @@ animate();
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 
 /* PANEL SWITCH */
-function switchPanel(id,btn){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));document.getElementById(id).classList.add('on');document.querySelectorAll('.npill').forEach(b=>b.classList.remove('on'));if(btn)btn.classList.add('on');window.scrollTo({top:0,behavior:'instant'});if(id==='b2b')animateBars();}
+function switchPanel(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  document.querySelectorAll('.npill').forEach(b=>b.classList.remove('on'));
+  if(btn)btn.classList.add('on');
+  window.scrollTo({top:0,behavior:'instant'});
+  if(id==='b2b')animateBars();
+}
 
 /* SCROLL REVEAL */
-const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')})},{threshold:.2});
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')})
+},{threshold:.2});
 document.querySelectorAll('.fu').forEach(el=>obs.observe(el));
 
-/* 3D TILT ON CARDS */
-document.querySelectorAll('.rchip,.testi-card,.bm').forEach(card=>{
+/* 3D TILT ON CHIPS */
+document.querySelectorAll('.rchip').forEach(card=>{
   card.addEventListener('mousemove',e=>{
     const rect=card.getBoundingClientRect();
     const x=e.clientX-rect.left-rect.width/2;
@@ -327,18 +330,30 @@ document.querySelectorAll('.rchip,.testi-card,.bm').forEach(card=>{
 });
 
 /* ANIMATE BARS */
-function animateBars(){document.querySelectorAll('.bm-fill').forEach(bar=>{bar.style.width=bar.dataset.w+'%'})}
+function animateBars(){
+  document.querySelectorAll('.bm-fill').forEach(bar=>{
+    bar.style.width=bar.dataset.w+'%'
+  })
+}
 
 /* ROTATING HERO WORDS */
-let ridx=0;setInterval(()=>{const words=document.querySelectorAll('#rw.rword');words[ridx].classList.remove('state-active');words[ridx].classList.add('state-above');ridx=(ridx+1)%words.length;words[ridx].classList.remove('state-above');words[ridx].classList.add('state-active');},2200);
-
-/* MAP INIT (kept from your original) */
-function initTerritoryMap(){/* your existing map code */}
+let ridx=0;
+setInterval(()=>{
+  const words=document.querySelectorAll('#rw.rword');
+  words[ridx].classList.remove('state-active');
+  ridx=(ridx+1)%words.length;
+  words[ridx].classList.add('state-active');
+},2200);
 
 /* PLACEHOLDERS */
 function joinWaitlist(){document.getElementById('hero-confirm').style.display='block'}
 function submitForm(btn){btn.textContent='REQUEST SENT ✓';btn.disabled=true}
 function scrollToId(id){document.getElementById(id).scrollIntoView({behavior:'smooth'})}
+
+/* MAP (your original) */
+function initTerritoryMap(){
+  // your Leaflet map code stays here
+}
 </script>
 </body>
 </html>
