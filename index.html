@@ -3,68 +3,176 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FitBounty — The fitness app with consequences.</title>
+<title>FitBounty</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: #0b0f1a;
+  color: white;
+}
+
+/* NAV */
+nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 30px;
+}
+
+.logo {
+  font-family: 'Bebas Neue';
+  font-size: 28px;
+  letter-spacing: 2px;
+}
+
+.cta {
+  background: gold;
+  color: black;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* HERO */
+.hero {
+  text-align: center;
+  padding: 120px 20px;
+  position: relative;
+}
+
+.hero h1 {
+  font-family: 'Bebas Neue';
+  font-size: 70px;
+  line-height: 1;
+}
+
+.highlight {
+  color: gold;
+}
+
+.hero p {
+  color: #aaa;
+  margin-top: 10px;
+}
+
+/* INPUT */
+.hero-form {
+  margin-top: 30px;
+}
+
+input {
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  width: 250px;
+}
+
+button {
+  padding: 12px 20px;
+  margin-left: 10px;
+  background: #00ffcc;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* STATS */
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  margin-top: 60px;
+}
+
+.stats h2 {
+  font-size: 32px;
+}
+
+/* SECTION */
+.section {
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.card {
+  background: #121826;
+  padding: 20px;
+  border-radius: 15px;
+  margin: 20px auto;
+  max-width: 400px;
+}
+
+/* ANIMATION */
+.fade {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: 0.6s;
+}
+
+.fade.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
 </head>
 
 <body>
 
-<!-- NAV -->
 <nav>
   <div class="logo">FITBOUNTY</div>
-  <a class="cta">GET EARLY ACCESS</a>
+  <div class="cta">GET EARLY ACCESS</div>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
-  <div class="hero-glow"></div>
-
-  <h1 class="hero-title">
-    THE APP THAT MAKES YOU<br>
+  <h1>
+    THE APP THAT MAKES YOU <br>
     <span class="highlight">ACCOUNTABLE.</span>
   </h1>
 
-  <p class="hero-sub">
-    Compete. Stay consistent. Win rewards.
-  </p>
+  <p>Compete. Stay consistent. Win rewards.</p>
 
   <div class="hero-form">
     <input placeholder="Enter email">
-    <button class="hero-btn">JOIN WAITLIST</button>
+    <button>JOIN WAITLIST</button>
   </div>
 
   <div class="stats">
-    <div><h2 class="counter">340</h2><p>Users</p></div>
-    <div><h2 class="counter">4.8</h2><p>% Loss</p></div>
-    <div><h2 class="counter">83</h2><p>% Retention</p></div>
+    <div><h2>340+</h2><p>Users</p></div>
+    <div><h2>4.8%</h2><p>Avg Loss</p></div>
+    <div><h2>83%</h2><p>Retention</p></div>
   </div>
 </section>
 
-<!-- HOW -->
-<section class="how fu">
+<section class="section fade">
   <h2>How it works</h2>
-
-  <div class="steps">
-    <div class="step">Create challenge</div>
-    <div class="step">Track progress</div>
-    <div class="step">Win rewards</div>
-  </div>
+  <div class="card">Create challenge</div>
+  <div class="card">Track progress</div>
+  <div class="card">Win rewards</div>
 </section>
 
-<!-- LEADERBOARD -->
-<section class="leaderboard fu">
+<section class="section fade">
   <h2>Live Leaderboard</h2>
-
-  <div class="card">
-    <div>#1 Pranith -4.2%</div>
-    <div>#2 Shreyas -3.8%</div>
-    <div>#3 Kishen -3.1%</div>
-  </div>
+  <div class="card">#1 Pranith -4.2%</div>
+  <div class="card">#2 Shreyas -3.8%</div>
+  <div class="card">#3 Kishen -3.1%</div>
 </section>
 
-<script src="script.js"></script>
+<script>
+// scroll animation
+const fades = document.querySelectorAll('.fade');
+
+window.addEventListener('scroll', () => {
+  fades.forEach(el => {
+    const top = el.getBoundingClientRect().top;
+    if (top < window.innerHeight - 100) {
+      el.classList.add('show');
+    }
+  });
+});
+</script>
 
 </body>
 </html>
