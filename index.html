@@ -2,177 +2,876 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FitBounty</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FitBounty — Compete. Win Real. Own the Board.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
 <style>
-body {
-  margin: 0;
-  font-family: 'Inter', sans-serif;
-  background: #0b0f1a;
-  color: white;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#030309;--s1:#07071A;--s2:#0B0B20;--s3:#101028;
+  --brd:rgba(255,255,255,.055);--brd2:rgba(255,255,255,.1);
+  --gold:#F5A623;--gold2:#FFB84D;--lime:#00E87A;--red:#FF4444;--indigo:#6B7FFF;--rose:#FF6B9D;
+  --text:#F0EDF8;--t2:#7775A8;--t3:#38365C;
+  --fh:'Syne',sans-serif;--fb:'DM Sans',sans-serif;--fm:'DM Mono',monospace;
+  --r:10px;--rl:16px;--rxl:22px;
 }
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);-webkit-font-smoothing:antialiased;overflow-x:hidden;cursor:none}
 
-/* NAV */
-nav {
-  display: flex;
-  justify-content: space-between;
-  padding: 20px 30px;
-}
+/* ── CURSOR ── */
+#cur{position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s;mix-blend-mode:difference}
+#cur-r{position:fixed;width:36px;height:36px;border:1.5px solid rgba(245,166,35,.28);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .3s,height .3s,opacity .3s}
+.curbig #cur{width:20px;height:20px}
+.curbig #cur-r{width:56px;height:56px;opacity:.45}
 
-.logo {
-  font-family: 'Bebas Neue';
-  font-size: 28px;
-  letter-spacing: 2px;
-}
+/* ── NOISE ── */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
 
-.cta {
-  background: gold;
-  color: black;
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-}
+/* ── NAV ── */
+nav{position:fixed;top:0;inset-x:0;z-index:800;height:62px;display:flex;align-items:center;padding:0 clamp(16px,4vw,60px);gap:24px;border-bottom:1px solid transparent;transition:all .4s}
+nav.s{background:rgba(3,3,9,.93);backdrop-filter:blur(22px);border-color:var(--brd)}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none;margin-right:auto}
+.logo-m{width:30px;height:30px;background:var(--gold);border-radius:8px;display:grid;place-items:center;font-family:var(--fh);font-size:1rem;color:#030309;font-weight:800}
+.logo-t{font-family:var(--fh);font-size:1rem;font-weight:800;letter-spacing:.5px}
+.nav-l{display:flex;gap:26px}
+.nav-l a{color:var(--t2);text-decoration:none;font-size:.8rem;font-weight:500;transition:color .18s}
+.nav-l a:hover{color:var(--text)}
+.nav-btns{display:flex;gap:8px;align-items:center}
+.nbtn{padding:7px 16px;background:transparent;border:1.5px solid var(--brd2);border-radius:100px;font-family:var(--fh);font-size:.75rem;font-weight:700;color:var(--t2);cursor:none;transition:all .2s;text-decoration:none;white-space:nowrap}
+.nbtn:hover{border-color:rgba(245,166,35,.35);color:var(--text)}
+.nbtn-p{padding:8px 20px;background:var(--gold);border:none;border-radius:100px;font-family:var(--fh);font-size:.8rem;font-weight:700;color:#030309;cursor:none;transition:all .22s;letter-spacing:.3px;text-decoration:none;white-space:nowrap}
+.nbtn-p:hover{background:var(--gold2);transform:scale(1.04)}
+@media(max-width:780px){.nav-l{display:none}.nbtn{display:none}}
 
-/* HERO */
-.hero {
-  text-align: center;
-  padding: 120px 20px;
-  position: relative;
-}
+/* ── KEYFRAMES ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,232,122,.5)}60%{opacity:.5;box-shadow:0 0 0 8px rgba(0,232,122,0)}}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes ldot{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(15px)}}
+@keyframes rotIn{from{opacity:0;transform:rotate(-8deg) translateY(-120px)}to{opacity:1;transform:rotate(var(--rot,0deg)) translateY(0)}}
+@keyframes ulIn{to{transform:scaleX(1)}}
+@keyframes colUp{from{transform:translateY(0)}to{transform:translateY(-50%)}}
 
-.hero h1 {
-  font-family: 'Bebas Neue';
-  font-size: 70px;
-  line-height: 1;
-}
+.fu{opacity:0;transform:translateY(34px);transition:opacity .65s cubic-bezier(.22,1,.36,1),transform .65s cubic-bezier(.22,1,.36,1)}
+.fu.v{opacity:1;transform:none}
+.d1{transition-delay:.08s}.d2{transition-delay:.18s}.d3{transition-delay:.28s}.d4{transition-delay:.38s}.d5{transition-delay:.48s}
 
-.highlight {
-  color: gold;
-}
+/* ── SHARED ── */
+.sec{padding:clamp(72px,9vw,120px) clamp(16px,5vw,72px);position:relative}
+.ey{font-size:.62rem;font-weight:700;letter-spacing:3.5px;text-transform:uppercase;display:block;margin-bottom:14px}
+.sh{font-family:var(--fh);font-size:clamp(2.2rem,5vw,4.6rem);line-height:.9;font-weight:800;margin-bottom:16px}
+.sp{font-size:clamp(.86rem,1.5vw,.98rem);color:var(--t2);line-height:1.85}
+.btn-p{padding:13px 28px;background:var(--gold);border:none;border-radius:100px;font-family:var(--fh);font-size:.9rem;font-weight:700;color:#030309;cursor:none;transition:all .26s;letter-spacing:.3px;white-space:nowrap}
+.btn-p:hover{background:var(--gold2);transform:translateY(-3px);box-shadow:0 12px 36px rgba(245,166,35,.28)}
+.btn-g{padding:13px 28px;background:transparent;border:1.5px solid var(--brd2);border-radius:100px;font-family:var(--fh);font-size:.9rem;font-weight:700;color:var(--t2);cursor:none;transition:all .26s}
+.btn-g:hover{border-color:rgba(245,166,35,.4);color:var(--text);transform:translateY(-3px)}
 
-.hero p {
-  color: #aaa;
-  margin-top: 10px;
-}
+/* ════════════════════════════════════
+   HERO — Geometric floating shapes
+   (from HeroGeometric component)
+════════════════════════════════════ */
+.hero{min-height:100svh;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;background:#030309;padding:80px clamp(16px,5vw,60px) 60px}
+.hero-bg-grad{position:absolute;inset:0;background:linear-gradient(135deg,rgba(107,127,255,.05) 0%,transparent 50%,rgba(255,107,157,.04) 100%);pointer-events:none}
+.hero-shapes{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+/* Each shape is a floating pill/ellipse */
+.hs{position:absolute;border-radius:9999px;border:2px solid rgba(255,255,255,.12);backdrop-filter:blur(2px)}
+.hs::after{content:'';position:absolute;inset:0;border-radius:9999px;background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.18),transparent 70%)}
+.hs1{width:600px;height:140px;top:18%;left:-8%;--rot:12deg;animation:rotIn 2.4s .3s cubic-bezier(.23,.86,.39,.96) both,float 12s 2.7s ease-in-out infinite;background:linear-gradient(to right,rgba(107,127,255,.14),transparent)}
+.hs2{width:500px;height:115px;top:72%;right:-4%;--rot:-14deg;animation:rotIn 2.4s .5s cubic-bezier(.23,.86,.39,.96) both,float 14s 2.9s ease-in-out infinite;animation-direction:normal,alternate;background:linear-gradient(to right,rgba(255,107,157,.13),transparent)}
+.hs3{width:300px;height:75px;bottom:8%;left:8%;--rot:-7deg;animation:rotIn 2.4s .4s cubic-bezier(.23,.86,.39,.96) both,float 11s 2.8s ease-in-out infinite;background:linear-gradient(to right,rgba(155,109,255,.13),transparent)}
+.hs4{width:200px;height:56px;top:12%;right:18%;--rot:20deg;animation:rotIn 2.4s .6s cubic-bezier(.23,.86,.39,.96) both,float 10s 3.0s ease-in-out infinite;background:linear-gradient(to right,rgba(245,166,35,.12),transparent)}
+.hs5{width:150px;height:40px;top:7%;left:24%;--rot:-24deg;animation:rotIn 2.4s .7s cubic-bezier(.23,.86,.39,.96) both,float 13s 3.1s ease-in-out infinite;background:linear-gradient(to right,rgba(0,232,122,.1),transparent)}
+.hero-fade-t{position:absolute;top:0;left:0;right:0;height:120px;background:linear-gradient(to bottom,#030309,transparent);pointer-events:none}
+.hero-fade-b{position:absolute;bottom:0;left:0;right:0;height:180px;background:linear-gradient(to top,#030309,transparent);pointer-events:none}
+/* Hero content */
+.hero-inner{position:relative;z-index:2;max-width:800px}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:100px;padding:6px 16px;font-size:.68rem;font-weight:600;letter-spacing:1.5px;color:rgba(255,255,255,.6);margin-bottom:32px;text-transform:uppercase;animation:fadeUp .65s .5s both}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--rose);display:inline-block}
+h1.hh{font-family:var(--fh);font-size:clamp(3rem,10.5vw,9rem);line-height:.86;letter-spacing:-2px;font-weight:800;animation:fadeUp .8s .7s both}
+h1.hh .line2{display:block;background:linear-gradient(to right,rgba(107,127,255,.9),rgba(255,255,255,.9) 50%,rgba(255,107,157,.85));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+h1.hh .line3{display:block;color:var(--gold);position:relative}
+h1.hh .line3::after{content:'';position:absolute;bottom:-4px;left:50%;transform:translateX(-50%) scaleX(0);width:60%;height:3px;background:var(--gold);border-radius:2px;animation:ulIn .55s 1.6s forwards;transform-origin:center}
+.hero-sub{font-size:clamp(.92rem,1.7vw,1.1rem);color:rgba(255,255,255,.4);line-height:1.85;max-width:480px;margin:28px auto 36px;font-weight:400;letter-spacing:.2px;animation:fadeUp .8s .9s both}
+.hero-ctas{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;animation:fadeUp .8s 1.05s both}
+.scroll-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:5px;animation:fadeUp .6s 1.6s both;z-index:2}
+.scroll-hint-line{width:1px;height:36px;background:linear-gradient(to bottom,rgba(255,255,255,.18),transparent)}
+.scroll-hint-lbl{font-size:.58rem;letter-spacing:3px;color:var(--t3);text-transform:uppercase}
 
-/* INPUT */
-.hero-form {
-  margin-top: 30px;
-}
+/* ── PROBLEM STRIP ── */
+.prob{background:var(--gold);padding:12px 0;overflow:hidden}
+.prob-t{display:flex;animation:mq 26s linear infinite;width:max-content}
+.prob-i{display:flex;align-items:center;gap:14px;padding:0 28px;font-family:var(--fh);font-size:.8rem;letter-spacing:.8px;color:#030309;font-weight:700;white-space:nowrap}
+.prob-sep{width:4px;height:4px;border-radius:50%;background:#030309;opacity:.3}
 
-input {
-  padding: 12px;
-  border-radius: 8px;
-  border: none;
-  width: 250px;
-}
+/* ── LEADERBOARD SECTION ── */
+.lboard{background:var(--s1);border-top:1px solid var(--brd)}
+.lb-in{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:clamp(36px,6vw,80px);align-items:center}
+@media(max-width:860px){.lb-in{grid-template-columns:1fr}}
+.lb-wrap{perspective:1100px}
+.lb-card{border-radius:var(--rxl);overflow:hidden;background:var(--s2);border:1px solid var(--brd2);transform:rotateY(-14deg) rotateX(5deg);transform-style:preserve-3d;transition:transform .55s cubic-bezier(.22,1,.36,1);box-shadow:-24px 24px 80px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.04),0 0 80px rgba(107,127,255,.04)}
+.lb-wrap:hover .lb-card{transform:rotateY(-2deg) rotateX(1deg)}
+.lb-hd{background:var(--bg);padding:11px 17px;border-bottom:1px solid var(--brd);display:flex;justify-content:space-between;align-items:center}
+.lb-hd-t{font-family:var(--fm);font-size:.6rem;color:var(--t2);letter-spacing:2px;text-transform:uppercase}
+.lb-live{font-family:var(--fm);font-size:.6rem;color:var(--lime);display:flex;align-items:center;gap:5px}
+.lb-ld{width:5px;height:5px;border-radius:50%;background:var(--lime);animation:ldot 1.8s infinite}
+.lbr{display:flex;align-items:center;gap:11px;padding:11px 17px;border-bottom:1px solid var(--brd);position:relative}
+.lbr::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:0 2px 2px 0}
+.lbr.g1::before{background:linear-gradient(to bottom,#F5A623,#C87800)}
+.lbr.g2::before{background:linear-gradient(to bottom,#888,#444)}
+.lbr.g3::before{background:linear-gradient(to bottom,#9B6DFF,#5B1DDF)}
+.lbr-rk{font-family:var(--fh);font-size:1rem;width:24px;text-align:center;font-weight:800;flex-shrink:0}
+.lbr-av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-family:var(--fh);font-size:.8rem;font-weight:800;color:#fff;flex-shrink:0}
+.lbr-inf{flex:1;min-width:0}
+.lbr-nm{font-size:.81rem;font-weight:600;display:flex;align-items:center;gap:5px}
+.lbr-sk{font-size:.58rem;font-weight:700;background:rgba(245,166,35,.1);color:var(--gold);border-radius:3px;padding:1px 5px}
+.lbr-mt{font-size:.6rem;color:var(--t3);margin-top:2px}
+.lbr-pct{font-family:var(--fm);font-size:.83rem;font-weight:700;flex-shrink:0}
+.lb-bar{padding:2px 17px 9px}
+.lb-bar-bg{height:3px;background:var(--brd);border-radius:2px;overflow:hidden}
+.lb-bar-f{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--lime),#00A858)}
+.lb-alert{margin:0 14px 12px;background:rgba(255,68,68,.05);border:1px solid rgba(255,68,68,.12);border-radius:var(--r);padding:9px 12px;font-size:.7rem;color:var(--red);display:flex;align-items:center;gap:7px}
+.lb-foot{padding:10px 17px;background:rgba(0,232,122,.04);border-top:1px solid rgba(0,232,122,.08);display:flex;justify-content:space-between;align-items:center;font-size:.68rem;color:var(--t2)}
+.lb-foot-cta{font-family:var(--fh);font-size:.66rem;font-weight:700;color:var(--gold);background:rgba(245,166,35,.1);padding:4px 11px;border-radius:100px}
 
-button {
-  padding: 12px 20px;
-  margin-left: 10px;
-  background: #00ffcc;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
+/* ══════════════════════════════
+   FEATURE STEPS (from component)
+   Left: animated steps, Right: cycling image
+══════════════════════════════ */
+.features{background:var(--bg);border-top:1px solid var(--brd)}
+.feat-in{max-width:1120px;margin:0 auto}
+.feat-h{text-align:center;margin-bottom:56px}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,5vw,72px);align-items:center}
+@media(max-width:760px){.feat-grid{grid-template-columns:1fr}}
+/* Left steps */
+.feat-steps{display:flex;flex-direction:column;gap:0}
+.fstep{display:flex;gap:18px;padding:22px 0;cursor:pointer;border-bottom:1px solid var(--brd);transition:opacity .35s}
+.fstep:last-child{border-bottom:none}
+.fstep.inactive{opacity:.3}
+.fstep-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+.fstep-dot{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-family:var(--fh);font-size:.85rem;transition:all .32s;flex-shrink:0}
+.fstep.active .fstep-dot{background:var(--gold);color:#030309;transform:scale(1.1)}
+.fstep.inactive .fstep-dot{background:var(--s3);border:1.5px solid var(--brd2);color:var(--t2)}
+.fstep.done .fstep-dot{background:rgba(0,232,122,.14);border:1.5px solid var(--lime);color:var(--lime)}
+.fstep-track{width:2px;flex:1;background:var(--brd);margin-top:6px;overflow:hidden;min-height:16px;border-radius:2px}
+.fstep-fill{width:100%;height:0%;background:var(--gold);border-radius:2px;transition:height .1s linear}
+.fstep.done .fstep-fill{height:100%;background:var(--lime)}
+.fstep-body{padding-top:2px}
+.fstep-num{font-size:.6rem;font-weight:700;letter-spacing:2.5px;color:var(--t3);text-transform:uppercase;margin-bottom:4px}
+.fstep.active .fstep-num{color:var(--gold)}
+.fstep-title{font-family:var(--fh);font-size:1.2rem;font-weight:700;margin-bottom:5px;line-height:1.15}
+.fstep.inactive .fstep-title{color:var(--t2)}
+.fstep-desc{font-size:.81rem;color:var(--t2);line-height:1.72;max-height:0;overflow:hidden;opacity:0;transition:max-height .4s ease,opacity .32s ease}
+.fstep.active .fstep-desc{max-height:120px;opacity:1}
+/* Right image panel */
+.feat-img-panel{position:relative;height:420px;border-radius:var(--rxl);overflow:hidden;background:var(--s2)}
+@media(max-width:760px){.feat-img-panel{height:220px}}
+.feat-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.22,1,.36,1),opacity .45s ease}
+.feat-img.fenter{transform:translateY(60px) scale(1.04);opacity:0}
+.feat-img.factive{transform:translateY(0) scale(1);opacity:1}
+.feat-img.fleave{transform:translateY(-60px) scale(.96);opacity:0}
+.feat-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(3,3,9,.85) 0%,rgba(3,3,9,.25) 40%,transparent 70%);pointer-events:none}
+.feat-img-tag{position:absolute;bottom:20px;left:20px;display:inline-flex;align-items:center;gap:6px;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.22);border-radius:100px;padding:4px 12px;font-size:.65rem;font-weight:700;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase}
 
-/* STATS */
-.stats {
-  display: flex;
-  justify-content: center;
-  gap: 50px;
-  margin-top: 60px;
-}
+/* ── ACCOUNTABILITY SCROLL CARD ── */
+.acc{background:var(--s1);border-top:1px solid var(--brd)}
+.acc-in{max-width:820px;margin:0 auto;text-align:center}
+.acc-scene{perspective:1300px;margin:48px 0 40px}
+.acc-card{background:var(--s2);border:1px solid var(--brd2);border-radius:var(--rxl);overflow:hidden;max-width:480px;margin:0 auto;transform:rotateX(20deg) scale(.93);transform-origin:50% 0%;will-change:transform;box-shadow:0 56px 120px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.03)}
+.acc-top{background:var(--bg);padding:10px 17px;border-bottom:1px solid var(--brd);display:flex;justify-content:space-between;align-items:center}
+.acc-tt{font-family:var(--fm);font-size:.6rem;color:var(--t2);letter-spacing:2px;text-transform:uppercase}
+.acc-lv{font-family:var(--fm);font-size:.6rem;color:var(--lime);display:flex;align-items:center;gap:5px}
+.acc-lv span{width:5px;height:5px;border-radius:50%;background:var(--lime);animation:ldot 1.8s infinite}
+.rules{display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:left}
+@media(max-width:560px){.rules{grid-template-columns:1fr}}
+.rule{background:var(--s2);border:1px solid var(--brd);border-radius:var(--rl);padding:15px;display:flex;gap:11px;align-items:flex-start;transition:all .28s}
+.rule:hover{border-color:var(--brd2);transform:translateY(-3px)}
+.rule-ic{font-size:1.1rem;flex-shrink:0}
+.rule h4{font-size:.81rem;font-weight:600;margin-bottom:2px}
+.rule p{font-size:.73rem;color:var(--t2);line-height:1.62}
 
-.stats h2 {
-  font-size: 32px;
-}
+/* ── PAID CONTESTS (skill-based) ── */
+.contests{background:var(--bg);border-top:1px solid var(--brd)}
+.contests-in{max-width:1120px;margin:0 auto}
+.contests-h{text-align:center;margin-bottom:52px}
+.cpool-card{background:var(--s1);border:1px solid var(--brd2);border-radius:var(--rxl);padding:28px;position:relative;overflow:hidden;transition:all .35s}
+.cpool-card:hover{border-color:rgba(245,166,35,.28);transform:translateY(-5px);box-shadow:0 28px 70px rgba(0,0,0,.5)}
+.cpool-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.cpool-card.gold::before{background:linear-gradient(to right,var(--gold),var(--gold2))}
+.cpool-card.lime::before{background:linear-gradient(to right,var(--lime),#00C860)}
+.cpool-card.indigo::before{background:linear-gradient(to right,var(--indigo),var(--rose))}
+.cpool-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:760px){.cpool-grid{grid-template-columns:1fr}}
+.cpool-ico{font-size:2rem;margin-bottom:14px}
+.cpool-tag{display:inline-block;font-size:.58rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;padding:3px 9px;border-radius:100px;margin-bottom:10px}
+.cpool-card.gold .cpool-tag{background:rgba(245,166,35,.1);color:var(--gold)}
+.cpool-card.lime .cpool-tag{background:rgba(0,232,122,.1);color:var(--lime)}
+.cpool-card.indigo .cpool-tag{background:rgba(107,127,255,.1);color:var(--indigo)}
+.cpool-title{font-family:var(--fh);font-size:1.2rem;font-weight:700;margin-bottom:9px;line-height:1.15}
+.cpool-desc{font-size:.8rem;color:var(--t2);line-height:1.75;margin-bottom:16px}
+.cpool-note{font-size:.72rem;color:var(--t3);border-top:1px solid var(--brd);padding-top:12px;display:flex;flex-direction:column;gap:4px}
+.cpool-note span{display:flex;align-items:center;gap:6px}
+.cpool-note span::before{content:'→';color:var(--gold)}
+/* Legal disclaimer */
+.legal-note{max-width:700px;margin:28px auto 0;background:rgba(255,255,255,.02);border:1px solid var(--brd);border-radius:var(--rl);padding:14px 18px;font-size:.72rem;color:var(--t3);line-height:1.7;text-align:center}
+.legal-note strong{color:var(--t2)}
 
-/* SECTION */
-.section {
-  padding: 80px 20px;
-  text-align: center;
-}
+/* ── TERRITORY ── */
+.territory{background:var(--s1);border-top:1px solid var(--brd)}
+.terr-in{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:clamp(36px,6vw,80px);align-items:center}
+@media(max-width:860px){.terr-in{grid-template-columns:1fr}}
+.terr-map{height:360px;border-radius:var(--rxl);overflow:hidden;border:1px solid rgba(0,232,122,.1);background:#050d12;position:relative}
+#tmap{width:100%;height:100%}
+.tmap-hud{position:absolute;top:12px;left:12px;z-index:1000;pointer-events:none}
+.tmap-b{display:inline-flex;align-items:center;gap:6px;background:rgba(3,4,12,.9);border:1px solid rgba(0,232,122,.22);border-radius:8px;padding:4px 10px;font-family:var(--fm);font-size:.6rem;color:var(--lime)}
+.tmap-b span{width:5px;height:5px;border-radius:50%;background:var(--lime);animation:ldot 1.8s infinite}
+.terr-pts{display:flex;flex-direction:column;gap:14px;margin-top:24px}
+.tp{display:flex;gap:13px;align-items:flex-start}
+.tpn{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:.73rem;font-weight:700;flex-shrink:0;margin-top:3px}
+.tp h4{font-size:.85rem;font-weight:600;margin-bottom:2px}
+.tp p{font-size:.77rem;color:var(--t2);line-height:1.65}
 
-.card {
-  background: #121826;
-  padding: 20px;
-  border-radius: 15px;
-  margin: 20px auto;
-  max-width: 400px;
-}
+/* ── VOUCHER MARQUEE ── */
+.vouchers{background:var(--s1);border-top:1px solid var(--brd);border-bottom:1px solid var(--brd);padding:clamp(48px,7vw,72px) 0}
+.v-head{text-align:center;padding:0 clamp(16px,5vw,72px) 28px}
+.mq-wrap{overflow:hidden;position:relative}
+.mq-wrap::before,.mq-wrap::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none}
+.mq-wrap::before{left:0;background:linear-gradient(to right,var(--s1),transparent)}
+.mq-wrap::after{right:0;background:linear-gradient(to left,var(--s1),transparent)}
+.mq-t{display:flex;gap:10px;animation:mq 34s linear infinite;width:max-content}
+.mq-wrap:hover .mq-t{animation-play-state:paused}
+.chip{display:inline-flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--brd2);border-radius:100px;padding:9px 18px;white-space:nowrap;flex-shrink:0;transition:all .22s;cursor:default}
+.chip:hover{border-color:rgba(245,166,35,.28);transform:translateY(-2px)}
+.chip-ico{font-size:14px}
+.chip-b{font-size:.79rem;font-weight:700}
+.chip-t{font-size:.67rem;color:var(--t2)}
 
-/* ANIMATION */
-.fade {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: 0.6s;
-}
+/* ══════════════════════════════
+   TESTIMONIALS — Scrolling columns
+   (from TestimonialsColumn component)
+══════════════════════════════ */
+.testi{background:var(--bg);border-top:1px solid var(--brd)}
+.testi-in{max-width:1120px;margin:0 auto}
+.testi-h{text-align:center;margin-bottom:44px}
+.testi-cols{display:flex;gap:14px;justify-content:center;max-height:700px;overflow:hidden;mask-image:linear-gradient(to bottom,transparent,black 14%,black 82%,transparent);-webkit-mask-image:linear-gradient(to bottom,transparent,black 14%,black 82%,transparent)}
+.tcol{flex:0 0 300px;overflow:hidden}
+.tcol:nth-child(2){display:none}
+.tcol:nth-child(3){display:none}
+@media(min-width:680px){.tcol:nth-child(2){display:block}}
+@media(min-width:1020px){.tcol:nth-child(3){display:block}}
+.tcol-inner{display:flex;flex-direction:column;gap:14px}
+.tcol.col1 .tcol-inner{animation:colUp 18s linear infinite}
+.tcol.col2 .tcol-inner{animation:colUp 22s linear infinite}
+.tcol.col3 .tcol-inner{animation:colUp 16s linear infinite}
+.tcol:hover .tcol-inner{animation-play-state:paused}
+.tcard{background:var(--s1);border:1px solid var(--brd);border-radius:var(--rxl);padding:22px;transition:border-color .25s}
+.tcard:hover{border-color:var(--brd2)}
+.tcard-txt{font-size:.83rem;color:var(--t2);line-height:1.78;font-style:italic;margin-bottom:16px}
+.tcard-foot{display:flex;align-items:center;gap:10px}
+.tcard-av{width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.tcard-name{font-size:.81rem;font-weight:600}
+.tcard-role{font-size:.67rem;color:var(--t3);margin-top:1px}
+.tcard-res{font-family:var(--fm);font-size:.74rem;font-weight:700;color:var(--lime);margin-left:auto}
 
-.fade.show {
-  opacity: 1;
-  transform: translateY(0);
-}
+/* ── B2B STRIP (slim, not a full section) ── */
+.b2b-strip{background:var(--s1);border-top:1px solid var(--brd);border-bottom:1px solid var(--brd);padding:clamp(40px,5vw,60px) clamp(16px,5vw,72px)}
+.b2b-in{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center}
+@media(max-width:640px){.b2b-in{grid-template-columns:1fr}}
+.b2b-label{font-size:.6rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--indigo);margin-bottom:8px}
+.b2b-title{font-family:var(--fh);font-size:clamp(1.4rem,3vw,2.2rem);font-weight:800;margin-bottom:8px;line-height:1}
+.b2b-desc{font-size:.82rem;color:var(--t2);line-height:1.72;max-width:500px}
+.b2b-btn{padding:12px 24px;background:transparent;border:1.5px solid rgba(107,127,255,.35);border-radius:100px;font-family:var(--fh);font-size:.82rem;font-weight:700;color:var(--indigo);cursor:none;transition:all .22s;white-space:nowrap;text-decoration:none;display:inline-block}
+.b2b-btn:hover{background:rgba(107,127,255,.08);border-color:rgba(107,127,255,.5);transform:translateY(-2px)}
+
+/* ── FINAL CTA ── */
+.cta{background:var(--bg);border-top:1px solid var(--brd)}
+.cta-in{max-width:600px;margin:0 auto;text-align:center}
+.cta-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(245,166,35,.07);border:1px solid rgba(245,166,35,.18);border-radius:100px;padding:6px 16px;font-family:var(--fm);font-size:.7rem;color:var(--gold);margin-bottom:24px}
+.cta-form{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:30px}
+.cta-inp{flex:1;min-width:220px;padding:13px 20px;background:var(--s2);border:1.5px solid var(--brd2);border-radius:100px;color:var(--text);font-family:var(--fb);font-size:.87rem;outline:none;transition:border-color .2s}
+.cta-inp:focus{border-color:rgba(245,166,35,.44)}
+.cta-inp::placeholder{color:var(--t3)}
+.cta-note{margin-top:12px;font-size:.68rem;color:var(--t3)}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--brd);padding:30px clamp(16px,4vw,60px);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.fl{display:flex;gap:20px;flex-wrap:wrap}
+.fl a{color:var(--t3);font-size:.73rem;text-decoration:none;transition:color .18s}
+.fl a:hover{color:var(--t2)}
+.fr{font-size:.68rem;color:var(--t3)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(70px);background:var(--s2);border:1px solid rgba(0,232,122,.28);border-radius:100px;padding:11px 22px;font-size:.82rem;font-weight:600;color:var(--lime);z-index:9999;opacity:0;transition:all .38s cubic-bezier(.22,1,.36,1);pointer-events:none;white-space:nowrap}
+.toast.on{transform:translateX(-50%) translateY(0);opacity:1}
 </style>
 </head>
-
 <body>
+<div id="cur"></div>
+<div id="cur-r"></div>
+<div class="toast" id="toast">🎉 You're on the list.</div>
 
-<nav>
-  <div class="logo">FITBOUNTY</div>
-  <div class="cta">GET EARLY ACCESS</div>
+<!-- NAV -->
+<nav id="nav">
+  <a class="logo" href="#"><div class="logo-m">F</div><span class="logo-t">FITBOUNTY</span></a>
+  <div class="nav-l">
+    <a href="#compete">Leaderboard</a>
+    <a href="#features">How It Works</a>
+    <a href="#contests">Win Cash</a>
+    <a href="#territory">Territory</a>
+  </div>
+  <div class="nav-btns">
+    <a class="nbtn" href="#b2b">For Brands</a>
+    <a class="nbtn-p" href="#waitlist">Get Early Access</a>
+  </div>
 </nav>
 
-<section class="hero">
-  <h1>
-    THE APP THAT MAKES YOU <br>
-    <span class="highlight">ACCOUNTABLE.</span>
-  </h1>
-
-  <p>Compete. Stay consistent. Win rewards.</p>
-
-  <div class="hero-form">
-    <input placeholder="Enter email">
-    <button>JOIN WAITLIST</button>
+<!-- HERO — Geometric floating shapes -->
+<section class="hero" id="hero">
+  <div class="hero-bg-grad"></div>
+  <div class="hero-shapes">
+    <div class="hs hs1"></div>
+    <div class="hs hs2"></div>
+    <div class="hs hs3"></div>
+    <div class="hs hs4"></div>
+    <div class="hs hs5"></div>
   </div>
+  <div class="hero-fade-t"></div>
+  <div class="hero-fade-b"></div>
+  <div class="hero-inner">
+    <div class="hero-badge"><span class="hero-badge-dot"></span>Early Access — Limited Spots</div>
+    <h1 class="hh">
+      The fitness<br>
+      <span class="line2">challenge that</span>
+      <span class="line3">bites back.</span>
+    </h1>
+    <p class="hero-sub">Join a group. Weigh in weekly with photo proof. Your results go on a live leaderboard — every Monday. Win real vouchers. Enter prize pools. Own territory. Lose your excuses.</p>
+    <div class="hero-ctas">
+      <button class="btn-p" onclick="claim()">Get Early Access</button>
+      <a class="btn-g" href="#compete">See the Board ↓</a>
+    </div>
+  </div>
+  <div class="scroll-hint"><span class="scroll-hint-lbl">Scroll</span><div class="scroll-hint-line"></div></div>
+</section>
 
-  <div class="stats">
-    <div><h2>340+</h2><p>Users</p></div>
-    <div><h2>4.8%</h2><p>Avg Loss</p></div>
-    <div><h2>83%</h2><p>Retention</p></div>
+<!-- PROBLEM STRIP -->
+<div class="prob">
+  <div class="prob-t">
+    <span class="prob-i">Apps don't make you accountable <span class="prob-sep"></span></span>
+    <span class="prob-i">Badges aren't real rewards <span class="prob-sep"></span></span>
+    <span class="prob-i">Nobody cares about your step count <span class="prob-sep"></span></span>
+    <span class="prob-i">There's no consequence for quitting <span class="prob-sep"></span></span>
+    <span class="prob-i">Fitness without competition is just tracking <span class="prob-sep"></span></span>
+    <span class="prob-i">If your group can't see it, it didn't happen <span class="prob-sep"></span></span>
+    <span class="prob-i">Apps don't make you accountable <span class="prob-sep"></span></span>
+    <span class="prob-i">Badges aren't real rewards <span class="prob-sep"></span></span>
+    <span class="prob-i">Nobody cares about your step count <span class="prob-sep"></span></span>
+    <span class="prob-i">There's no consequence for quitting <span class="prob-sep"></span></span>
+    <span class="prob-i">Fitness without competition is just tracking <span class="prob-sep"></span></span>
+    <span class="prob-i">If your group can't see it, it didn't happen <span class="prob-sep"></span></span>
+  </div>
+</div>
+
+<!-- LEADERBOARD SECTION -->
+<section class="sec lboard" id="compete">
+  <div class="lb-in">
+    <div class="fu">
+      <span class="ey" style="color:var(--gold)">The Live Board</span>
+      <h2 class="sh">Your rank.<br>Everyone's screen.</h2>
+      <p class="sp" style="max-width:400px;margin-bottom:26px">Every Monday 6 AM, your weekly % change goes live to your group — streak, rank, photo status. There is no opt-out once you join.</p>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:20px">
+        <div style="display:flex;align-items:center;gap:11px;font-size:.82rem;color:var(--t2)"><span style="color:var(--lime);flex-shrink:0">✓</span>Ranked by % body change — fair at any weight</div>
+        <div style="display:flex;align-items:center;gap:11px;font-size:.82rem;color:var(--t2)"><span style="color:var(--lime);flex-shrink:0">✓</span>Missed weigh-in = broken streak, visible to group</div>
+        <div style="display:flex;align-items:center;gap:11px;font-size:.82rem;color:var(--t2)"><span style="color:var(--lime);flex-shrink:0">✓</span>Live photo verification — no faking your result</div>
+        <div style="display:flex;align-items:center;gap:11px;font-size:.82rem;color:var(--t2)"><span style="color:var(--lime);flex-shrink:0">✓</span>Actual weight stays private — only % is public</div>
+      </div>
+    </div>
+    <div class="lb-wrap fu d2">
+      <div class="lb-card" id="lbc">
+        <div class="lb-hd">
+          <span class="lb-hd-t">Week 8 of 12 · Office Group</span>
+          <span class="lb-live"><span class="lb-ld"></span>Live</span>
+        </div>
+        <div class="lbr g1">
+          <span class="lbr-rk">🥇</span>
+          <div class="lbr-av" style="background:var(--gold)">P</div>
+          <div class="lbr-inf"><div class="lbr-nm">Pranith <span class="lbr-sk">🔥 8 wks</span></div><div class="lbr-mt">8 weigh-ins · photo verified</div></div>
+          <span class="lbr-pct" style="color:var(--lime)">−4.2%</span>
+        </div>
+        <div class="lb-bar"><div class="lb-bar-bg"><div class="lb-bar-f" style="width:100%"></div></div></div>
+        <div class="lbr g2">
+          <span class="lbr-rk">🥈</span>
+          <div class="lbr-av" style="background:#777">S</div>
+          <div class="lbr-inf"><div class="lbr-nm">Shreyas <span class="lbr-sk">🔥 5 wks</span></div><div class="lbr-mt">7 weigh-ins · photo verified</div></div>
+          <span class="lbr-pct" style="color:var(--lime)">−3.8%</span>
+        </div>
+        <div class="lb-bar"><div class="lb-bar-bg"><div class="lb-bar-f" style="width:90%"></div></div></div>
+        <div class="lbr g3">
+          <span class="lbr-rk">🥉</span>
+          <div class="lbr-av" style="background:#9B6DFF">K</div>
+          <div class="lbr-inf"><div class="lbr-nm">Kishen <span class="lbr-sk">🔥 3 wks</span></div><div class="lbr-mt">8 weigh-ins · photo verified</div></div>
+          <span class="lbr-pct" style="color:var(--lime)">−3.1%</span>
+        </div>
+        <div class="lb-bar"><div class="lb-bar-bg"><div class="lb-bar-f" style="width:74%"></div></div></div>
+        <div class="lbr" style="opacity:.48">
+          <span class="lbr-rk" style="color:var(--t3)">4</span>
+          <div class="lbr-av" style="background:var(--s3)">R</div>
+          <div class="lbr-inf"><div class="lbr-nm">Rahul</div><div class="lbr-mt" style="color:var(--red)">⚠ Missed last 2 weigh-ins</div></div>
+          <span class="lbr-pct" style="color:var(--t2)">−1.1%</span>
+        </div>
+        <div class="lb-alert">😬 Rahul's group was notified. Streak gone. Everyone knows.</div>
+        <div class="lb-foot"><span>Next reveal: Monday 6 AM</span><span class="lb-foot-cta">Join Group →</span></div>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="section fade">
-  <h2>How it works</h2>
-  <div class="card">Create challenge</div>
-  <div class="card">Track progress</div>
-  <div class="card">Win rewards</div>
+<!-- FEATURE STEPS (auto-cycling) -->
+<section class="sec features" id="features">
+  <div class="feat-in">
+    <div class="feat-h fu">
+      <span class="ey" style="color:var(--gold);display:block;text-align:center">How It Works</span>
+      <h2 class="sh" style="text-align:center">Simple to start.<br><span style="color:var(--gold)">Impossible to ignore.</span></h2>
+    </div>
+    <div class="feat-grid">
+      <!-- Left: steps -->
+      <div class="feat-steps fu" id="fsteps">
+        <div class="fstep active" data-i="0" onclick="fsActivate(0)">
+          <div class="fstep-left">
+            <div class="fstep-dot"><span class="fs-num">1</span><span class="fs-chk" style="display:none">✓</span></div>
+            <div class="fstep-track"><div class="fstep-fill" id="fsp-0"></div></div>
+          </div>
+          <div class="fstep-body">
+            <div class="fstep-num">Step 01</div>
+            <h3 class="fstep-title">Join a Group</h3>
+            <p class="fstep-desc">Create or join a challenge group — gym crew, office team, running club. Set a duration (4, 8, or 12 weeks) and invite your people.</p>
+          </div>
+        </div>
+        <div class="fstep inactive" data-i="1" onclick="fsActivate(1)">
+          <div class="fstep-left">
+            <div class="fstep-dot"><span class="fs-num">2</span><span class="fs-chk" style="display:none">✓</span></div>
+            <div class="fstep-track"><div class="fstep-fill" id="fsp-1"></div></div>
+          </div>
+          <div class="fstep-body">
+            <div class="fstep-num">Step 02</div>
+            <h3 class="fstep-title">Weekly Weigh-In</h3>
+            <p class="fstep-desc">Every week, take a live photo on your scale. Metadata verified. No screenshots, no manual entry, no cheating. Miss it — your group gets notified.</p>
+          </div>
+        </div>
+        <div class="fstep inactive" data-i="2" onclick="fsActivate(2)">
+          <div class="fstep-left">
+            <div class="fstep-dot"><span class="fs-num">3</span><span class="fs-chk" style="display:none">✓</span></div>
+            <div class="fstep-track"><div class="fstep-fill" id="fsp-2"></div></div>
+          </div>
+          <div class="fstep-body">
+            <div class="fstep-num">Step 03</div>
+            <h3 class="fstep-title">Live Board — Every Monday</h3>
+            <p class="fstep-desc">Your % change, streak, and rank go public to your group every Monday morning. Social pressure, automated. The board waits for no one.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Right: image panel -->
+      <div class="feat-img-panel fu d2" id="feat-panel">
+        <img class="feat-img factive" id="fimg-0" src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=900&q=80" alt="Group fitness">
+        <img class="feat-img fenter" id="fimg-1" src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=900&q=80" alt="Weigh in">
+        <img class="feat-img fenter" id="fimg-2" src="https://images.unsplash.com/photo-1547592180-85f173990554?w=900&q=80" alt="Leaderboard">
+        <div class="feat-img-overlay"></div>
+        <div class="feat-img-tag" id="fs-tag">🤝 Challenge your crew</div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<section class="section fade">
-  <h2>Live Leaderboard</h2>
-  <div class="card">#1 Pranith -4.2%</div>
-  <div class="card">#2 Shreyas -3.8%</div>
-  <div class="card">#3 Kishen -3.1%</div>
+<!-- ACCOUNTABILITY SCROLL CARD -->
+<section class="sec acc" id="mechanic">
+  <div class="acc-in">
+    <div class="fu">
+      <span class="ey" style="color:var(--lime);display:block;text-align:center">Accountability Layer</span>
+      <h2 class="sh" style="text-align:center">Nowhere<br><span style="color:var(--lime)">to hide.</span></h2>
+      <p class="sp" style="max-width:440px;margin:0 auto">Social pressure is the world's oldest fitness hack. We made it digital, weekly, and automatic. Your group will know before your morning coffee.</p>
+    </div>
+    <div class="acc-scene" id="acc-scene">
+      <div class="acc-card" id="acc-card">
+        <div class="acc-top">
+          <span class="acc-tt">Monday Reveal · Week 8</span>
+          <span class="acc-lv"><span></span>Live</span>
+        </div>
+        <div class="lbr g1" style="background:rgba(245,166,35,.02)">
+          <span class="lbr-rk">🥇</span>
+          <div class="lbr-av" style="background:var(--gold)">P</div>
+          <div class="lbr-inf"><div class="lbr-nm">Pranith</div><div class="lbr-mt">Verified · −4.2% · 🔥 8 week streak</div></div>
+          <span class="lbr-pct" style="color:var(--lime)">↑ #1</span>
+        </div>
+        <div class="lbr" style="opacity:.52">
+          <span class="lbr-rk" style="color:var(--t3)">4</span>
+          <div class="lbr-av" style="background:var(--s3)">R</div>
+          <div class="lbr-inf"><div class="lbr-nm">Rahul</div><div class="lbr-mt" style="color:var(--red)">Missed 2 weeks · no streak · group notified</div></div>
+          <span class="lbr-pct" style="color:var(--red)">↓ #4</span>
+        </div>
+        <div class="lb-alert">😬 Rahul's group got the notification 4 minutes ago.</div>
+      </div>
+    </div>
+    <div class="rules fu d1">
+      <div class="rule"><span class="rule-ic">📸</span><div><h4>Photo proof, every week</h4><p>Live scale photo. Metadata verified. Old screenshots rejected instantly.</p></div></div>
+      <div class="rule"><span class="rule-ic">🔥</span><div><h4>Streaks break publicly</h4><p>Gain or skip a week? Streak resets. Your entire group sees it Monday morning.</p></div></div>
+      <div class="rule"><span class="rule-ic">⚖️</span><div><h4>% change — fair for all</h4><p>Ranked by percentage, not kilograms. Equal footing at 60kg or 120kg.</p></div></div>
+      <div class="rule"><span class="rule-ic">🔒</span><div><h4>Actual weight is private</h4><p>Only the % change is visible to your group. The number on the scale is only yours.</p></div></div>
+    </div>
+  </div>
 </section>
+
+<!-- PAID CONTESTS -->
+<section class="sec contests" id="contests">
+  <div class="contests-in">
+    <div class="contests-h fu">
+      <span class="ey" style="color:var(--gold);display:block;text-align:center">Skill-Based Contests</span>
+      <h2 class="sh" style="text-align:center">Put something<br><span style="color:var(--gold)">on the line.</span></h2>
+      <p class="sp" style="text-align:center;max-width:480px;margin:0 auto">Beyond free challenges — enter a prize pool contest. Entry fee goes into the pool. Best % change at end of contest wins the split. Pure skill, no luck.</p>
+    </div>
+    <div class="cpool-grid">
+      <div class="cpool-card gold fu d1">
+        <div class="cpool-ico">🎯</div>
+        <div class="cpool-tag">Free Challenge</div>
+        <h3 class="cpool-title">Brand-Sponsored Groups</h3>
+        <p class="cpool-desc">Join any free challenge group. Top performers earn real vouchers funded by our brand partners — gear, supplements, gym passes, nutrition packs.</p>
+        <div class="cpool-note">
+          <span>Free to enter, always</span>
+          <span>Vouchers from real brands</span>
+          <span>8–12 week challenges</span>
+        </div>
+      </div>
+      <div class="cpool-card lime fu d2">
+        <div class="cpool-ico">🏆</div>
+        <div class="cpool-tag">Prize Pool</div>
+        <h3 class="cpool-title">Paid Entry Contests</h3>
+        <p class="cpool-desc">Put ₹200–₹2000 in. Winner takes the pool split. Entry fee creates skin in the game — people who pay show up every week. Skill contest under Indian law.</p>
+        <div class="cpool-note">
+          <span>₹200–₹2000 entry tiers</span>
+          <span>Outcome = verified fitness result</span>
+          <span>Withdrawable winnings via UPI</span>
+        </div>
+      </div>
+      <div class="cpool-card indigo fu d3">
+        <div class="cpool-ico">🏢</div>
+        <div class="cpool-tag">Corporate</div>
+        <h3 class="cpool-title">Office Wellness Challenges</h3>
+        <p class="cpool-desc">Companies run private leaderboards for their teams. HR gets a wellness dashboard. Employees compete, get healthier, actually enjoy it. Billed per employee/month.</p>
+        <div class="cpool-note">
+          <span>Private company leaderboard</span>
+          <span>HR analytics dashboard</span>
+          <span>Custom challenge branding</span>
+        </div>
+      </div>
+    </div>
+    <div class="legal-note fu">
+      <strong>Legal note:</strong> Paid contests on FitBounty are skill-based competitions where outcomes are determined purely by verified physical results (% body change), not chance. This is consistent with Indian skill gaming law. FitBounty retains a platform fee (up to 15%) from contest prize pools, similar to platforms like Dream11 and MPL. Consult our full <a href="#" style="color:var(--t2)">Terms of Service</a> before entering paid contests.
+    </div>
+  </div>
+</section>
+
+<!-- TERRITORY -->
+<section class="sec territory" id="territory">
+  <div class="terr-in">
+    <div class="fu">
+      <span class="ey" style="color:var(--lime)">Territory Mode</span>
+      <h2 class="sh">Run loops.<br>Own the <span style="color:var(--lime)">map.</span></h2>
+      <p class="sp" style="margin-bottom:22px">Trace a GPS route through any streets. Close it — claim that zone on the shared city map in your colour. Rivals contest your territory. 7 days to defend or lose it.</p>
+      <div class="terr-pts">
+        <div class="tp fu d1"><div class="tpn" style="background:rgba(0,232,122,.1);color:var(--lime)">①</div><div><h4>GPS validates every metre</h4><p>You must physically run the boundary. Zero shortcuts, zero faking.</p></div></div>
+        <div class="tp fu d2"><div class="tpn" style="background:rgba(245,166,35,.1);color:var(--gold)">②</div><div><h4>Monthly territory leaderboard</h4><p>Most km² claimed at month-end wins gear. Resets every 1st.</p></div></div>
+        <div class="tp fu d3"><div class="tpn" style="background:rgba(107,127,255,.1);color:var(--indigo)">③</div><div><h4>Coins earned through activity</h4><p>Run more, earn coins, claim zones. Real activity = real rewards.</p></div></div>
+      </div>
+    </div>
+    <div class="fu d2">
+      <div class="terr-map">
+        <div class="tmap-hud"><div class="tmap-b"><span></span>Live · Active Zones</div></div>
+        <div id="tmap"></div>
+      </div>
+    </div>
+  </div>
+</section>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+
+<!-- VOUCHER MARQUEE -->
+<section class="vouchers">
+  <div class="v-head fu">
+    <span class="ey" style="color:var(--gold);display:block;text-align:center;margin-bottom:8px">What You Win</span>
+    <h2 class="sh" style="font-size:clamp(1.7rem,4vw,3rem);text-align:center;line-height:1">Not XP. Not badges.<br><span style="color:var(--gold)">Actual vouchers.</span></h2>
+  </div>
+  <div class="mq-wrap">
+    <div class="mq-t">
+      <div class="chip"><span class="chip-ico">👟</span><div><div class="chip-b">Running Shoes</div><div class="chip-t">Footwear Voucher</div></div></div>
+      <div class="chip"><span class="chip-ico">🏋️</span><div><div class="chip-b">Sports Equipment</div><div class="chip-t">Gear Bundle</div></div></div>
+      <div class="chip"><span class="chip-ico">💊</span><div><div class="chip-b">Protein Supplements</div><div class="chip-t">Nutrition Pack</div></div></div>
+      <div class="chip"><span class="chip-ico">⌚</span><div><div class="chip-b">Fitness Tracker</div><div class="chip-t">Wearable Voucher</div></div></div>
+      <div class="chip"><span class="chip-ico">🎽</span><div><div class="chip-b">Sportswear</div><div class="chip-t">Apparel Voucher</div></div></div>
+      <div class="chip"><span class="chip-ico">💪</span><div><div class="chip-b">Cult.fit Pass</div><div class="chip-t">Studio Sessions</div></div></div>
+      <div class="chip"><span class="chip-ico">🏃</span><div><div class="chip-b">Trail Shoes</div><div class="chip-t">Footwear Voucher</div></div></div>
+      <div class="chip"><span class="chip-ico">🥗</span><div><div class="chip-b">Healthy Meals</div><div class="chip-t">Delivery Credits</div></div></div>
+      <div class="chip"><span class="chip-ico">🧴</span><div><div class="chip-b">Whey Protein</div><div class="chip-t">Supplement Pack</div></div></div>
+      <div class="chip"><span class="chip-ico">🩺</span><div><div class="chip-b">Health Checkup</div><div class="chip-t">Wellness Voucher</div></div></div>
+      <!-- dup -->
+      <div class="chip"><span class="chip-ico">👟</span><div><div class="chip-b">Running Shoes</div><div class="chip-t">Footwear Voucher</div></div></div>
+      <div class="chip"><span class="chip-ico">🏋️</span><div><div class="chip-b">Sports Equipment</div><div class="chip-t">Gear Bundle</div></div></div>
+      <div class="chip"><span class="chip-ico">💊</span><div><div class="chip-b">Protein Supplements</div><div class="chip-t">Nutrition Pack</div></div></div>
+      <div class="chip"><span class="chip-ico">⌚</span><div><div class="chip-b">Fitness Tracker</div><div class="chip-t">Wearable Voucher</div></div></div>
+      <div class="chip"><span class="chip-ico">🎽</span><div><div class="chip-b">Sportswear</div><div class="chip-t">Apparel Voucher</div></div></div>
+      <div class="chip"><span class="chip-ico">💪</span><div><div class="chip-b">Cult.fit Pass</div><div class="chip-t">Studio Sessions</div></div></div>
+      <div class="chip"><span class="chip-ico">🏃</span><div><div class="chip-b">Trail Shoes</div><div class="chip-t">Footwear Voucher</div></div></div>
+      <div class="chip"><span class="chip-ico">🥗</span><div><div class="chip-b">Healthy Meals</div><div class="chip-t">Delivery Credits</div></div></div>
+      <div class="chip"><span class="chip-ico">🧴</span><div><div class="chip-b">Whey Protein</div><div class="chip-t">Supplement Pack</div></div></div>
+      <div class="chip"><span class="chip-ico">🩺</span><div><div class="chip-b">Health Checkup</div><div class="chip-t">Wellness Voucher</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS — Scrolling columns (from component) -->
+<section class="sec testi" id="social">
+  <div class="testi-in">
+    <div class="testi-h fu">
+      <div style="display:inline-block;border:1px solid var(--brd2);border-radius:8px;padding:4px 12px;font-size:.7rem;color:var(--t2);margin-bottom:14px">Early Testers</div>
+      <h2 class="sh" style="text-align:center">The board<br>doesn't lie.</h2>
+      <p class="sp" style="text-align:center;max-width:400px;margin:0 auto">What our early beta users said when the leaderboard went live for the first time.</p>
+    </div>
+    <div class="testi-cols">
+      <div class="tcol col1">
+        <div class="tcol-inner" id="tc1">
+          <!-- filled by JS -->
+        </div>
+      </div>
+      <div class="tcol col2">
+        <div class="tcol-inner" id="tc2"></div>
+      </div>
+      <div class="tcol col3">
+        <div class="tcol-inner" id="tc3"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- B2B STRIP -->
+<div class="b2b-strip" id="b2b">
+  <div class="b2b-in">
+    <div class="fu">
+      <div class="b2b-label">For Brands & Sponsors</div>
+      <h3 class="b2b-title">Reach verified fitness<br>audiences. Fund real prizes.</h3>
+      <p class="b2b-desc">FitBounty connects fitness brands with motivated, verified users through sponsored challenges and prize pools. Your vouchers become the prize. Their results prove your ROI.</p>
+    </div>
+    <div class="fu d2" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+      <a class="b2b-btn" href="mailto:brands@fitbounty.in">Partner With Us →</a>
+      <span style="font-size:.68rem;color:var(--t3)">₹50K–₹5L campaigns · City targeting · Verified redemptions</span>
+    </div>
+  </div>
+</div>
+
+<!-- FINAL CTA -->
+<section class="sec cta" id="waitlist">
+  <div class="cta-in">
+    <div class="fu">
+      <div class="cta-badge">Early Access — No credit card</div>
+      <h2 class="sh" style="text-align:center;font-size:clamp(2.4rem,6vw,5.5rem)">Your board<br>is waiting.</h2>
+      <p class="sp" style="text-align:center;max-width:400px;margin:0 auto">Be among the first to compete. Early access members get priority in all launch challenges and first pick of prize pool contests.</p>
+      <div class="cta-form">
+        <input class="cta-inp" type="email" id="email-in" placeholder="your@email.com">
+        <button class="btn-p" onclick="claim()">Claim My Spot</button>
+      </div>
+      <p class="cta-note">No spam. Unsubscribe any time.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a class="logo" href="#" style="text-decoration:none">
+    <div class="logo-m" style="width:26px;height:26px;font-size:.85rem">F</div>
+    <span class="logo-t" style="font-size:.88rem;color:var(--t2)">FITBOUNTY</span>
+  </a>
+  <div class="fl">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">Skill Gaming Policy</a>
+    <a href="mailto:hello@fitbounty.in">hello@fitbounty.in</a>
+    <a href="mailto:brands@fitbounty.in">brands@fitbounty.in</a>
+  </div>
+  <span class="fr">© 2025 FitBounty · India</span>
+</footer>
 
 <script>
-// scroll animation
-const fades = document.querySelectorAll('.fade');
-
-window.addEventListener('scroll', () => {
-  fades.forEach(el => {
-    const top = el.getBoundingClientRect().top;
-    if (top < window.innerHeight - 100) {
-      el.classList.add('show');
-    }
-  });
+/* ── CURSOR ── */
+const cur=document.getElementById('cur'),curR=document.getElementById('cur-r');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(loop)})();
+document.querySelectorAll('a,button,.lb-card,.fstep,.tcard,.chip,.cpool-card,.rule').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('curbig'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('curbig'));
 });
-</script>
 
+/* ── NAV SCROLL ── */
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('s',scrollY>10),{passive:true});
+
+/* ── SCROLL REVEAL ── */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v')}),{threshold:.1});
+document.querySelectorAll('.fu').forEach(el=>io.observe(el));
+
+/* ── 3D LB CARD — MOUSE TILT ── */
+const lbW=document.querySelector('.lb-wrap'),lbc=document.getElementById('lbc');
+if(lbW){
+  lbW.addEventListener('mousemove',e=>{
+    const r=lbW.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    lbc.style.transform=`rotateY(${-14+x*14}deg) rotateX(${5-y*8}deg)`;
+    lbc.style.transition='transform .1s ease';
+  });
+  lbW.addEventListener('mouseleave',()=>{lbc.style.transform='rotateY(-14deg) rotateX(5deg)';lbc.style.transition='transform .55s cubic-bezier(.22,1,.36,1)';});
+}
+
+/* ── 3D ACCOUNTABILITY — SCROLL DRIVEN ── */
+function upd3d(){
+  const c=document.getElementById('acc-card'),s=document.getElementById('acc-scene');
+  if(!c||!s)return;
+  const r=s.getBoundingClientRect(),vh=window.innerHeight;
+  const p=Math.max(0,Math.min(1,(vh-r.top)/(vh+r.height*.5)));
+  c.style.transform=`rotateX(${(20*(1-p)).toFixed(2)}deg) scale(${(.93+p*.07).toFixed(3)})`;
+}
+window.addEventListener('scroll',upd3d,{passive:true});
+upd3d();
+
+/* ══════════════════════════════
+   FEATURE STEPS (from component)
+   Auto-cycles with progress bar
+══════════════════════════════ */
+let fsCur=0,fsTimer=null,fsProg=0;
+const FS_IV=4000;
+const fsTags=['🤝 Challenge your crew','📸 Weekly weigh-in verified','🏆 Live board — every Monday'];
+const fsImgSrcs=[
+  'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=900&q=80',
+  'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=900&q=80',
+  'https://images.unsplash.com/photo-1547592180-85f173990554?w=900&q=80'
+];
+
+function fsActivate(idx){
+  const steps=document.querySelectorAll('.fstep');
+  const imgs=document.querySelectorAll('.feat-img');
+  // update steps
+  steps.forEach((s,i)=>{
+    s.className='fstep '+(i<idx?'done':i===idx?'active':'inactive');
+    const num=s.querySelector('.fs-num'),chk=s.querySelector('.fs-chk');
+    if(i<idx){if(num)num.style.display='none';if(chk)chk.style.display=''}
+    else{if(num)num.style.display='';if(chk)chk.style.display='none'}
+    const fill=document.getElementById('fsp-'+i);
+    if(fill) fill.style.height = i<idx?'100%':i===idx?fsProg+'%':'0%';
+  });
+  // update image
+  imgs.forEach((img,i)=>{
+    if(i===fsCur&&i!==idx){img.className='feat-img fleave';setTimeout(()=>{img.className='feat-img fenter';},600);}
+    else if(i!==idx){img.className='feat-img fenter';}
+  });
+  setTimeout(()=>{imgs[idx].className='feat-img factive';},50);
+  // update tag
+  const tag=document.getElementById('fs-tag');
+  if(tag) tag.textContent=fsTags[idx];
+  fsCur=idx;
+}
+
+function fsStart(){
+  fsTimer=setInterval(()=>{
+    fsProg+=100/(FS_IV/100);
+    const fill=document.getElementById('fsp-'+fsCur);
+    if(fill) fill.style.height=Math.min(fsProg,100)+'%';
+    if(fsProg>=100){fsProg=0;fsActivate((fsCur+1)%3);}
+  },100);
+}
+const fsObs=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting&&!fsTimer) fsStart();
+    else if(!e.isIntersecting&&fsTimer){clearInterval(fsTimer);fsTimer=null;}
+  });
+},{threshold:.2});
+const fsEl=document.getElementById('features');
+if(fsEl) fsObs.observe(fsEl);
+
+/* ══════════════════════════════
+   TESTIMONIALS — fill + scroll
+══════════════════════════════ */
+const testis=[
+  {t:"I've tried five fitness apps. None made me scared to skip a workout. Knowing my office group sees my missed weigh-in on Monday morning — that hits differently.",av:"https://randomuser.me/api/portraits/men/32.jpg",n:"Aditya R.",role:"Software Eng.",res:"−5.1%"},
+  {t:"The territory mode got me running routes I'd never do otherwise. Someone took my zone and I was genuinely annoyed. Went out next morning and took it back.",av:"https://randomuser.me/api/portraits/women/44.jpg",n:"Nisha K.",role:"Product Manager",res:"+11 km²"},
+  {t:"I came last in week one. My friends wouldn't let me forget it. By week six I was #2. The embarrassment is the feature.",av:"https://randomuser.me/api/portraits/men/55.jpg",n:"Vikram S.",role:"Gym Owner",res:"−6.3%"},
+  {t:"Entered a ₹500 contest on a dare. Lost week 1. It made me so competitive I didn't miss a single weigh-in for 8 weeks. Won ₹3,200.",av:"https://randomuser.me/api/portraits/women/28.jpg",n:"Priya M.",role:"Marketing Lead",res:"₹3,200 won"},
+  {t:"My company ran a corporate challenge for 40 people. The weekly leaderboard emails went viral internally. Nobody expected it to work this well.",av:"https://randomuser.me/api/portraits/men/18.jpg",n:"Rohit N.",role:"HR Director",res:"40 employees"},
+  {t:"Being able to enter paid contests with UPI and just... win cash back based on actually losing weight? That's a different kind of motivation.",av:"https://randomuser.me/api/portraits/women/61.jpg",n:"Sruthi L.",role:"Entrepreneur",res:"−4.8%"},
+  {t:"I set up a challenge with my college friends. Eight of us. Every Monday the WhatsApp group explodes. It's the most we've all talked in years.",av:"https://randomuser.me/api/portraits/men/72.jpg",n:"Karthik P.",role:"Student",res:"−3.9%"},
+  {t:"The % ranking is genius. At 93kg I can compete fairly against my 65kg friend. First time a fitness app has felt actually fair to me.",av:"https://randomuser.me/api/portraits/women/35.jpg",n:"Deepa V.",role:"Teacher",res:"−7.2%"},
+  {t:"What got me is that my actual weight is private. Only % change shows. I was more comfortable joining because of that one detail.",av:"https://randomuser.me/api/portraits/men/41.jpg",n:"Suresh T.",role:"Sales Manager",res:"−4.1%"},
+];
+function tCard(d){
+  return `<div class="tcard"><p class="tcard-txt">"${d.t}"</p><div class="tcard-foot"><img class="tcard-av" src="${d.av}" alt="${d.n}"><div><div class="tcard-name">${d.n}</div><div class="tcard-role">${d.role}</div></div><span class="tcard-res">${d.res}</span></div></div>`;
+}
+const c1=testis.slice(0,3),c2=testis.slice(3,6),c3=testis.slice(6,9);
+function fillCol(id,arr){
+  const el=document.getElementById(id);
+  if(!el)return;
+  // double for infinite scroll
+  el.innerHTML=[...arr,...arr].map(tCard).join('');
+}
+fillCol('tc1',c1);fillCol('tc2',c2);fillCol('tc3',c3);
+
+/* ── TOAST ── */
+function claim(){
+  const inp=document.getElementById('email-in'),t=document.getElementById('toast');
+  const v=inp?inp.value.trim():'';
+  if(v.includes('@')){t.style.borderColor='rgba(0,232,122,.28)';t.style.color='var(--lime)';t.textContent='🎉 You\'re in, '+v.split('@')[0]+'. See you on the board.';if(inp)inp.value='';}
+  else{t.style.borderColor='rgba(255,68,68,.3)';t.style.color='var(--red)';t.textContent='Enter a valid email to join.';}
+  t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3400);
+}
+
+/* ── TERRITORY MAP ── */
+function initMap(){
+  const el=document.getElementById('tmap');
+  if(!el||typeof L==='undefined')return;
+  try{
+    const map=L.map('tmap',{center:[12.9784,77.6408],zoom:16,zoomControl:false,dragging:false,scrollWheelZoom:false,doubleClickZoom:false,touchZoom:false,keyboard:false,attributionControl:false});
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
+    const runners=[
+      {n:'P',col:'#F5A623',fc:'rgba(245,166,35,.14)',bc:'#C87800',route:[[12.9784,77.6408],[12.9800,77.6408],[12.9800,77.6430],[12.9784,77.6430],[12.9784,77.6408]],spd:.22},
+      {n:'K',col:'#00E87A',fc:'rgba(0,232,122,.11)',bc:'#00A85A',route:[[12.9760,77.6415],[12.9760,77.6440],[12.9775,77.6440],[12.9775,77.6415],[12.9760,77.6415]],spd:.17},
+      {n:'V',col:'#6B7FFF',fc:'rgba(107,127,255,.11)',bc:'#3B4FDF',route:[[12.9795,77.6385],[12.9810,77.6385],[12.9810,77.6408],[12.9795,77.6408],[12.9795,77.6385]],spd:.19}
+    ];
+    function bp(wps,steps){const pts=[];for(let i=0;i<wps.length-1;i++){const a=wps[i],b=wps[i+1];for(let s=0;s<steps;s++)pts.push([a[0]+(b[0]-a[0])*s/steps,a[1]+(b[1]-a[1])*s/steps]);}pts.push(wps[wps.length-1]);return pts;}
+    runners.forEach(r=>{
+      r.path=bp(r.route,100);r.pidx=0;
+      r.trail=L.polyline([],{color:r.col,weight:3,opacity:.9,dashArray:'7 4'}).addTo(map);
+      r.poly=L.polygon([],{color:r.bc,fillColor:r.fc,weight:2,fillOpacity:1}).addTo(map);
+      r.closed=false;
+      const d=document.createElement('div');
+      d.style.cssText=`width:20px;height:20px;background:${r.col};border-radius:50%;border:2.5px solid rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;color:#030309;font-family:'Syne',sans-serif;box-shadow:0 0 12px ${r.col}55`;
+      d.textContent=r.n;
+      r.marker=L.marker(r.route[0],{icon:L.divIcon({html:d,className:'',iconSize:[20,20],iconAnchor:[10,10]}),zIndexOffset:1000}).addTo(map);
+      r.pts=[];
+    });
+    let last=null;
+    function tick(ts){
+      if(!last)last=ts;
+      const dt=Math.min((ts-last)/1000,.04);last=ts;
+      runners.forEach(r=>{
+        const steps=Math.max(1,Math.round(r.spd*60*dt));
+        for(let s=0;s<steps;s++){r.pidx=(r.pidx+1)%r.path.length;if(r.pidx===0)r.closed=true;}
+        const c=r.path[r.pidx];
+        r.marker.setLatLng(c);r.pts.push(c);
+        if(r.pts.length>400)r.pts.shift();
+        if(!r.closed)r.trail.setLatLngs(r.pts);
+        else{r.trail.setLatLngs([]);r.poly.setLatLngs(r.route.slice(0,-1));}
+      });
+      requestAnimationFrame(tick);
+    }
+    map.whenReady(()=>setTimeout(()=>requestAnimationFrame(tick),400));
+  }catch(e){console.warn(e)}
+}
+const mio=new IntersectionObserver(es=>{if(es[0].isIntersecting){mio.disconnect();if(typeof L!=='undefined'){initMap();return;}const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js';s.onload=initMap;document.head.appendChild(s);}},{threshold:.05});
+const terEl=document.getElementById('territory');
+if(terEl)mio.observe(terEl);
+</script>
 </body>
 </html>
