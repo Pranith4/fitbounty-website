@@ -225,10 +225,20 @@ h1.hero-h span::after{content:'';position:absolute;bottom:-3px;left:0;right:0;he
 .cta-in{max-width:620px;margin:0 auto;text-align:center}
 .cta-counter{display:inline-flex;align-items:center;gap:8px;background:rgba(245,166,35,.07);border:1px solid rgba(245,166,35,.18);border-radius:100px;padding:6px 16px;font-family:var(--fm);font-size:.72rem;color:var(--gold);margin-bottom:28px;font-weight:500}
 .cta-counter span{font-weight:700;color:var(--gold2)}
-.cta-form{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:32px}
-.cta-inp{flex:1;min-width:220px;padding:13px 20px;background:var(--s2);border:1.5px solid var(--brd2);border-radius:100px;color:var(--text);font-family:var(--fb);font-size:.88rem;outline:none;transition:border-color .2s}
-.cta-inp:focus{border-color:rgba(245,166,35,.45)}
+.cta-form{display:flex;flex-direction:column;gap:10px;align-items:center;margin-top:32px;width:100%;max-width:440px;margin-left:auto;margin-right:auto}
+.cta-inp{width:100%;padding:13px 20px;background:var(--s2);border:1.5px solid var(--brd2);border-radius:100px;color:var(--text);font-family:var(--fb);font-size:.88rem;outline:none;transition:border-color .2s,box-shadow .2s}
+.cta-inp:focus{border-color:rgba(245,166,35,.45);box-shadow:0 0 0 3px rgba(245,166,35,.07)}
 .cta-inp::placeholder{color:var(--t3)}
+.cta-inp.error{border-color:rgba(255,64,64,.45)!important;box-shadow:0 0 0 3px rgba(255,64,64,.07)!important}
+.cta-btn{width:100%;padding:14px 30px;background:var(--gold);border:none;border-radius:100px;font-family:var(--fh);font-size:.95rem;font-weight:700;color:#05050D;cursor:pointer;transition:all .28s;letter-spacing:.3px;position:relative;overflow:hidden}
+.cta-btn:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 14px 40px rgba(245,166,35,.3)}
+.cta-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
+.cta-btn .btn-spinner{display:none;width:16px;height:16px;border:2px solid rgba(5,5,13,.3);border-top-color:#05050D;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto}
+.cta-btn.loading .btn-label{display:none}
+.cta-btn.loading .btn-spinner{display:block}
+.cta-field-err{font-size:.7rem;color:var(--red);padding-left:20px;align-self:flex-start;display:none}
+.cta-field-err.show{display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
 .cta-note{margin-top:14px;font-size:.7rem;color:var(--t3)}
 
 /* ─ FOOTER ─ */
@@ -272,7 +282,7 @@ footer{border-top:1px solid var(--brd);padding:32px clamp(16px,4vw,56px);display
   <h1 class="hero-h">The fitness<br>challenge you<br>can't <span>ignore.</span></h1>
   <p class="hero-sub">Join a group. Weigh in weekly. Your results go on a live leaderboard — every Monday, visible to your entire crew. Win real brand vouchers. Lose your excuses.</p>
   <div class="hero-ctas">
-    <button class="btn-p" onclick="claim()">Claim My Spot</button>
+    <button class="btn-p" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Claim My Spot</button>
     <a class="btn-g" href="#compete">See the Board ↓</a>
   </div>
   <div class="scroll-cue">
@@ -534,9 +544,15 @@ footer{border-top:1px solid var(--brd);padding:32px clamp(16px,4vw,56px);display
       <div class="cta-counter"><span id="spots-left">347</span> spots left in the Bangalore beta</div>
       <h2 class="sh" style="text-align:center;font-size:clamp(2.4rem,6vw,5.5rem)">Your board<br>is waiting.</h2>
       <p class="sp" style="text-align:center;max-width:400px;margin:0 auto">Beta members get early access and first pick of challenges when we launch. No credit card. No fluff.</p>
-      <div class="cta-form">
-        <input class="cta-inp" type="email" id="email-in" placeholder="your@email.com">
-        <button class="btn-p" onclick="claim()">Claim My Spot</button>
+      <div class="cta-form" id="waitlist-form">
+        <input class="cta-inp" type="email" id="email-in" placeholder="your@email.com" autocomplete="email">
+        <span class="cta-field-err" id="email-err"></span>
+        <input class="cta-inp" type="tel" id="phone-in" placeholder="+91 98765 43210" autocomplete="tel">
+        <span class="cta-field-err" id="phone-err"></span>
+        <button class="cta-btn" id="claim-btn" onclick="claim()">
+          <span class="btn-label">Claim My Spot →</span>
+          <span class="btn-spinner"></span>
+        </button>
       </div>
       <p class="cta-note">Bangalore only for now. No spam. Unsubscribe any time.</p>
     </div>
@@ -552,12 +568,12 @@ footer{border-top:1px solid var(--brd);padding:32px clamp(16px,4vw,56px);display
   <div class="fl">
     <a href="#">Privacy</a>
     <a href="#">Terms</a>
-    <a href="mailto:hello@fitbounty.in">hello@fitbounty.in</a>
+    <a href="/cdn-cgi/l/email-protection#84ece1e8e8ebc4e2edf0e6ebf1eaf0fdaaedea"><span class="__cf_email__" data-cfemail="533b363f3f3c13353a27313c263d272a7d3a3d">[email&#160;protected]</span></a>
   </div>
   <span class="fr">© 2025 FitBounty · Bangalore</span>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ─ CURSOR ─ */
 const cur=document.getElementById('cur'),curR=document.getElementById('cur-r');
 let mx=0,my=0,rx=0,ry=0;
@@ -611,22 +627,113 @@ setInterval(()=>{
   }
 },8000);
 
-/* ─ WAITLIST TOAST ─ */
-function claim(){
-  const inp=document.getElementById('email-in'),toast=document.getElementById('toast');
-  const val=inp?inp.value.trim():'';
-  if(val.includes('@')){
-    toast.textContent='🎉 You\'re in, '+val.split('@')[0]+'. See you on the board.';
-    inp.value='';
-  } else {
-    toast.textContent='Enter your email to claim a spot.';
-    toast.style.borderColor='rgba(255,64,64,.3)';
-    toast.style.color='var(--red)';
-    setTimeout(()=>{toast.style.borderColor='';toast.style.color=''},2600);
+/* ─ SUPABASE CONFIG — replace these two values ─ */
+const SUPABASE_URL  = 'https://vobomlzhqrmpgdnqbrvv.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZvYm9tbHpocXJtcGdkbnFicnZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3MTcyNzIsImV4cCI6MjA4OTI5MzI3Mn0.P09_FOhJC_WxHW_-nTwiT0koP52D_rk13tdCSSrFuGA';
+
+/* ─ WAITLIST SUBMIT ─ */
+async function claim(){
+  const emailEl = document.getElementById('email-in');
+  const phoneEl = document.getElementById('phone-in');
+  const emailErr= document.getElementById('email-err');
+  const phoneErr= document.getElementById('phone-err');
+  const btn     = document.getElementById('claim-btn');
+  const toast   = document.getElementById('toast');
+
+  const email = emailEl.value.trim();
+  const phone = phoneEl.value.trim().replace(/\s+/g,'');
+
+  // ── client-side validation ──
+  let valid = true;
+
+  emailEl.classList.remove('error'); emailErr.classList.remove('show');
+  phoneEl.classList.remove('error'); phoneErr.classList.remove('show');
+
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const phoneOk = /^\+?[0-9]{8,15}$/.test(phone);
+
+  if(!emailOk){
+    emailEl.classList.add('error');
+    emailErr.textContent = email ? 'Enter a valid email address.' : 'Email is required.';
+    emailErr.classList.add('show');
+    valid = false;
   }
-  toast.classList.add('on');
-  setTimeout(()=>toast.classList.remove('on'),3200);
+  if(!phoneOk){
+    phoneEl.classList.add('error');
+    phoneErr.textContent = phone ? 'Enter a valid phone number (e.g. +91 98765 43210).' : 'Phone number is required.';
+    phoneErr.classList.add('show');
+    valid = false;
+  }
+  if(!valid) return;
+
+  // ── loading state ──
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/waitlist`, {
+      method: 'POST',
+      headers: {
+        'Content-Type':  'application/json',
+        'apikey':        SUPABASE_ANON,
+        'Authorization': `Bearer ${SUPABASE_ANON}`,
+        'Prefer':        'return=minimal'
+      },
+      body: JSON.stringify({ email, phone, city: 'Bangalore', source: 'landing_page' })
+    });
+
+    if(res.ok || res.status === 201){
+      // ── success ──
+      showToast('🎉 You\'re in, ' + email.split('@')[0] + '. See you on the board.', 'success');
+      emailEl.value = '';
+      phoneEl.value = '';
+      // tick down the counter
+      const counter = document.getElementById('spots-left');
+      if(counter) counter.textContent = Math.max(0, parseInt(counter.textContent) - 1);
+
+    } else {
+      const body = await res.json().catch(()=>({}));
+      // ── duplicate detection ──
+      const isDupEmail = body?.message?.toLowerCase().includes('email') || body?.code === '23505' && body?.details?.includes('email');
+      const isDupPhone = body?.message?.toLowerCase().includes('phone') || body?.code === '23505' && body?.details?.includes('phone');
+      const isDup      = res.status === 409 || body?.code === '23505';
+
+      if(isDup){
+        if(isDupPhone && !isDupEmail){
+          phoneEl.classList.add('error');
+          phoneErr.textContent = 'This phone number is already on the list.';
+          phoneErr.classList.add('show');
+        } else {
+          emailEl.classList.add('error');
+          emailErr.textContent = 'This email is already on the list.';
+          emailErr.classList.add('show');
+        }
+      } else {
+        showToast('Something went wrong. Please try again.', 'error');
+      }
+    }
+  } catch(e){
+    showToast('Network error. Check your connection and try again.', 'error');
+  } finally {
+    btn.classList.remove('loading');
+    btn.disabled = false;
+  }
 }
+
+function showToast(msg, type){
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.style.borderColor = type === 'error' ? 'rgba(255,64,64,.3)' : '';
+  toast.style.color       = type === 'error' ? 'var(--red)'         : '';
+  toast.classList.add('on');
+  setTimeout(()=>{ toast.classList.remove('on'); toast.style.borderColor=''; toast.style.color=''; }, 3600);
+}
+
+/* Also handle Enter key on inputs */
+['email-in','phone-in'].forEach(id=>{
+  const el = document.getElementById(id);
+  if(el) el.addEventListener('keydown', e=>{ if(e.key==='Enter') claim(); });
+});
 
 /* ─ TERRITORY MAP ─ */
 function initMap(){
@@ -676,12 +783,146 @@ const mio=new IntersectionObserver(es=>{
     if(typeof L!=='undefined'){initMap();return;}
     const s=document.createElement('script');
     s.src='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js';
-    s.onload=initMap;
-    document.head.appendChild(s);
+    s.onload=initMap;document.head.appendChild(s);
   }
-},{threshold:.05});
-const terEl=document.getElementById('territory');
-if(terEl)mio.observe(terEl);
+},{ threshold:.1 });
+const mapEl=document.getElementById('tmap');
+if(mapEl)mio.observe(mapEl);
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/motion@11.11.9/dist/motion.js"></script>
+<script>
+/* ─ FRAMER MOTION (Motion One) ─ */
+/* Safety: if Motion fails for any reason, unhide everything */
+function showAll(){
+  document.querySelectorAll('[data-m]').forEach(el=>{
+    el.style.opacity='';el.style.transform='';
+  });
+}
+const motionGuard=setTimeout(showAll,2500);
+
+window.addEventListener('load',function(){
+  const M=window.Motion;
+  if(!M){clearTimeout(motionGuard);showAll();return;}
+  const {animate,inView,stagger,spring}=M;
+
+  const sSnap  = spring({stiffness:300,damping:24,mass:1});
+  const sSmooth= spring({stiffness:200,damping:22,mass:1});
+  const sBouncy= spring({stiffness:260,damping:16,mass:0.9});
+  const sBar   = spring({stiffness:70, damping:18,mass:1});
+
+  /* Helper: hide then animate in */
+  function reveal(sel,props,opts){
+    const els=document.querySelectorAll(sel);
+    if(!els.length)return;
+    try{ animate(sel,props,opts); }catch(e){ els.forEach(el=>{el.style.opacity=1;el.style.transform='none';}); }
+  }
+
+  /* ── HERO staggered entrance ── */
+  [
+    ['.badge',     0.08],
+    ['h1.hero-h',  0.22],
+    ['.hero-sub',  0.40],
+    ['.hero-ctas', 0.54],
+    ['.scroll-cue',1.30],
+  ].forEach(([sel,delay])=>{
+    const el=document.querySelector(sel);
+    if(!el)return;
+    el.style.opacity='0';
+    el.style.transform='translateY(36px)';
+    animate(el,{opacity:[0,1],y:[36,0]},{easing:sSmooth,delay});
+  });
+
+  /* ── NAV entrance ── */
+  const nav=document.getElementById('nav');
+  if(nav){nav.style.opacity='0';animate(nav,{opacity:[0,1],y:[-12,0]},{easing:sBouncy,delay:0});}
+
+  /* ── Underline spring ── */
+  const ul=document.querySelector('h1.hero-h span::after');
+  // CSS ::after can't be targeted by Motion; leave CSS animation for it
+
+  /* ── Generic .fu scroll reveals ── */
+  document.querySelectorAll('.fu').forEach(el=>{
+    // Skip elements handled by group stagger
+    if(el.closest('.steps')||el.closest('.quotes')||el.closest('.rules')||el.closest('.terr-pts'))return;
+    el.style.opacity='0';
+    el.style.transform='translateY(36px)';
+    inView(el,()=>{
+      animate(el,{opacity:[0,1],y:[36,0]},{easing:sSmooth});
+    },{amount:0.1});
+  });
+
+  /* ── STEPS stagger ── */
+  document.querySelectorAll('.step').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(48px) scale(0.97)';});
+  inView('.steps',()=>{
+    animate('.step',{opacity:[0,1],y:[48,0],scale:[0.97,1]},{easing:sBouncy,delay:stagger(0.09,{start:0.05})});
+  },{amount:0.1});
+
+  /* ── QUOTES stagger ── */
+  document.querySelectorAll('.quote').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(44px)';});
+  inView('.quotes',()=>{
+    animate('.quote',{opacity:[0,1],y:[44,0]},{easing:sSmooth,delay:stagger(0.12,{start:0.05})});
+  },{amount:0.1});
+
+  /* ── LEADERBOARD ROWS ── */
+  document.querySelectorAll('.lbr').forEach(el=>{el.style.opacity='0';el.style.transform='translateX(-24px)';});
+  inView('#lbc',()=>{
+    animate('.lbr',{opacity:[0,1],x:[-24,0]},{easing:sSnap,delay:stagger(0.07,{start:0.15})});
+    // Progress bars
+    document.querySelectorAll('.lb-bar-f').forEach((bar,i)=>{
+      const w=bar.style.width||'100%';bar.style.width='0%';
+      animate(bar,{width:w},{easing:sBar,delay:0.6+i*0.18});
+    });
+  },{amount:0.2});
+
+  /* ── RULES stagger ── */
+  document.querySelectorAll('.rule').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(32px)';});
+  inView('.rules',()=>{
+    animate('.rule',{opacity:[0,1],y:[32,0]},{easing:sSmooth,delay:stagger(0.1,{start:0.05})});
+  },{amount:0.15});
+
+  /* ── TERRITORY POINTS stagger ── */
+  document.querySelectorAll('.tp').forEach(el=>{el.style.opacity='0';el.style.transform='translateX(-28px)';});
+  inView('.terr-pts',()=>{
+    animate('.tp',{opacity:[0,1],x:[-28,0]},{easing:sSnap,delay:stagger(0.11,{start:0.05})});
+  },{amount:0.15});
+
+  /* ── VOUCHER CHIPS ── */
+  document.querySelectorAll('.chip').forEach(el=>{el.style.opacity='0';el.style.transform='scale(0.88)';});
+  inView('.mq-wrap',()=>{
+    animate('.chip',{opacity:[0,1],scale:[0.88,1]},{easing:sBouncy,delay:stagger(0.04)});
+  },{amount:0.1});
+
+  /* ── CTA SECTION ── */
+  const ctaEls=['.cta-counter','.cta-in .sh','.cta-in .sp','.cta-form','.cta-note'];
+  ctaEls.forEach(sel=>{ const el=document.querySelector(sel); if(el){el.style.opacity='0';el.style.transform='translateY(24px)';} });
+  inView('.cta-in',()=>{
+    ctaEls.forEach((sel,i)=>{ const el=document.querySelector(sel); if(el)animate(el,{opacity:[0,1],y:[24,0]},{easing:sSmooth,delay:i*0.12}); });
+  },{amount:0.2});
+
+  /* ── FOOTER ── */
+  const footer=document.querySelector('footer');
+  if(footer){footer.style.opacity='0';inView(footer,()=>animate(footer,{opacity:[0,1],y:[20,0]},{easing:sSmooth}),{amount:0.3});}
+
+  /* ── MAGNETIC PRIMARY BUTTONS ── */
+  document.querySelectorAll('.btn-p,.nav-btn').forEach(btn=>{
+    btn.addEventListener('mousemove',e=>{
+      const r=btn.getBoundingClientRect();
+      const dx=(e.clientX-(r.left+r.width/2))*0.22;
+      const dy=(e.clientY-(r.top+r.height/2))*0.22;
+      animate(btn,{x:dx,y:dy},{easing:spring({stiffness:500,damping:28})});
+    });
+    btn.addEventListener('mouseleave',()=>animate(btn,{x:0,y:0},{easing:spring({stiffness:400,damping:26})}));
+  });
+
+  /* ── GHOST BUTTON spring ── */
+  document.querySelectorAll('.btn-g').forEach(btn=>{
+    btn.addEventListener('mouseenter',()=>animate(btn,{scale:1.04},{easing:spring({stiffness:500,damping:24})}));
+    btn.addEventListener('mouseleave',()=>animate(btn,{scale:1},{easing:spring({stiffness:400,damping:26})}));
+  });
+
+  clearTimeout(motionGuard);
+});
 </script>
 </body>
 </html>
