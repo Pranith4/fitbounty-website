@@ -33,10 +33,9 @@ html{scroll-behavior:smooth;overflow-x:hidden}
 body{background:var(--bg);color:var(--text);font-family:var(--fb);-webkit-font-smoothing:antialiased;overflow-x:hidden;cursor:none}
 
 /* ─ CURSOR ─ */
-#cur{position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s;mix-blend-mode:difference}
-#cur-r{position:fixed;width:36px;height:36px;border:1.5px solid rgba(245,166,35,.3);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .3s,height .3s,opacity .3s}
-.cur-big #cur{width:20px;height:20px}
-.cur-big #cur-r{width:56px;height:56px;opacity:.5}
+#cur{position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);font-size:22px;line-height:1;transition:transform .15s,font-size .2s;user-select:none;filter:drop-shadow(0 2px 6px rgba(245,166,35,.45));will-change:transform}
+#cur-r{display:none}
+.cur-big #cur{font-size:30px;transform:translate(-50%,-50%) rotate(-30deg) scale(1.15)}
 
 /* ─ NOISE ─ */
 body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:1}
@@ -254,7 +253,7 @@ footer{border-top:1px solid var(--brd);padding:32px clamp(16px,4vw,56px);display
 </style>
 </head>
 <body>
-<div id="cur"></div>
+<div id="cur">🏋️</div>
 <div id="cur-r"></div>
 <div class="toast" id="toast">🎉 Spot claimed — see you on the board.</div>
 
@@ -575,13 +574,12 @@ footer{border-top:1px solid var(--brd);padding:32px clamp(16px,4vw,56px);display
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ─ CURSOR ─ */
-const cur=document.getElementById('cur'),curR=document.getElementById('cur-r');
-let mx=0,my=0,rx=0,ry=0;
+const cur=document.getElementById('cur');
+let mx=0,my=0;
 document.addEventListener('mousemove',e=>{
   mx=e.clientX;my=e.clientY;
   cur.style.left=mx+'px';cur.style.top=my+'px';
 });
-(function loop(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(loop)})();
 document.querySelectorAll('a,button,.lb-card,.step,.quote,.rule,.chip').forEach(el=>{
   el.addEventListener('mouseenter',()=>document.body.classList.add('cur-big'));
   el.addEventListener('mouseleave',()=>document.body.classList.remove('cur-big'));
@@ -628,8 +626,8 @@ setInterval(()=>{
 },8000);
 
 /* ─ SUPABASE CONFIG — replace these two values ─ */
-const SUPABASE_URL  = 'https://vobomlzhqrmpgdnqbrvv.supabase.co';
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZvYm9tbHpocXJtcGdkbnFicnZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3MTcyNzIsImV4cCI6MjA4OTI5MzI3Mn0.P09_FOhJC_WxHW_-nTwiT0koP52D_rk13tdCSSrFuGA';
+/* ─ EDGE FUNCTION URL — only thing you need to change ─ */
+const FUNCTION_URL = 'https://vobomlzhqrmpgdnqbrvv.supabase.co/functions/v1/clever-api';
 
 /* ─ WAITLIST SUBMIT ─ */
 async function claim(){
@@ -638,7 +636,6 @@ async function claim(){
   const emailErr= document.getElementById('email-err');
   const phoneErr= document.getElementById('phone-err');
   const btn     = document.getElementById('claim-btn');
-  const toast   = document.getElementById('toast');
 
   const email = emailEl.value.trim();
   const phone = phoneEl.value.trim().replace(/\s+/g,'');
@@ -671,47 +668,36 @@ async function claim(){
   btn.disabled = true;
 
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/waitlist`, {
+    const res = await fetch(FUNCTION_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type':  'application/json',
-        'apikey':        SUPABASE_ANON,
-        'Authorization': `Bearer ${SUPABASE_ANON}`,
-        'Prefer':        'return=minimal'
-      },
-      body: JSON.stringify({ email, phone, city: 'Bangalore', source: 'landing_page' })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, phone })
     });
 
-    if(res.ok || res.status === 201){
-      // ── success ──
+    const body = await res.json().catch(()=>({}));
+
+    if(res.ok){
       showToast('🎉 You\'re in, ' + email.split('@')[0] + '. See you on the board.', 'success');
       emailEl.value = '';
       phoneEl.value = '';
-      // tick down the counter
       const counter = document.getElementById('spots-left');
       if(counter) counter.textContent = Math.max(0, parseInt(counter.textContent) - 1);
 
-    } else {
-      const body = await res.json().catch(()=>({}));
-      // ── duplicate detection ──
-      const isDupEmail = body?.message?.toLowerCase().includes('email') || body?.code === '23505' && body?.details?.includes('email');
-      const isDupPhone = body?.message?.toLowerCase().includes('phone') || body?.code === '23505' && body?.details?.includes('phone');
-      const isDup      = res.status === 409 || body?.code === '23505';
-
-      if(isDup){
-        if(isDupPhone && !isDupEmail){
-          phoneEl.classList.add('error');
-          phoneErr.textContent = 'This phone number is already on the list.';
-          phoneErr.classList.add('show');
-        } else {
-          emailEl.classList.add('error');
-          emailErr.textContent = 'This email is already on the list.';
-          emailErr.classList.add('show');
-        }
+    } else if(res.status === 409){
+      // duplicate — edge function returns "duplicate_email" or "duplicate_phone"
+      if(body?.error === 'duplicate_phone'){
+        phoneEl.classList.add('error');
+        phoneErr.textContent = 'This phone number is already on the list.';
+        phoneErr.classList.add('show');
       } else {
-        showToast('Something went wrong. Please try again.', 'error');
+        emailEl.classList.add('error');
+        emailErr.textContent = 'This email is already on the list.';
+        emailErr.classList.add('show');
       }
+    } else {
+      showToast('Something went wrong. Please try again.', 'error');
     }
+
   } catch(e){
     showToast('Network error. Check your connection and try again.', 'error');
   } finally {
@@ -729,7 +715,7 @@ function showToast(msg, type){
   setTimeout(()=>{ toast.classList.remove('on'); toast.style.borderColor=''; toast.style.color=''; }, 3600);
 }
 
-/* Also handle Enter key on inputs */
+/* Enter key on inputs */
 ['email-in','phone-in'].forEach(id=>{
   const el = document.getElementById(id);
   if(el) el.addEventListener('keydown', e=>{ if(e.key==='Enter') claim(); });
