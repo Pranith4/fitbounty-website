@@ -1,621 +1,1391 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>FitBounty — Bangalore's Most Competitive Fitness Challenge</title>
+<title>FitBounty India | The Neon Arena</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Be+Vietnam+Pro:wght@400;500;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
 <style>
+/* ─────────────────────────────────────────
+   RESET
+───────────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#05050D;
-  --s1:#08081A;
-  --s2:#0D0D22;
-  --s3:#12122A;
-  --brd:rgba(255,255,255,.06);
-  --brd2:rgba(255,255,255,.11);
-  --gold:#F5A623;
-  --gold2:#FFB340;
-  --lime:#00E87A;
-  --red:#FF4040;
-  --text:#F2EFF9;
-  --t2:#7876A0;
-  --t3:#3A3860;
-  --fh:'Syne',sans-serif;
-  --fb:'DM Sans',sans-serif;
-  --fm:'DM Mono',monospace;
-  --r:10px;--rl:16px;--rxl:22px;
-}
 html{scroll-behavior:smooth;overflow-x:hidden}
-body{background:var(--bg);color:var(--text);font-family:var(--fb);-webkit-font-smoothing:antialiased;overflow-x:hidden;cursor:none}
+body{cursor:none;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+     font-family:'Inter',sans-serif;background:#13121c;color:#e4e1ef}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:none}
+img{display:block;max-width:100%}
 
-/* ─ CURSOR ─ */
-#cur{position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);font-size:22px;line-height:1;transition:transform .15s,font-size .2s;user-select:none;filter:drop-shadow(0 2px 6px rgba(245,166,35,.45));will-change:transform}
-#cur-r{display:none}
+/* ─────────────────────────────────────────
+   COLOR TOKENS
+───────────────────────────────────────── */
+:root{
+  --primary:              #ffc880;
+  --primary-container:    #f5a623;
+  --on-primary:           #452b00;
+  --on-primary-container: #644000;
+  --secondary:            #7cffa3;
+  --secondary-container:  #00e779;
+  --on-secondary:         #003919;
+  --tertiary:             #d0cdfc;
+  --error:                #ffb4ab;
+  --error-container:      #93000a;
+  --surface:              #13121c;
+  --surface-bright:       #393843;
+  --surface-c-lowest:     #0d0d17;
+  --surface-c-low:        #1b1b24;
+  --surface-c:            #1f1f29;
+  --surface-c-high:       #292933;
+  --surface-c-highest:    #34343e;
+  --on-surface:           #e4e1ef;
+  --on-surface-var:       #d7c3ae;
+  --outline:              #9f8e7a;
+  --outline-var:          #524534;
+  --shadow-press:         #633f00;
+}
+
+/* ─────────────────────────────────────────
+   TYPOGRAPHY
+───────────────────────────────────────── */
+.font-headline{font-family:'Space Grotesk',sans-serif}
+.font-body    {font-family:'Inter',sans-serif}
+.font-label   {font-family:'Be Vietnam Pro',sans-serif}
+.font-mono    {font-family:'DM Mono',monospace}
+
+.text-xs  {font-size:.75rem;line-height:1rem}
+.text-sm  {font-size:.875rem;line-height:1.25rem}
+.text-base{font-size:1rem;line-height:1.5rem}
+.text-lg  {font-size:1.125rem;line-height:1.75rem}
+.text-xl  {font-size:1.25rem;line-height:1.75rem}
+.text-2xl {font-size:1.5rem;line-height:2rem}
+.text-3xl {font-size:1.875rem;line-height:2.25rem}
+.text-4xl {font-size:2.25rem;line-height:2.5rem}
+
+.text-10px{font-size:10px;line-height:1.4}
+.text-11px{font-size:11px;line-height:1.4}
+.text-9px {font-size:9px;line-height:1.4}
+.text-82  {font-size:.82rem}
+
+.font-normal{font-weight:400}
+.font-medium{font-weight:500}
+.font-bold  {font-weight:700}
+.font-black {font-weight:900}
+.italic     {font-style:italic}
+
+.tracking-tighter{letter-spacing:-.05em}
+.tracking-tight  {letter-spacing:-.025em}
+.tracking-wide   {letter-spacing:.025em}
+.tracking-wider  {letter-spacing:.05em}
+.tracking-widest {letter-spacing:.1em}
+.tracking-2em    {letter-spacing:.2em}
+
+.leading-none   {line-height:1}
+.leading-tight  {line-height:1.25}
+.leading-relaxed{line-height:1.625}
+.leading-loose  {line-height:2}
+
+.uppercase  {text-transform:uppercase}
+.whitespace-nowrap{white-space:nowrap}
+.text-center{text-align:center}
+.text-right {text-align:right}
+
+/* ─────────────────────────────────────────
+   COLOR UTILITIES
+───────────────────────────────────────── */
+.text-primary           {color:var(--primary)}
+.text-primary-container {color:var(--primary-container)}
+.text-on-primary        {color:var(--on-primary)}
+.text-on-primary-container{color:var(--on-primary-container)}
+.text-secondary         {color:var(--secondary)}
+.text-on-secondary      {color:var(--on-secondary)}
+.text-tertiary          {color:var(--tertiary)}
+.text-error             {color:var(--error)}
+.text-on-surface        {color:var(--on-surface)}
+.text-on-surface-var    {color:var(--on-surface-var)}
+.text-white             {color:#fff}
+.text-slate-300         {color:#cbd5e1}
+.text-slate-400         {color:#94a3b8}
+.text-slate-500         {color:#64748b}
+.text-slate-600         {color:#475569}
+.text-custom-blue       {color:#4DA6FF}
+.text-custom-purple     {color:#9B6DFF}
+
+.bg-surface             {background:var(--surface)}
+.bg-surface-bright      {background:var(--surface-bright)}
+.bg-surface-c-lowest    {background:var(--surface-c-lowest)}
+.bg-surface-c-low       {background:var(--surface-c-low)}
+.bg-surface-c           {background:var(--surface-c)}
+.bg-surface-c-high      {background:var(--surface-c-high)}
+.bg-surface-c-highest   {background:var(--surface-c-highest)}
+.bg-primary             {background:var(--primary)}
+.bg-primary-container   {background:var(--primary-container)}
+.bg-secondary           {background:var(--secondary)}
+.bg-dark-map            {background:#050d12}
+.bg-footer              {background:#0a0a0f}
+.bg-nav                 {background:rgba(19,18,28,.6)}
+
+.bg-primary-10    {background:rgba(245,166,35,.1)}
+.bg-primary-20    {background:rgba(245,166,35,.2)}
+.bg-secondary-5   {background:rgba(124,255,163,.05)}
+.bg-secondary-10  {background:rgba(124,255,163,.1)}
+.bg-secondary-20  {background:rgba(0,231,121,.2)}
+.bg-error-5       {background:rgba(255,180,171,.05)}
+.bg-white-5       {background:rgba(255,255,255,.05)}
+.bg-white-10      {background:rgba(255,255,255,.1)}
+.bg-slate-600     {background:#475569}
+.bg-9b6d          {background:#9B6DFF}
+.bg-4da6-10       {background:rgba(77,166,255,.1)}
+.bg-13121c-60     {background:rgba(19,18,28,.6)}
+.bg-0a0a0f        {background:#0a0a0f}
+.bg-050d12        {background:#050d12}
+
+/* ─────────────────────────────────────────
+   BORDERS
+───────────────────────────────────────── */
+.border        {border:1px solid}
+.border-2      {border:2px solid}
+.border-b      {border-bottom:1px solid}
+.border-t      {border-top:1px solid}
+.border-l-2    {border-left:2px solid}
+.border-y      {border-top:1px solid;border-bottom:1px solid}
+
+.border-white-5  {border-color:rgba(255,255,255,.05)}
+.border-white-10 {border-color:rgba(255,255,255,.1)}
+.border-outline-30{border-color:rgba(159,142,122,.3)}
+.border-primary-c-20{border-color:rgba(245,166,35,.2)}
+.border-primary-c-30{border-color:rgba(245,166,35,.3)}
+.border-secondary-10{border-color:rgba(124,255,163,.1)}
+.border-secondary-12{border-color:rgba(124,255,163,.12)}
+.border-secondary-20{border-color:rgba(124,255,163,.2)}
+.border-secondary-22{border-color:rgba(124,255,163,.22)}
+.border-error-15    {border-color:rgba(255,180,171,.15)}
+.border-transparent {border-color:transparent}
+
+.rounded    {border-radius:1rem}
+.rounded-sm {border-radius:.5rem}
+.rounded-lg {border-radius:2rem}
+.rounded-xl {border-radius:.75rem}
+.rounded-2xl{border-radius:1rem}
+.rounded-full{border-radius:9999px}
+.rounded-t-2rem{border-radius:2rem 2rem 0 0}
+.rounded-15rem{border-radius:1.5rem}
+.rounded-19rem{border-radius:1.9rem}
+.rounded-20rem{border-radius:2rem}
+
+/* ─────────────────────────────────────────
+   LAYOUT
+───────────────────────────────────────── */
+.block   {display:block}
+.flex    {display:flex}
+.grid    {display:grid}
+.hidden  {display:none}
+.inline-flex{display:inline-flex}
+.inline-block{display:inline-block}
+
+.flex-col  {flex-direction:column}
+.flex-wrap {flex-wrap:wrap}
+.flex-1    {flex:1 1 0%}
+.flex-grow {flex-grow:1}
+.shrink-0  {flex-shrink:0}
+
+.items-start  {align-items:flex-start}
+.items-center {align-items:center}
+.items-end    {align-items:flex-end}
+.justify-start{justify-content:flex-start}
+.justify-center{justify-content:center}
+.justify-end  {justify-content:flex-end}
+.justify-between{justify-content:space-between}
+.place-items-center{place-items:center}
+
+.grid-1{grid-template-columns:1fr}
+.grid-2{grid-template-columns:1fr 1fr}
+
+.gap-1{gap:.25rem}  .gap-1_5{gap:.375rem} .gap-2{gap:.5rem}
+.gap-3{gap:.75rem}  .gap-4{gap:1rem}       .gap-5{gap:1.25rem}
+.gap-6{gap:1.5rem}  .gap-8{gap:2rem}       .gap-10{gap:2.5rem}
+.gap-16{gap:4rem}
+
+.space-y-2>*+*{margin-top:.5rem}
+.space-y-3>*+*{margin-top:.75rem}
+.space-y-4>*+*{margin-top:1rem}
+.space-y-6>*+*{margin-top:1.5rem}
+
+.-space-x-2>*+*{margin-left:-.5rem}
+
+/* ─────────────────────────────────────────
+   POSITIONING
+───────────────────────────────────────── */
+.relative {position:relative}
+.absolute {position:absolute}
+.fixed    {position:fixed}
+.sticky   {position:sticky}
+
+.inset-0   {inset:0}
+.inset-y-0 {top:0;bottom:0}
+.top-0     {top:0}
+.top-3     {top:.75rem}
+.bottom-0  {bottom:0}
+.bottom-8  {bottom:2rem}
+.left-0    {left:0}
+.left-3    {left:.75rem}
+.right-0   {right:0}
+.right-4   {right:1rem}
+
+.z-10    {z-index:10}
+.z-20    {z-index:20}
+.z-50    {z-index:50}
+.z-800   {z-index:800}
+.z-1000  {z-index:1000}
+.z-9999  {z-index:9999}
+
+.overflow-hidden  {overflow:hidden}
+.overflow-x-hidden{overflow-x:hidden}
+
+/* ─────────────────────────────────────────
+   SIZING
+───────────────────────────────────────── */
+.w-1    {width:.25rem}  .w-2{width:.5rem}
+.w-8    {width:2rem}    .w-9{width:2.25rem} .w-10{width:2.5rem}
+.w-24   {width:6rem}    .w-px{width:1px}
+.w-full {width:100%}    .w-fit{width:fit-content}
+.w-half {width:50%}
+.w-500px{width:500px}   .w-900px{width:900px}
+
+.h-1    {height:.25rem} .h-2{height:.5rem}
+.h-8    {height:2rem}   .h-9{height:2.25rem} .h-10{height:2.5rem}
+.h-full {height:100%}   .h-px{height:1px}
+.h-380px{height:380px}  .h-500px{height:500px} .h-900px{height:900px}
+.min-h-screen{min-height:100svh}
+.max-w-sm  {max-width:24rem}   .max-w-md  {max-width:28rem}
+.max-w-xl  {max-width:36rem}   .max-w-2xl {max-width:42rem}
+.max-w-3xl {max-width:48rem}   .max-w-4xl {max-width:56rem}
+.max-w-5xl {max-width:64rem}   .max-w-7xl {max-width:80rem}
+.mx-auto   {margin-left:auto;margin-right:auto}
+
+/* ─────────────────────────────────────────
+   PADDING & MARGIN
+───────────────────────────────────────── */
+.p-1   {padding:.25rem}  .p-3{padding:.75rem}   .p-4{padding:1rem}
+.p-5   {padding:1.25rem} .p-6{padding:1.5rem}   .p-7{padding:1.75rem}
+.p-8   {padding:2rem}
+
+.px-2  {padding-left:.5rem;  padding-right:.5rem}
+.px-3  {padding-left:.75rem; padding-right:.75rem}
+.px-4  {padding-left:1rem;   padding-right:1rem}
+.px-5  {padding-left:1.25rem;padding-right:1.25rem}
+.px-6  {padding-left:1.5rem; padding-right:1.5rem}
+.px-7  {padding-left:1.75rem;padding-right:1.75rem}
+.px-8  {padding-left:2rem;   padding-right:2rem}
+.px-10 {padding-left:2.5rem; padding-right:2.5rem}
+.px-14 {padding-left:3.5rem; padding-right:3.5rem}
+
+.py-0_5{padding-top:.125rem;padding-bottom:.125rem}
+.py-1_5{padding-top:.375rem;padding-bottom:.375rem}
+.py-2  {padding-top:.5rem;  padding-bottom:.5rem}
+.py-3  {padding-top:.75rem; padding-bottom:.75rem}
+.py-4  {padding-top:1rem;   padding-bottom:1rem}
+.py-5  {padding-top:1.25rem;padding-bottom:1.25rem}
+.py-12 {padding-top:3rem;   padding-bottom:3rem}
+.py-20 {padding-top:5rem;   padding-bottom:5rem}
+.py-24 {padding-top:6rem;   padding-bottom:6rem}
+
+.pt-3{padding-top:.75rem}   .pt-20{padding-top:5rem}
+.pb-28{padding-bottom:7rem} .pb-12{padding-bottom:3rem}
+
+.mt-0_5{margin-top:.125rem} .mt-1{margin-top:.25rem}
+.mt-4  {margin-top:1rem}    .mt-6{margin-top:1.5rem}
+.mt-8  {margin-top:2rem}    .mb-3{margin-bottom:.75rem}
+.mb-4  {margin-bottom:1rem} .mb-5{margin-bottom:1.25rem}
+.mb-6  {margin-bottom:1.5rem} .mb-8{margin-bottom:2rem}
+.mb-10 {margin-bottom:2.5rem} .mb-12{margin-bottom:3rem}
+.mb-14 {margin-bottom:3.5rem} .mb-16{margin-bottom:4rem}
+
+/* ─────────────────────────────────────────
+   EFFECTS
+───────────────────────────────────────── */
+.shadow-lb {box-shadow:0 40px 100px rgba(0,0,0,.6)}
+.shadow-acc{box-shadow:0 60px 120px rgba(0,0,0,.7)}
+.shadow-nav{box-shadow:0 12px 40px rgba(245,166,35,.06)}
+.shadow-bot{box-shadow:0 -8px 30px rgba(0,0,0,.5)}
+.shadow-8-gold{box-shadow:0 8px 0 0 var(--shadow-press)}
+.shadow-fab{box-shadow:0 0 15px rgba(245,166,35,.3)}
+
+.backdrop-blur{backdrop-filter:blur(24px)}
+.backdrop-blur-xl{backdrop-filter:blur(20px)}
+
+.pointer-events-none{pointer-events:none}
+.select-none{user-select:none}
+.antialiased{-webkit-font-smoothing:antialiased}
+
+/* ─────────────────────────────────────────
+   TRANSFORMS & TRANSITIONS
+───────────────────────────────────────── */
+.transition-all    {transition:all .3s}
+.transition-colors {transition:color .2s, background-color .2s, border-color .2s}
+.transition-opacity{transition:opacity .2s}
+.transition-transform{transition:transform .2s}
+.duration-200{transition-duration:.2s}
+.duration-300{transition-duration:.3s}
+.duration-500{transition-duration:.5s}
+
+.translate-x-half{transform:translateX(-50%)}
+.translate-y-half{transform:translateY(-50%)}
+.translate-xy    {transform:translate(-50%,-50%)}
+.top-half        {top:50%}
+
+.hover\:scale-105:hover{transform:scale(1.05)}
+.hover\:bg-surface-c:hover{background:var(--surface-c)}
+.hover\:bg-white-5:hover{background:rgba(255,255,255,.05)}
+.hover\:border-primary-c:hover{border-color:rgba(245,166,35,.2)}
+.hover\:border-secondary:hover{border-color:rgba(124,255,163,.2)}
+.hover\:text-white:hover{color:#fff}
+.hover\:text-secondary:hover{color:var(--secondary)}
+.hover\:opacity-100:hover{opacity:1}
+
+.active\:scale-90:active{transform:scale(.9)}
+.active\:scale-95:active{transform:scale(.95)}
+.active\:shadow-none:active{box-shadow:none}
+.active\:translate-y-1:active{transform:translateY(4px)}
+
+.focus\:ring-0:focus{outline:none;box-shadow:none}
+
+.group:hover .group-hover\:opacity-100{opacity:1}
+
+/* ─────────────────────────────────────────
+   GRADIENT UTILITIES
+───────────────────────────────────────── */
+.grad-nav{background:linear-gradient(to bottom,#1b1b24,transparent)}
+.grad-gold-orange{background:linear-gradient(135deg,var(--primary-container),var(--primary))}
+.grad-right-gold {background:linear-gradient(to right,rgba(245,166,35,.05),transparent)}
+.grad-t-surface  {background:linear-gradient(to top,var(--surface-c-lowest),transparent)}
+
+/* ─────────────────────────────────────────
+   MATERIAL ICONS
+───────────────────────────────────────── */
+.material-symbols-outlined{
+  font-family:'Material Symbols Outlined';
+  font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
+  vertical-align:middle;display:inline-block;line-height:1
+}
+
+/* ─────────────────────────────────────────
+   COMPONENT STYLES
+───────────────────────────────────────── */
+
+/* Cursor */
+#cur{position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);
+     font-size:22px;line-height:1;user-select:none;
+     filter:drop-shadow(0 2px 8px rgba(245,166,35,.5));will-change:transform;
+     transition:font-size .2s}
 .cur-big #cur{font-size:30px;transform:translate(-50%,-50%) rotate(-30deg) scale(1.15)}
 
-/* ─ NOISE ─ */
-body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:1}
+/* Noise */
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E")}
 
-/* ─ NAV ─ */
-nav{position:fixed;top:0;inset-x:0;z-index:800;height:62px;display:flex;align-items:center;padding:0 clamp(16px,4vw,56px);gap:24px;transition:background .4s,border-color .4s;border-bottom:1px solid transparent}
-nav.s{background:rgba(5,5,13,.92);backdrop-filter:blur(20px);border-color:var(--brd)}
-.logo{display:flex;align-items:center;gap:9px;text-decoration:none;margin-right:auto}
-.logo-m{width:30px;height:30px;background:var(--gold);border-radius:8px;display:grid;place-items:center;font-family:var(--fh);font-size:1rem;color:#05050D;font-weight:800;flex-shrink:0}
-.logo-t{font-family:var(--fh);font-size:1rem;font-weight:800;letter-spacing:.5px}
-.nav-l{display:flex;gap:26px}
-.nav-l a{color:var(--t2);text-decoration:none;font-size:.8rem;font-weight:500;transition:color .18s}
-.nav-l a:hover{color:var(--text)}
-.nav-btn{padding:8px 20px;background:var(--gold);border:none;border-radius:100px;font-family:var(--fh);font-size:.82rem;font-weight:700;color:#05050D;cursor:none;transition:all .22s;letter-spacing:.3px;text-decoration:none;display:inline-block;white-space:nowrap}
-.nav-btn:hover{background:var(--gold2);transform:scale(1.04)}
-@media(max-width:720px){.nav-l{display:none}}
-
-/* ─ ANIMATIONS ─ */
-@keyframes up{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
-@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,232,122,.5)}60%{opacity:.6;box-shadow:0 0 0 7px rgba(0,232,122,0)}}
-@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-@keyframes ul{to{transform:scaleX(1)}}
-@keyframes ldot{0%,100%{opacity:1}50%{opacity:.3}}
-.fu{opacity:0;transform:translateY(36px);transition:opacity .65s cubic-bezier(.22,1,.36,1),transform .65s cubic-bezier(.22,1,.36,1)}
-.fu.v{opacity:1;transform:none}
-.d1{transition-delay:.08s}.d2{transition-delay:.17s}.d3{transition-delay:.26s}.d4{transition-delay:.35s}
-
-/* ─ HERO ─ */
-.hero{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px clamp(16px,5vw,80px) 56px;position:relative;overflow:hidden}
-.h-orb1{position:absolute;width:960px;height:960px;background:radial-gradient(circle,rgba(245,166,35,.065) 0%,transparent 60%);top:-280px;left:50%;transform:translateX(-50%);pointer-events:none}
-.h-orb2{position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(0,232,122,.035) 0%,transparent 65%);bottom:-80px;right:-80px;pointer-events:none}
-.h-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(245,166,35,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(245,166,35,.025) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse 75% 55% at 50% 40%,black,transparent 75%);pointer-events:none}
-.badge{display:inline-flex;align-items:center;gap:7px;background:rgba(0,232,122,.07);border:1px solid rgba(0,232,122,.2);border-radius:100px;padding:6px 16px;font-size:.68rem;font-weight:700;letter-spacing:1.5px;color:var(--lime);margin-bottom:32px;text-transform:uppercase;animation:up .6s .1s both}
-.bdot{width:6px;height:6px;border-radius:50%;background:var(--lime);animation:pulse 1.8s infinite}
-h1.hero-h{font-family:var(--fh);font-size:clamp(3rem,11vw,9.5rem);line-height:.86;letter-spacing:-2px;font-weight:800;animation:up .75s .25s both;max-width:940px}
-h1.hero-h span{color:var(--gold);position:relative;display:inline-block}
-h1.hero-h span::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:3px;background:var(--gold);border-radius:2px;transform:scaleX(0);transform-origin:left;animation:ul .55s 1.1s forwards}
-.hero-sub{font-size:clamp(.93rem,1.7vw,1.1rem);color:var(--t2);line-height:1.85;max-width:480px;margin:26px auto 38px;animation:up .75s .4s both}
-.hero-ctas{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;animation:up .75s .55s both}
-.btn-p{padding:14px 30px;background:var(--gold);border:none;border-radius:100px;font-family:var(--fh);font-size:.95rem;font-weight:700;color:#05050D;cursor:none;transition:all .28s;letter-spacing:.3px;white-space:nowrap}
-.btn-p:hover{background:var(--gold2);transform:translateY(-3px);box-shadow:0 14px 40px rgba(245,166,35,.3)}
-.btn-g{padding:14px 30px;background:transparent;border:1.5px solid var(--brd2);border-radius:100px;font-family:var(--fh);font-size:.95rem;font-weight:700;color:var(--t2);cursor:none;transition:all .28s}
-.btn-g:hover{border-color:rgba(245,166,35,.4);color:var(--text);transform:translateY(-3px)}
-/* Scroll cue */
-.scroll-cue{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;animation:up .6s 1.4s both}
-.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--brd2),transparent)}
-.scroll-label{font-size:.6rem;letter-spacing:3px;color:var(--t3);text-transform:uppercase}
-
-/* ─ PROBLEM STRIP ─ */
-.prob{background:var(--gold);padding:12px 0;overflow:hidden}
-.prob-t{display:flex;animation:mq 24s linear infinite;width:max-content}
-.prob-i{display:flex;align-items:center;gap:14px;padding:0 28px;font-family:var(--fh);font-size:.82rem;letter-spacing:.8px;color:#05050D;font-weight:700;white-space:nowrap}
-.prob-sep{width:4px;height:4px;border-radius:50%;background:#05050D;opacity:.35}
-
-/* ─ SECTION BASE ─ */
-.sec{padding:clamp(72px,9vw,120px) clamp(16px,5vw,72px);position:relative}
-.ey{font-size:.62rem;font-weight:700;letter-spacing:3.5px;text-transform:uppercase;display:block;margin-bottom:14px}
-.sh{font-family:var(--fh);font-size:clamp(2.2rem,5vw,4.6rem);line-height:.9;font-weight:800;margin-bottom:16px}
-.sp{font-size:clamp(.86rem,1.5vw,.98rem);color:var(--t2);line-height:1.85}
-
-/* ─ COMPETE (hero's second beat — leaderboard) ─ */
-.compete{background:var(--s1);border-top:1px solid var(--brd)}
-.compete-in{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:clamp(36px,6vw,80px);align-items:center}
-@media(max-width:860px){.compete-in{grid-template-columns:1fr}}
-
-/* 3D lb card */
-.lb-wrap{perspective:1100px}
-.lb-card{border-radius:var(--rxl);overflow:hidden;background:var(--s2);border:1px solid var(--brd2);transform:rotateY(-14deg) rotateX(5deg);transform-style:preserve-3d;transition:transform .55s cubic-bezier(.22,1,.36,1);box-shadow:-28px 28px 90px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.04),0 0 100px rgba(245,166,35,.03)}
-.lb-wrap:hover .lb-card{transform:rotateY(-2deg) rotateX(1deg)}
-.lb-hd{background:var(--bg);padding:11px 18px;border-bottom:1px solid var(--brd);display:flex;justify-content:space-between;align-items:center}
-.lb-hd-t{font-family:var(--fm);font-size:.62rem;color:var(--t2);letter-spacing:2px;text-transform:uppercase}
-.lb-live{font-family:var(--fm);font-size:.6rem;color:var(--lime);display:flex;align-items:center;gap:5px}
-.lb-live-d{width:5px;height:5px;border-radius:50%;background:var(--lime);animation:ldot 1.8s infinite}
-.lbr{display:flex;align-items:center;gap:11px;padding:11px 18px;border-bottom:1px solid var(--brd);position:relative}
-.lbr::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:0 2px 2px 0}
-.lbr.g1::before{background:linear-gradient(to bottom,#F5A623,#D47800)}
-.lbr.g2::before{background:linear-gradient(to bottom,#9A9A9A,#5A5A5A)}
-.lbr.g3::before{background:linear-gradient(to bottom,#9B6DFF,#5B2DDF)}
-.lbr-rk{font-family:var(--fh);font-size:1rem;width:26px;text-align:center;font-weight:800;flex-shrink:0}
-.lbr-av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-family:var(--fh);font-size:.82rem;font-weight:800;color:#fff;flex-shrink:0}
-.lbr-inf{flex:1;min-width:0}
-.lbr-nm{font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:5px}
-.lbr-sk{font-size:.6rem;font-weight:700;background:rgba(245,166,35,.1);color:var(--gold);border-radius:3px;padding:1px 5px}
-.lbr-mt{font-size:.62rem;color:var(--t3);margin-top:2px}
-.lbr-pct{font-family:var(--fm);font-size:.85rem;font-weight:700;flex-shrink:0}
-.lb-bar-r{padding:2px 18px 10px}
-.lb-bar-bg{height:3px;background:var(--brd);border-radius:2px;overflow:hidden}
-.lb-bar-f{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--lime),#00A858)}
-.lb-alert{margin:0 16px 12px;background:rgba(255,64,64,.05);border:1px solid rgba(255,64,64,.12);border-radius:var(--r);padding:9px 13px;font-size:.71rem;color:var(--red);display:flex;align-items:center;gap:8px}
-.lb-foot{padding:11px 18px;background:rgba(0,232,122,.04);border-top:1px solid rgba(0,232,122,.08);display:flex;justify-content:space-between;align-items:center;font-size:.7rem;color:var(--t2)}
-.lb-foot-cta{font-family:var(--fh);font-size:.68rem;font-weight:700;color:var(--gold);background:rgba(245,166,35,.1);padding:4px 11px;border-radius:100px}
-
-/* ─ HOW ─ */
-.how{background:var(--bg)}
-.how-in{max-width:1120px;margin:0 auto}
-.how-h{text-align:center;margin-bottom:56px}
-.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
-@media(max-width:720px){.steps{grid-template-columns:1fr 1fr}}
-@media(max-width:440px){.steps{grid-template-columns:1fr}}
-.step{background:var(--s1);border:1px solid var(--brd);padding:30px 22px;position:relative;transition:all .38s cubic-bezier(.22,1,.36,1)}
-.step:first-child{border-radius:var(--rxl) 0 0 var(--rxl)}
-.step:last-child{border-radius:0 var(--rxl) var(--rxl) 0}
-@media(max-width:720px){
-  .step:first-child{border-radius:var(--rxl) 0 0 0}
-  .step:nth-child(2){border-radius:0 var(--rxl) 0 0}
-  .step:nth-child(3){border-radius:0 0 0 var(--rxl)}
-  .step:last-child{border-radius:0 0 var(--rxl) 0}
+/* Arena bg */
+.arena-gradient{
+  background:
+    radial-gradient(circle at 70% 10%,rgba(245,166,35,.08) 0%,transparent 40%),
+    radial-gradient(circle at 20% 80%,rgba(0,231,121,.05) 0%,transparent 40%);
 }
-@media(max-width:440px){
-  .step:first-child{border-radius:var(--rxl) var(--rxl) 0 0}
-  .step:last-child{border-radius:0 0 var(--rxl) var(--rxl)}
-  .step:not(:first-child):not(:last-child){border-radius:0}
+
+/* Nav */
+nav#main-nav{
+  position:fixed;top:0;width:100%;z-index:800;
+  background:rgba(19,18,28,.6);
+  backdrop-filter:blur(20px);
+  background-image:linear-gradient(to bottom,#1b1b24,transparent);
+  box-shadow:0 12px 40px rgba(245,166,35,.06);
+  transition:background .3s;
 }
-.step:hover{background:var(--s2);border-color:var(--brd2);transform:translateY(-8px);box-shadow:0 28px 60px rgba(0,0,0,.45);z-index:2}
-.step:hover .sn{background:var(--gold);color:#05050D;border-color:var(--gold)}
-.sn{width:34px;height:34px;border-radius:50%;background:var(--bg);border:1px solid var(--brd2);display:grid;place-items:center;font-family:var(--fh);font-size:.82rem;font-weight:700;margin-bottom:22px;transition:all .3s}
-.si{font-size:1.5rem;margin-bottom:12px}
-.st{font-family:var(--fh);font-size:1.1rem;font-weight:700;margin-bottom:7px;line-height:1.2}
-.sd{font-size:.79rem;color:var(--t2);line-height:1.72}
+nav#main-nav .nav-inner{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.9rem 1.5rem;
+}
+@media(min-width:768px){nav#main-nav .nav-inner{padding:.9rem 2.5rem}}
+.nav-links{display:none;gap:2.5rem}
+@media(min-width:768px){.nav-links{display:flex}}
+.nav-links a{
+  font-family:'Space Grotesk',sans-serif;font-weight:700;
+  text-transform:uppercase;letter-spacing:.05em;font-size:.8rem;
+  color:#94a3b8;transition:color .2s;
+}
+.nav-links a:hover{color:#fff}
+.logo-text{
+  font-family:'Space Grotesk',sans-serif;font-size:1.4rem;
+  font-weight:900;font-style:italic;letter-spacing:-.05em;
+  color:var(--primary-container);
+}
+.btn-join{
+  background:var(--primary-container);color:var(--on-primary-container);
+  padding:.45rem 1.4rem;border-radius:9999px;border:none;
+  font-family:'Be Vietnam Pro',sans-serif;font-weight:700;
+  text-transform:uppercase;letter-spacing:.08em;font-size:.75rem;
+  transition:transform .2s;cursor:none;
+}
+.btn-join:hover{transform:scale(1.05)}
+.btn-join:active{transform:scale(.95)}
 
-/* ─ ACCOUNTABILITY (3D scroll card, reused as THIN section — just the card + 4 rules) ─ */
-.acc{background:var(--s1);border-top:1px solid var(--brd)}
-.acc-in{max-width:860px;margin:0 auto;text-align:center}
-.acc-scene{perspective:1300px;margin:48px 0 40px}
-.acc-card{background:var(--s2);border:1px solid var(--brd2);border-radius:var(--rxl);overflow:hidden;max-width:500px;margin:0 auto;transform:rotateX(20deg) scale(.93);transform-origin:50% 0%;transition:transform .1s linear;will-change:transform;box-shadow:0 60px 120px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.035)}
-.acc-top{background:var(--bg);padding:10px 17px;border-bottom:1px solid var(--brd);display:flex;justify-content:space-between;align-items:center}
-.acc-t{font-family:var(--fm);font-size:.6rem;color:var(--t2);letter-spacing:2px;text-transform:uppercase}
-.acc-live{font-family:var(--fm);font-size:.6rem;color:var(--lime);display:flex;align-items:center;gap:5px}
-.acc-live span{width:5px;height:5px;border-radius:50%;background:var(--lime);animation:ldot 1.8s infinite}
-.rules{display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:left}
-@media(max-width:560px){.rules{grid-template-columns:1fr}}
-.rule{background:var(--s2);border:1px solid var(--brd);border-radius:var(--rl);padding:15px;display:flex;gap:11px;align-items:flex-start;transition:all .28s}
-.rule:hover{border-color:var(--brd2);transform:translateY(-3px)}
-.rule-ic{font-size:1.1rem;flex-shrink:0}
-.rule h4{font-size:.82rem;font-weight:600;margin-bottom:2px}
-.rule p{font-size:.74rem;color:var(--t2);line-height:1.6}
+/* Hero */
+.hero-section{
+  min-height:100svh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  padding:5rem clamp(1rem,5vw,5rem) 3.5rem;
+  position:relative;overflow:hidden;
+}
+.hero-grid-bg{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(245,166,35,.025) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(245,166,35,.025) 1px,transparent 1px);
+  background-size:56px 56px;
+  mask-image:radial-gradient(ellipse 75% 55% at 50% 40%,black,transparent 75%);
+}
+.hero-orb1{
+  position:absolute;width:900px;height:900px;border-radius:50%;
+  pointer-events:none;top:-240px;left:50%;transform:translateX(-50%);
+  background:radial-gradient(circle,rgba(245,166,35,.07) 0%,transparent 60%);
+}
+.hero-orb2{
+  position:absolute;width:500px;height:500px;border-radius:50%;
+  pointer-events:none;bottom:-80px;right:-60px;
+  background:radial-gradient(circle,rgba(0,231,121,.04) 0%,transparent 65%);
+  animation:float-anim 10s ease-in-out infinite;
+}
+.hero-content{position:relative;z-index:10;max-width:64rem;width:100%}
+.badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.35rem 1rem;border-radius:9999px;
+  background:rgba(124,255,163,.1);border:1px solid rgba(124,255,163,.2);
+  color:var(--secondary);font-family:'DM Mono',monospace;
+  font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;
+  margin-bottom:2rem;
+}
+.hero-h{
+  font-family:'Space Grotesk',sans-serif;font-weight:700;
+  font-size:clamp(3.2rem,11vw,9rem);line-height:.88;
+  letter-spacing:-.03em;margin-bottom:2rem;
+}
+.hero-underline{position:relative;display:inline-block;color:var(--primary-container)}
+.hero-underline::after{
+  content:'';position:absolute;bottom:-4px;left:0;right:0;height:3px;
+  background:var(--primary-container);border-radius:2px;
+  transform:scaleX(0);transform-origin:left;
+  animation:underline-in .55s 1.1s forwards;
+}
+.hero-sub{
+  font-size:clamp(.95rem,1.8vw,1.2rem);color:var(--on-surface-var);
+  max-width:42rem;margin:0 auto 2.5rem;line-height:1.7;
+}
+.hero-ctas{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-primary{
+  background:var(--primary-container);color:var(--on-primary-container);
+  padding:1.1rem 2.5rem;border-radius:9999px;border:none;
+  font-family:'Be Vietnam Pro',sans-serif;font-weight:900;
+  font-size:1rem;text-transform:uppercase;letter-spacing:.12em;
+  box-shadow:0 0 24px rgba(245,166,35,.25),0 8px 0 0 var(--shadow-press);
+  transition:transform .2s;cursor:none;
+}
+.btn-primary:hover{transform:scale(1.05) translateY(-1px)}
+.btn-primary:active{box-shadow:none;transform:translateY(4px)}
+.btn-ghost{
+  background:transparent;border:1px solid rgba(159,142,122,.3);
+  color:var(--on-surface);
+  padding:1.1rem 2.5rem;border-radius:9999px;
+  font-family:'Be Vietnam Pro',sans-serif;font-weight:700;
+  font-size:1rem;text-transform:uppercase;letter-spacing:.12em;
+  transition:all .2s;cursor:none;
+}
+.btn-ghost:hover{background:var(--surface-c);border-color:rgba(245,166,35,.3)}
+.scroll-cue{
+  position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:.4;
+}
 
-/* ─ TERRITORY ─ */
-.territory{background:var(--bg);border-top:1px solid var(--brd)}
-.terr-in{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:clamp(36px,6vw,80px);align-items:center}
-@media(max-width:860px){.terr-in{grid-template-columns:1fr}}
-.terr-map{height:360px;border-radius:var(--rxl);overflow:hidden;border:1px solid rgba(0,232,122,.12);background:#050d12;position:relative}
-#tmap{width:100%;height:100%}
-.tmap-hud{position:absolute;top:12px;left:12px;z-index:1000;pointer-events:none}
-.tmap-b{display:inline-flex;align-items:center;gap:6px;background:rgba(4,6,14,.9);border:1px solid rgba(0,232,122,.22);border-radius:8px;padding:4px 10px;font-family:var(--fm);font-size:.6rem;color:var(--lime)}
-.tmap-b span{width:5px;height:5px;border-radius:50%;background:var(--lime);animation:ldot 1.8s infinite}
-.terr-pts{display:flex;flex-direction:column;gap:14px;margin-top:24px}
-.tp{display:flex;gap:13px;align-items:flex-start}
-.tpn{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:.74rem;font-weight:700;flex-shrink:0;margin-top:3px}
-.tp h4{font-size:.86rem;font-weight:600;margin-bottom:2px}
-.tp p{font-size:.78rem;color:var(--t2);line-height:1.65}
-
-/* ─ VOUCHER MARQUEE ─ */
-.vouchers{background:var(--s1);border-top:1px solid var(--brd);border-bottom:1px solid var(--brd);padding:clamp(52px,7vw,76px) 0}
-.v-head{text-align:center;padding:0 clamp(16px,5vw,72px) 32px}
+/* Marquee */
+.marquee-section{background:var(--primary-container);padding:.6rem 0;overflow:hidden}
 .mq-wrap{overflow:hidden;position:relative}
-.mq-wrap::before,.mq-wrap::after{content:'';position:absolute;top:0;bottom:0;width:90px;z-index:2;pointer-events:none}
-.mq-wrap::before{left:0;background:linear-gradient(to right,var(--s1),transparent)}
-.mq-wrap::after{right:0;background:linear-gradient(to left,var(--s1),transparent)}
-.mq-t{display:flex;gap:10px;animation:mq 34s linear infinite;width:max-content}
-.mq-wrap:hover .mq-t{animation-play-state:paused}
-.chip{display:inline-flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--brd2);border-radius:100px;padding:9px 18px;white-space:nowrap;flex-shrink:0;transition:all .22s}
-.chip:hover{border-color:rgba(245,166,35,.3);transform:translateY(-2px)}
-.chip-ico{font-size:15px}
-.chip-b{font-size:.8rem;font-weight:700}
-.chip-t{font-size:.68rem;color:var(--t2);margin-top:1px}
+.mq-wrap::before,.mq-wrap::after{
+  content:'';position:absolute;top:0;bottom:0;width:6rem;z-index:2;pointer-events:none;
+}
+.mq-wrap::before{left:0;background:linear-gradient(to right,var(--primary-container),transparent)}
+.mq-wrap::after {right:0;background:linear-gradient(to left,var(--primary-container),transparent)}
+.mq-track{display:flex;animation:mq 28s linear infinite;width:max-content}
+.mq-wrap:hover .mq-track{animation-play-state:paused}
+.mq-item{
+  display:flex;align-items:center;gap:1rem;padding:0 1.75rem;
+  font-family:'Space Grotesk',sans-serif;font-size:.82rem;
+  letter-spacing:.05em;color:var(--on-primary-container);
+  font-weight:700;white-space:nowrap;
+}
 
-/* ─ SOCIAL PROOF QUOTES ─ */
-.social{background:var(--bg);border-top:1px solid var(--brd)}
-.social-in{max-width:1120px;margin:0 auto}
-.social-h{text-align:center;margin-bottom:48px}
-.quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-@media(max-width:820px){.quotes{grid-template-columns:1fr 1fr}}
-@media(max-width:500px){.quotes{grid-template-columns:1fr}}
-.quote{background:var(--s1);border:1px solid var(--brd);border-radius:var(--rxl);padding:24px;transition:all .32s}
-.quote:hover{border-color:var(--brd2);transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,.4)}
-.q-text{font-size:.85rem;color:var(--t2);line-height:1.78;font-style:italic;margin-bottom:18px}
-.q-foot{display:flex;align-items:center;gap:10px}
-.q-av{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-family:var(--fh);font-size:.82rem;font-weight:700;color:#fff;flex-shrink:0}
-.q-name{font-size:.82rem;font-weight:600}
-.q-role{font-size:.68rem;color:var(--t3);margin-top:2px}
-.q-result{font-family:var(--fm);font-size:.75rem;font-weight:700;color:var(--lime);margin-left:auto}
+/* Section */
+.section{padding:clamp(4rem,8vw,6rem) clamp(1rem,5vw,4.5rem);position:relative}
+.section-inner{max-width:80rem;margin:0 auto}
 
-/* ─ FINAL CTA ─ */
-.cta{background:var(--s1);border-top:1px solid var(--brd)}
-.cta-in{max-width:620px;margin:0 auto;text-align:center}
-.cta-counter{display:inline-flex;align-items:center;gap:8px;background:rgba(245,166,35,.07);border:1px solid rgba(245,166,35,.18);border-radius:100px;padding:6px 16px;font-family:var(--fm);font-size:.72rem;color:var(--gold);margin-bottom:28px;font-weight:500}
-.cta-counter span{font-weight:700;color:var(--gold2)}
-.cta-form{display:flex;flex-direction:column;gap:10px;align-items:center;margin-top:32px;width:100%;max-width:440px;margin-left:auto;margin-right:auto}
-.cta-inp{width:100%;padding:13px 20px;background:var(--s2);border:1.5px solid var(--brd2);border-radius:100px;color:var(--text);font-family:var(--fb);font-size:.88rem;outline:none;transition:border-color .2s,box-shadow .2s}
-.cta-inp:focus{border-color:rgba(245,166,35,.45);box-shadow:0 0 0 3px rgba(245,166,35,.07)}
-.cta-inp::placeholder{color:var(--t3)}
-.cta-inp.error{border-color:rgba(255,64,64,.45)!important;box-shadow:0 0 0 3px rgba(255,64,64,.07)!important}
-.cta-btn{width:100%;padding:14px 30px;background:var(--gold);border:none;border-radius:100px;font-family:var(--fh);font-size:.95rem;font-weight:700;color:#05050D;cursor:pointer;transition:all .28s;letter-spacing:.3px;position:relative;overflow:hidden}
-.cta-btn:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 14px 40px rgba(245,166,35,.3)}
-.cta-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
-.cta-btn .btn-spinner{display:none;width:16px;height:16px;border:2px solid rgba(5,5,13,.3);border-top-color:#05050D;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto}
-.cta-btn.loading .btn-label{display:none}
-.cta-btn.loading .btn-spinner{display:block}
-.cta-field-err{font-size:.7rem;color:var(--red);padding-left:20px;align-self:flex-start;display:none}
-.cta-field-err.show{display:block}
-@keyframes spin{to{transform:rotate(360deg)}}
-.cta-note{margin-top:14px;font-size:.7rem;color:var(--t3)}
+/* Glass card */
+.glass{
+  backdrop-filter:blur(24px);
+  background:rgba(27,27,36,.7);
+  border:1px solid rgba(255,255,255,.06);
+}
 
-/* ─ FOOTER ─ */
-footer{border-top:1px solid var(--brd);padding:32px clamp(16px,4vw,56px);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-.fl{display:flex;gap:20px}
-.fl a{color:var(--t3);font-size:.75rem;text-decoration:none;transition:color .18s}
-.fl a:hover{color:var(--t2)}
-.fr{font-size:.7rem;color:var(--t3)}
+/* 3D cards */
+.card-3d{
+  transition:transform .4s cubic-bezier(.175,.885,.32,1.275),box-shadow .4s ease;
+  transform-style:preserve-3d;
+}
+.card-3d:hover{
+  transform:translateY(-8px) rotateX(3deg) rotateY(1.5deg);
+  box-shadow:0 24px 48px -12px rgba(245,166,35,.12);
+}
 
-/* ─ TOAST ─ */
-.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(70px);background:var(--s2);border:1px solid rgba(0,232,122,.28);border-radius:100px;padding:11px 24px;font-size:.84rem;font-weight:600;color:var(--lime);z-index:9999;opacity:0;transition:all .38s cubic-bezier(.22,1,.36,1);pointer-events:none;white-space:nowrap}
+/* Leaderboard */
+.lb-perspective{perspective:1100px}
+.lb-card{
+  border-radius:1.5rem;overflow:hidden;
+  background:var(--surface-c);border:1px solid rgba(255,255,255,.05);
+  box-shadow:0 40px 100px rgba(0,0,0,.6);max-width:48rem;margin:0 auto;
+  transform:rotateY(-10deg) rotateX(4deg);
+  transition:transform .55s cubic-bezier(.22,1,.36,1);
+}
+.lb-head{
+  background:var(--surface-c-lowest);padding:.9rem 1.5rem;
+  border-bottom:1px solid rgba(255,255,255,.05);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.lbr{
+  border-bottom:1px solid rgba(255,255,255,.05);
+  padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;
+}
+.lb-bar-wrap{padding:.25rem 1.5rem .35rem}
+.lb-bar-bg{height:4px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden}
+.lb-bar-f{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--secondary),#00a858);transition:width .01s}
+.lb-avatar{
+  width:2.25rem;height:2.25rem;border-radius:50%;
+  display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;
+  font-weight:700;font-size:.85rem;flex-shrink:0;
+}
+.lb-alert{
+  margin:.5rem 1rem .75rem;
+  background:rgba(255,180,171,.05);border:1px solid rgba(255,180,171,.15);
+  border-radius:.75rem;padding:.7rem 1rem;font-size:11px;color:var(--error);
+  display:flex;align-items:center;gap:.5rem;font-family:'DM Mono',monospace;
+}
+.lb-foot{
+  padding:.9rem 1.5rem;background:rgba(124,255,163,.05);
+  border-top:1px solid rgba(124,255,163,.1);
+  display:flex;justify-content:space-between;align-items:center;
+}
+
+/* Bento grid */
+.bento{display:grid;grid-template-columns:1fr;gap:1rem}
+@media(min-width:768px){.bento{grid-template-columns:repeat(12,1fr)}}
+.bento-7{grid-column:span 1}
+.bento-5{grid-column:span 1}
+@media(min-width:768px){.bento-7{grid-column:span 7}.bento-5{grid-column:span 5}}
+.bento-card{
+  background:var(--surface-c-low);border-radius:1.5rem;
+  padding:2rem;border:1px solid rgba(255,255,255,.05);
+  transition:border-color .3s;
+}
+.bento-card:hover{border-color:rgba(245,166,35,.15)}
+.bento-num{font-family:'DM Mono',monospace;font-size:2.5rem;font-weight:700;opacity:.2}
+
+/* Accountability */
+.acc-section{background:var(--surface-c-lowest)}
+.acc-wrap{
+  background:var(--surface-c-low);border-radius:2rem;
+  padding:2rem;border:1px solid rgba(255,255,255,.05);
+  position:relative;overflow:hidden;
+}
+@media(min-width:768px){.acc-wrap{padding:4rem}}
+.acc-grid{display:grid;grid-template-columns:1fr;gap:4rem;align-items:center}
+@media(min-width:1024px){.acc-grid{grid-template-columns:1fr 1fr}}
+.rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2.5rem}
+.rule-card{
+  background:var(--surface-c-highest);padding:1.25rem;border-radius:.75rem;
+  border:1px solid rgba(255,255,255,.05);transition:all .28s;
+}
+.rule-card:hover{border-color:rgba(255,255,255,.1);transform:translateY(-2px)}
+.acc-card-3d{
+  background:var(--surface-c);border:1px solid rgba(255,255,255,.1);
+  border-radius:1.5rem;overflow:hidden;max-width:26rem;margin:0 auto;
+  box-shadow:0 60px 120px rgba(0,0,0,.7);
+  transform:rotateX(18deg) scale(.93);transform-origin:50% 0%;will-change:transform;
+}
+
+/* Territory */
+.terr-grid{display:grid;grid-template-columns:1fr;gap:2.5rem;align-items:center}
+@media(min-width:1024px){.terr-grid{grid-template-columns:1fr 1fr}}
+.map-wrap{position:relative;border-radius:1.5rem;overflow:hidden;height:380px;background:#050d12;border:1px solid rgba(124,255,163,.12)}
+.map-hud{position:absolute;top:.75rem;left:.75rem;z-index:1000;pointer-events:none}
+.map-hud-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:rgba(4,6,14,.9);border:1px solid rgba(124,255,163,.22);
+  border-radius:.5rem;padding:.3rem .75rem;font-family:'DM Mono',monospace;
+  font-size:10px;color:var(--secondary);
+}
+.terr-point{display:flex;gap:1rem;align-items:flex-start}
+.terr-num{
+  width:2rem;height:2rem;border-radius:50%;
+  display:grid;place-items:center;font-weight:700;font-size:.8rem;flex-shrink:0;
+}
+.conquerors{margin-top:2rem;border-radius:.75rem;padding:1.25rem}
+.conq-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.75rem;border-radius:.75rem;
+}
+
+/* Vouchers */
+.vouchers-section{background:var(--surface-c-lowest);border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05);padding:5rem 0}
+.chip{
+  display:inline-flex;align-items:center;gap:.75rem;
+  background:var(--surface-c);border:1px solid rgba(255,255,255,.1);
+  border-radius:9999px;padding:.7rem 1.25rem;flex-shrink:0;
+  transition:border-color .2s;
+}
+.chip:hover{border-color:rgba(245,166,35,.25)}
+
+/* Social proof */
+.quote-card{
+  background:var(--surface-c-low);border:1px solid rgba(255,255,255,.05);
+  border-radius:1.5rem;padding:1.75rem;transition:all .32s;
+}
+.quote-card:hover{border-color:rgba(255,255,255,.1);transform:translateY(-4px);
+  box-shadow:0 20px 50px rgba(0,0,0,.4)}
+
+/* CTA section */
+.cta-border-wrap{
+  background:linear-gradient(135deg,var(--primary-container),var(--primary));
+  padding:2px;border-radius:2rem;
+}
+.cta-inner{background:var(--surface);border-radius:1.9rem;padding:5rem 2rem;text-align:center}
+@media(min-width:768px){.cta-inner{padding:5rem 4rem}}
+.cta-counter-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);
+  border-radius:9999px;padding:.45rem 1.25rem;
+  font-family:'DM Mono',monospace;font-size:.75rem;color:var(--primary-container);
+  margin-bottom:2rem;
+}
+.cta-form-grid{
+  display:grid;grid-template-columns:1fr;gap:1rem;
+  max-width:42rem;margin:0 auto;
+}
+@media(min-width:768px){.cta-form-grid{grid-template-columns:1fr 1fr}}
+.form-field-wrap{position:relative}
+.cta-input{
+  width:100%;background:var(--surface-c-high);
+  border:2px solid rgba(245,166,35,.3);color:var(--on-surface);
+  padding:1.1rem 1.25rem;border-radius:.75rem;
+  font-family:'Be Vietnam Pro',sans-serif;font-size:.9rem;
+  outline:none;transition:all .2s;
+  box-shadow:0 4px 0 0 var(--shadow-press);
+}
+.cta-input::placeholder{color:#475569}
+.cta-input:focus{border-color:var(--primary-container);transform:translateY(2px);box-shadow:0 2px 0 0 var(--shadow-press)}
+.inp-error{border-color:rgba(255,180,171,.5)!important;box-shadow:0 4px 0 0 var(--error-container)!important}
+.inp-icon{
+  position:absolute;right:1rem;top:50%;transform:translateY(-50%);
+  color:var(--primary-container);opacity:.4;transition:opacity .2s;pointer-events:none;
+}
+.field-err{font-size:.7rem;color:var(--error);padding-left:4px;display:none;margin-top:.25rem}
+.field-err.show{display:block}
+.btn-arena{
+  width:100%;padding:1.2rem 2rem;background:var(--primary);color:var(--on-primary);
+  border-radius:9999px;border:none;cursor:none;
+  font-family:'Be Vietnam Pro',sans-serif;font-weight:900;
+  font-size:1rem;text-transform:uppercase;letter-spacing:.12em;
+  box-shadow:0 0 24px rgba(245,166,35,.25),0 8px 0 0 var(--shadow-press);
+  transition:transform .2s;position:relative;overflow:hidden;
+}
+@media(min-width:768px){.btn-arena{width:auto;padding:1.2rem 3.5rem}}
+.btn-arena:hover{transform:scale(1.05)}
+.btn-arena:active{box-shadow:none;transform:translateY(4px)}
+.btn-arena:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-label{display:block}
+.btn-spinner{display:none;width:18px;height:18px;border:2px solid rgba(69,43,0,.3);border-top-color:var(--on-primary);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto}
+.loading .btn-label{display:none}
+.loading .btn-spinner{display:block}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:1.75rem;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--surface-c-low);border:1px solid rgba(124,255,163,.3);
+  border-radius:9999px;padding:.75rem 1.75rem;
+  font-family:'Be Vietnam Pro',sans-serif;font-size:.84rem;font-weight:600;
+  color:var(--secondary);z-index:9999;opacity:0;
+  transition:all .38s cubic-bezier(.22,1,.36,1);pointer-events:none;white-space:nowrap;
+}
 .toast.on{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* Footer */
+.site-footer{
+  background:#0a0a0f;width:100%;padding:3rem 2rem;
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:space-between;gap:1.5rem;
+  border-top:1px solid rgba(255,255,255,.05);
+  padding-bottom:7rem;
+}
+@media(min-width:768px){.site-footer{flex-direction:row;padding-bottom:3rem}}
+.footer-links{display:flex;gap:2rem}
+.footer-links a{
+  font-family:'DM Mono',monospace;font-size:.7rem;text-transform:uppercase;
+  letter-spacing:.1em;color:#475569;transition:color .2s;
+}
+.footer-links a:hover{color:var(--secondary)}
+
+/* Bottom nav */
+.bottom-nav{
+  display:flex;justify-content:space-around;align-items:center;
+  position:fixed;bottom:0;left:0;width:100%;
+  padding:.75rem 1.5rem;padding-bottom:max(1.5rem,env(safe-area-inset-bottom));
+  background:#13121c;border-top:1px solid rgba(255,255,255,.1);
+  border-radius:2rem 2rem 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.5);
+  z-index:800;
+}
+@media(min-width:768px){.bottom-nav{display:none}}
+.bnav-item{
+  display:flex;flex-direction:column;align-items:center;
+  padding:.75rem;border-radius:.75rem;color:#64748b;
+  transition:all .15s;text-decoration:none;
+}
+.bnav-item:active{transform:scale(.9)}
+.bnav-item span.lbl{font-family:'Be Vietnam Pro',sans-serif;font-weight:700;font-size:9px;text-transform:uppercase;margin-top:.2rem}
+.bnav-active{background:rgba(245,166,35,.2);color:var(--primary-container);border-radius:9999px;box-shadow:0 0 15px rgba(245,166,35,.3)}
+
+/* Live dot */
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--secondary);animation:ldot 1.8s infinite;flex-shrink:0;display:inline-block}
+
+/* Proof bullets */
+.proof-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:4rem}
+@media(min-width:768px){.proof-grid{grid-template-columns:repeat(4,1fr)}}
+.proof-item{
+  backdrop-filter:blur(24px);background:rgba(27,27,36,.7);border:1px solid rgba(255,255,255,.06);
+  border-radius:.75rem;padding:1rem;font-size:.82rem;display:flex;align-items:flex-start;gap:.75rem;
+}
+
+/* Quotes grid */
+.quotes-grid{display:grid;grid-template-columns:1fr;gap:1.25rem}
+@media(min-width:768px){.quotes-grid{grid-template-columns:repeat(3,1fr)}}
+
+/* Score stat card */
+.stat-card{
+  backdrop-filter:blur(24px);background:rgba(27,27,36,.7);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:.75rem;padding:1.25rem 1.5rem;
+  display:flex;align-items:center;gap:2rem;flex-shrink:0;
+}
+.stat-div{width:1px;height:2.5rem;background:rgba(255,255,255,.1)}
+
+/* Scroll reveal */
+.fu{opacity:0;transform:translateY(32px)}
+
+/* ─────────────────────────────────────────
+   KEYFRAMES
+───────────────────────────────────────── */
+@keyframes mq          {from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes ldot        {0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes float-anim  {0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-20px) rotate(5deg)}}
+@keyframes spin        {to{transform:rotate(360deg)}}
+@keyframes underline-in{to{transform:scaleX(1)}}
+@keyframes bounce      {0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.animate-bounce{animation:bounce 1.5s ease-in-out infinite}
+
+/* ─────────────────────────────────────────
+   LEAFLET OVERRIDE
+───────────────────────────────────────── */
+.leaflet-container{background:#0d0d17!important}
 </style>
 </head>
 <body>
-<div id="cur">🏋️</div>
-<div id="cur-r"></div>
-<div class="toast" id="toast">🎉 Spot claimed — see you on the board.</div>
 
-<!-- NAV -->
-<nav id="nav">
-  <a class="logo" href="#">
-    <div class="logo-m">F</div>
-    <span class="logo-t">FITBOUNTY</span>
-  </a>
-  <div class="nav-l">
-    <a href="#compete">Compete</a>
-    <a href="#how">How It Works</a>
-    <a href="#territory">Territory</a>
-    <a href="#waitlist">Join Beta</a>
+<!-- CURSOR -->
+<div id="cur">🏋️</div>
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════════════
+     NAV
+══════════════════════════════════════ -->
+<nav id="main-nav">
+  <div class="nav-inner">
+    <a href="#" class="logo-text">FitBounty</a>
+    <div class="nav-links">
+      <a href="#compete">Compete</a>
+      <a href="#how">How it Works</a>
+      <a href="#territory">Territory</a>
+    </div>
+    <button class="btn-join" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Join Beta</button>
   </div>
-  <a class="nav-btn" href="#waitlist">Bangalore Beta →</a>
 </nav>
 
-<!-- HERO -->
-<section class="hero" id="hero">
-  <div class="h-orb1"></div>
-  <div class="h-orb2"></div>
-  <div class="h-grid"></div>
-  <span class="badge"><span class="bdot"></span>Bangalore Beta — 500 Spots</span>
-  <h1 class="hero-h">The fitness<br>challenge you<br>can't <span>ignore.</span></h1>
-  <p class="hero-sub">Join a group. Weigh in weekly. Your results go on a live leaderboard — every Monday, visible to your entire crew. Win real brand vouchers. Lose your excuses.</p>
-  <div class="hero-ctas">
-    <button class="btn-p" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Claim My Spot</button>
-    <a class="btn-g" href="#compete">See the Board ↓</a>
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<section class="hero-section arena-gradient" id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-orb1"></div>
+  <div class="hero-orb2"></div>
+  <div class="hero-content">
+    <span class="badge">
+      <span class="live-dot"></span>Active Season: Indiranagar Inferno
+    </span>
+    <h1 class="hero-h font-headline">
+      THE FITNESS CHALLENGE<br>
+      INDIA <span class="hero-underline" style="font-style:italic">CAN'T IGNORE.</span>
+    </h1>
+    <p class="hero-sub">High-stakes group weigh-ins in Bangalore, live ruthless leaderboards, and real vouchers from Cult.fit &amp; Myntra for those who survive.</p>
+    <div class="hero-ctas">
+      <button class="btn-primary" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Claim My Spot</button>
+      <a href="#compete" class="btn-ghost">View the Board ↓</a>
+    </div>
   </div>
   <div class="scroll-cue">
-    <span class="scroll-label">Scroll</span>
-    <div class="scroll-line"></div>
+    <span style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.2em">Protocol Start</span>
+    <span class="material-symbols-outlined animate-bounce" style="font-size:1rem">expand_more</span>
   </div>
 </section>
 
-<!-- PROBLEM STRIP -->
-<div class="prob">
-  <div class="prob-t">
-    <span class="prob-i">Apps don't make you accountable <span class="prob-sep"></span></span>
-    <span class="prob-i">Badges aren't real rewards <span class="prob-sep"></span></span>
-    <span class="prob-i">Nobody cares about your step count <span class="prob-sep"></span></span>
-    <span class="prob-i">There's no consequence for quitting <span class="prob-sep"></span></span>
-    <span class="prob-i">Fitness without competition is boring <span class="prob-sep"></span></span>
-    <span class="prob-i">If your group can't see it, it didn't happen <span class="prob-sep"></span></span>
-    <span class="prob-i">Apps don't make you accountable <span class="prob-sep"></span></span>
-    <span class="prob-i">Badges aren't real rewards <span class="prob-sep"></span></span>
-    <span class="prob-i">Nobody cares about your step count <span class="prob-sep"></span></span>
-    <span class="prob-i">There's no consequence for quitting <span class="prob-sep"></span></span>
-    <span class="prob-i">Fitness without competition is boring <span class="prob-sep"></span></span>
-    <span class="prob-i">If your group can't see it, it didn't happen <span class="prob-sep"></span></span>
+<!-- ══════════════════════════════════════
+     PROBLEM MARQUEE
+══════════════════════════════════════ -->
+<div class="marquee-section">
+  <div class="mq-wrap">
+    <div class="mq-track">
+      <span class="mq-item">Apps don't make you accountable <span style="width:4px;height:4px;border-radius:50%;background:rgba(69,43,0,.4);display:inline-block;flex-shrink:0"></span></span>
+      <span class="mq-item">Badges aren't real rewards <span style="width:4px;height:4px;border-radius:50%;background:rgba(69,43,0,.4);display:inline-block;flex-shrink:0"></span></span>
+      <span class="mq-item">Nobody cares about your step count <span style="width:4px;height:4px;border-radius:50%;background:rgba(69,43,0,.4);display:inline-block;flex-shrink:0"></span></span>
+      <span class="mq-item">There's no consequence for quitting <span style="width:4px;height:4px;border-radius:50%;background:rgba(69,43,0,.4);display:inline-block;flex-shrink:0"></span></span>
+      <span class="mq-item">If your group can't see it, it didn't happen <span style="width:4px;height:4px;border-radius:50%;background:rgba(69,43,0,.4);display:inline-block;flex-shrink:0"></span></span>
+      <span class="mq-item">Fitness without competition is boring <span style="width:4px;height:4px;border-radius:50%;background:rgba(69,43,0,.4);display:inline-block;flex-shrink:0"></span></span>
+      <!-- dup -->
+      <span class="mq-item">Apps don't make you accountable <span style="width:4px;height:4px;border-radius:50%;background:rgba(69,43,0,.4);display:inline-block;flex-shrink:0"></span></span>
+      <span class="mq-item">Badges aren't real rewards <span style="width:4px;height:4px;border-radius:50%;background:rgba(69,43,0,.4);display:inline-block;flex-shrink:0"></span></span>
+      <span class="mq-item">Nobody cares about your step count <span style="width:4px;height:4px;border-radius:50%;background:rgba(69,43,0,.4);display:inline-block;flex-shrink:0"></span></span>
+      <span class="mq-item">There's no consequence for quitting <span style="width:4px;height:4px;border-radius:50%;background:rgba(69,43,0,.4);display:inline-block;flex-shrink:0"></span></span>
+      <span class="mq-item">If your group can't see it, it didn't happen <span style="width:4px;height:4px;border-radius:50%;background:rgba(69,43,0,.4);display:inline-block;flex-shrink:0"></span></span>
+      <span class="mq-item">Fitness without competition is boring <span style="width:4px;height:4px;border-radius:50%;background:rgba(69,43,0,.4);display:inline-block;flex-shrink:0"></span></span>
+    </div>
   </div>
 </div>
 
-<!-- COMPETE — LIVE LEADERBOARD -->
-<section class="sec compete" id="compete">
-  <div class="compete-in">
-    <div class="fu">
-      <span class="ey" style="color:var(--gold)">The Live Board</span>
-      <h2 class="sh">Your rank.<br>Everyone's screen.</h2>
-      <p class="sp" style="max-width:400px;margin-bottom:28px">Every Monday 6 AM, your weekly % change goes public to your group. Your streak. Your name. Your rank. There is no opt-out once you're in.</p>
-      <div style="display:flex;flex-direction:column;gap:11px;margin-top:24px">
-        <div style="display:flex;align-items:center;gap:11px;font-size:.83rem;color:var(--t2)"><span style="color:var(--lime)">✓</span>Ranked by % body change — fair at any weight</div>
-        <div style="display:flex;align-items:center;gap:11px;font-size:.83rem;color:var(--t2)"><span style="color:var(--lime)">✓</span>Missed weigh-in = broken streak, visible to group</div>
-        <div style="display:flex;align-items:center;gap:11px;font-size:.83rem;color:var(--t2)"><span style="color:var(--lime)">✓</span>Photo proof required — no faking your result</div>
-        <div style="display:flex;align-items:center;gap:11px;font-size:.83rem;color:var(--t2)"><span style="color:var(--lime)">✓</span>Top performer wins actual brand vouchers</div>
+<!-- ══════════════════════════════════════
+     LIVE LEADERBOARD
+══════════════════════════════════════ -->
+<section class="section" style="background:var(--surface-c-lowest)" id="compete">
+  <div class="section-inner">
+
+    <!-- header row -->
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:1.5rem;margin-bottom:4rem" class="fu">
+      <div>
+        <span style="color:var(--secondary);font-family:'DM Mono',monospace;font-size:.75rem;text-transform:uppercase;letter-spacing:.15em;display:block;margin-bottom:.75rem">Active Competition</span>
+        <h2 class="font-headline" style="font-size:clamp(2.4rem,5vw,5rem);line-height:1;font-weight:700;letter-spacing:-.025em">THE LIVE <span style="color:var(--primary-container)">BOARD</span></h2>
+        <p style="color:var(--on-surface-var);margin-top:1rem;max-width:28rem;font-size:.875rem;line-height:1.7">Every Monday 6 AM, your weekly % change goes public to your group. Streak. Rank. Name. No opt-out once you're in.</p>
+      </div>
+      <div class="stat-card">
+        <div style="text-align:center">
+          <p style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;color:#64748b;margin-bottom:.25rem">Prize Pool</p>
+          <p class="font-headline" style="font-weight:700;color:var(--secondary);font-size:1.25rem">₹10,24,500</p>
+        </div>
+        <div class="stat-div"></div>
+        <div style="text-align:center">
+          <p style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;color:#64748b;margin-bottom:.25rem">Next Reveal</p>
+          <p class="font-headline" style="font-weight:700;font-size:1.25rem">Monday 6AM</p>
+        </div>
       </div>
     </div>
-    <div class="lb-wrap fu d2">
+
+    <!-- leaderboard -->
+    <div class="lb-perspective">
       <div class="lb-card" id="lbc">
-        <div class="lb-hd">
-          <span class="lb-hd-t">Week 8 of 12 · Indiranagar Group</span>
-          <span class="lb-live"><span class="lb-live-d"></span>Live</span>
+        <div class="lb-head">
+          <span style="font-family:'DM Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:#64748b">Week 8 of 12 · Indiranagar Group</span>
+          <span style="display:flex;align-items:center;gap:.5rem;font-family:'DM Mono',monospace;font-size:11px;color:var(--secondary)"><span class="live-dot"></span>Live</span>
         </div>
-        <div class="lbr g1">
-          <span class="lbr-rk">🥇</span>
-          <div class="lbr-av" style="background:var(--gold)">P</div>
-          <div class="lbr-inf"><div class="lbr-nm">Pranith <span class="lbr-sk">🔥 8 wks</span></div><div class="lbr-mt">8 weigh-ins · photo verified</div></div>
-          <span class="lbr-pct" style="color:var(--lime)">−4.2%</span>
+
+        <div class="lbr" style="border-left:3px solid var(--primary-container)">
+          <span style="font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:700;color:var(--primary-container);width:2rem">🥇</span>
+          <div class="lb-avatar" style="background:var(--primary-container);color:var(--on-primary-container)">P</div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:.5rem;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Pranith <span style="font-family:'DM Mono',monospace;font-size:10px;background:rgba(245,166,35,.1);color:var(--primary-container);padding:.1rem .4rem;border-radius:.2rem">🔥 8 wks</span></div>
+            <div style="font-family:'DM Mono',monospace;font-size:11px;color:#475569;margin-top:.2rem">8 weigh-ins · photo verified</div>
+          </div>
+          <span style="font-family:'DM Mono',monospace;font-weight:700;color:var(--secondary)">−4.2%</span>
         </div>
-        <div class="lb-bar-r"><div class="lb-bar-bg"><div class="lb-bar-f" style="width:100%"></div></div></div>
-        <div class="lbr g2">
-          <span class="lbr-rk">🥈</span>
-          <div class="lbr-av" style="background:#777">S</div>
-          <div class="lbr-inf"><div class="lbr-nm">Shreyas <span class="lbr-sk">🔥 5 wks</span></div><div class="lbr-mt">7 weigh-ins · photo verified</div></div>
-          <span class="lbr-pct" style="color:var(--lime)">−3.8%</span>
+        <div class="lb-bar-wrap"><div class="lb-bar-bg"><div class="lb-bar-f" style="width:100%"></div></div></div>
+
+        <div class="lbr" style="border-left:3px solid #777">
+          <span style="font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:700;color:#94a3b8;width:2rem">🥈</span>
+          <div class="lb-avatar" style="background:#475569;color:#fff">S</div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:.5rem;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Shreyas <span style="font-family:'DM Mono',monospace;font-size:10px;background:rgba(245,166,35,.1);color:var(--primary-container);padding:.1rem .4rem;border-radius:.2rem">🔥 5 wks</span></div>
+            <div style="font-family:'DM Mono',monospace;font-size:11px;color:#475569;margin-top:.2rem">7 weigh-ins · photo verified</div>
+          </div>
+          <span style="font-family:'DM Mono',monospace;font-weight:700;color:var(--secondary)">−3.8%</span>
         </div>
-        <div class="lb-bar-r"><div class="lb-bar-bg"><div class="lb-bar-f" style="width:90%"></div></div></div>
-        <div class="lbr g3">
-          <span class="lbr-rk">🥉</span>
-          <div class="lbr-av" style="background:#9B6DFF">K</div>
-          <div class="lbr-inf"><div class="lbr-nm">Kishen <span class="lbr-sk">🔥 3 wks</span></div><div class="lbr-mt">8 weigh-ins · photo verified</div></div>
-          <span class="lbr-pct" style="color:var(--lime)">−3.1%</span>
+        <div class="lb-bar-wrap"><div class="lb-bar-bg"><div class="lb-bar-f" style="width:90%"></div></div></div>
+
+        <div class="lbr" style="border-left:3px solid #9B6DFF">
+          <span style="font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:700;color:#9B6DFF;width:2rem">🥉</span>
+          <div class="lb-avatar" style="background:#9B6DFF;color:#fff">K</div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:.5rem;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Kishen <span style="font-family:'DM Mono',monospace;font-size:10px;background:rgba(245,166,35,.1);color:var(--primary-container);padding:.1rem .4rem;border-radius:.2rem">🔥 3 wks</span></div>
+            <div style="font-family:'DM Mono',monospace;font-size:11px;color:#475569;margin-top:.2rem">8 weigh-ins · photo verified</div>
+          </div>
+          <span style="font-family:'DM Mono',monospace;font-weight:700;color:var(--secondary)">−3.1%</span>
         </div>
-        <div class="lb-bar-r"><div class="lb-bar-bg"><div class="lb-bar-f" style="width:74%"></div></div></div>
+        <div class="lb-bar-wrap"><div class="lb-bar-bg"><div class="lb-bar-f" style="width:74%"></div></div></div>
+
         <div class="lbr" style="opacity:.5">
-          <span class="lbr-rk" style="color:var(--t3);font-size:.85rem">4</span>
-          <div class="lbr-av" style="background:var(--s3)">R</div>
-          <div class="lbr-inf"><div class="lbr-nm">Rahul</div><div class="lbr-mt" style="color:var(--red)">⚠ Missed last 2 weigh-ins</div></div>
-          <span class="lbr-pct" style="color:var(--t2)">−1.1%</span>
+          <span style="font-family:'DM Mono',monospace;font-size:.9rem;color:#64748b;width:2rem">4</span>
+          <div class="lb-avatar" style="background:var(--surface-c-highest);color:#94a3b8">R</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Rahul</div>
+            <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--error);margin-top:.2rem">⚠ Missed last 2 weigh-ins</div>
+          </div>
+          <span style="font-family:'DM Mono',monospace;font-weight:700;color:#475569">−1.1%</span>
         </div>
+
         <div class="lb-alert">😬 The group was notified Rahul missed this week. Streak gone.</div>
-        <div class="lb-foot"><span>Next reveal: Monday 6 AM</span><span class="lb-foot-cta">Join Group →</span></div>
+
+        <div class="lb-foot">
+          <span style="font-family:'DM Mono',monospace;font-size:11px;color:#94a3b8">Next reveal: Monday 6 AM</span>
+          <button onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})"
+            style="font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:var(--primary-container);background:rgba(245,166,35,.1);padding:.35rem 1rem;border-radius:9999px;border:none;cursor:none;transition:background .2s"
+            onmouseover="this.style.background='rgba(245,166,35,.2)'" onmouseout="this.style.background='rgba(245,166,35,.1)'">Join Group →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- proof bullets -->
+    <div class="proof-grid fu" style="margin-top:4rem">
+      <div class="proof-item"><span style="color:var(--secondary);flex-shrink:0">✓</span><span style="color:var(--on-surface-var);font-size:.8rem">Ranked by % body change — fair at any weight</span></div>
+      <div class="proof-item"><span style="color:var(--secondary);flex-shrink:0">✓</span><span style="color:var(--on-surface-var);font-size:.8rem">Missed weigh-in = broken streak, visible to group</span></div>
+      <div class="proof-item"><span style="color:var(--secondary);flex-shrink:0">✓</span><span style="color:var(--on-surface-var);font-size:.8rem">Live photo proof required — no faking results</span></div>
+      <div class="proof-item"><span style="color:var(--secondary);flex-shrink:0">✓</span><span style="color:var(--on-surface-var);font-size:.8rem">Top performer wins real brand vouchers</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     HOW IT WORKS — BENTO
+══════════════════════════════════════ -->
+<section class="section" id="how">
+  <div class="section-inner">
+    <div style="text-align:center;margin-bottom:4rem" class="fu">
+      <span style="color:var(--primary-container);font-family:'DM Mono',monospace;font-size:.75rem;text-transform:uppercase;letter-spacing:.15em;display:block;margin-bottom:.75rem">The Pipeline</span>
+      <h2 class="font-headline" style="font-size:clamp(2.4rem,5vw,5rem);line-height:1;font-weight:700;letter-spacing:-.025em">HOW IT <span style="color:var(--secondary)">WORKS</span></h2>
+    </div>
+    <div class="bento">
+      <!-- 01 -->
+      <div class="bento-card card-3d bento-7 fu">
+        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
+          <span class="bento-num" style="color:var(--primary-container)">01</span>
+          <div style="height:1px;flex-grow:1;background:rgba(82,69,52,.3)"></div>
+          <span class="material-symbols-outlined" style="font-size:2rem;color:var(--primary-container)">groups</span>
+        </div>
+        <h3 class="font-headline" style="font-size:1.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.75rem">Pick Your Group</h3>
+        <p style="color:var(--on-surface-var);line-height:1.7;margin-bottom:1.5rem">Join a Bangalore challenge — gym crew, running club, office team — or start your own. Small, local, and personal.</p>
+        <div style="background:var(--surface-c);border-radius:.75rem;padding:1rem;display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;margin-left:-.5rem">
+            <div style="width:2.25rem;height:2.25rem;border-radius:50%;background:var(--primary-container);border:2px solid var(--surface-c);display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.8rem;color:var(--on-primary-container)">A</div>
+            <div style="width:2.25rem;height:2.25rem;border-radius:50%;background:var(--secondary);border:2px solid var(--surface-c);display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.8rem;color:var(--on-secondary);margin-left:-.5rem">S</div>
+            <div style="width:2.25rem;height:2.25rem;border-radius:50%;background:#9B6DFF;border:2px solid var(--surface-c);display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.8rem;color:#fff;margin-left:-.5rem">K</div>
+            <div style="width:2.25rem;height:2.25rem;border-radius:50%;background:var(--surface-bright);border:2px solid var(--surface-c);display:grid;place-items:center;font-family:'DM Mono',monospace;font-size:.7rem;color:#cbd5e1;margin-left:-.5rem">+12</div>
+          </div>
+          <span style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--primary-container);font-weight:700;letter-spacing:.12em">Active: Indiranagar Arena</span>
+        </div>
+      </div>
+      <!-- 02 -->
+      <div class="bento-card card-3d bento-5 fu" style="border-color:rgba(124,255,163,.05)">
+        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
+          <span class="bento-num" style="color:var(--secondary)">02</span>
+          <div style="height:1px;flex-grow:1;background:rgba(82,69,52,.3)"></div>
+          <span class="material-symbols-outlined" style="font-size:2rem;color:var(--secondary)">photo_camera</span>
+        </div>
+        <h3 class="font-headline" style="font-size:1.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.75rem">Weigh In Weekly</h3>
+        <p style="color:var(--on-surface-var);line-height:1.7;margin-bottom:1.5rem">Live photo on the scale every Sunday. No screenshots. Miss it and your streak breaks — your entire group gets notified.</p>
+        <div style="display:inline-flex;align-items:center;gap:.5rem;background:rgba(124,255,163,.1);border:1px solid rgba(124,255,163,.2);border-radius:9999px;padding:.4rem 1rem">
+          <span class="live-dot"></span>
+          <span style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--secondary);font-weight:700">Live Validation Active</span>
+        </div>
+      </div>
+      <!-- 03 -->
+      <div class="bento-card card-3d bento-5 fu">
+        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
+          <span class="bento-num" style="color:var(--tertiary)">03</span>
+          <div style="height:1px;flex-grow:1;background:rgba(82,69,52,.3)"></div>
+          <span class="material-symbols-outlined" style="font-size:2rem;color:var(--tertiary)">leaderboard</span>
+        </div>
+        <h3 class="font-headline" style="font-size:1.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.75rem">Climb the Board</h3>
+        <p style="color:var(--on-surface-var);line-height:1.7;margin-bottom:1.25rem">Ranked strictly by % body weight change. Fair at 60kg or 120kg. Every Monday your change goes public.</p>
+        <div style="display:flex;flex-direction:column;gap:.5rem">
+          <div style="background:var(--surface-c-lowest);padding:.75rem 1rem;border-radius:.75rem;display:flex;align-items:center;justify-content:space-between">
+            <span style="font-family:'DM Mono',monospace;font-size:.75rem;color:var(--tertiary)">#01 PRANITH M.</span>
+            <span style="font-family:'DM Mono',monospace;font-size:.75rem;color:var(--secondary)">−4.2%</span>
+          </div>
+          <div style="background:var(--surface-bright);padding:.75rem 1rem;border-radius:.75rem;border-left:2px solid var(--primary-container);display:flex;align-items:center;justify-content:space-between">
+            <span style="font-family:'DM Mono',monospace;font-size:.75rem">#04 YOU</span>
+            <span style="font-family:'DM Mono',monospace;font-size:.75rem;color:var(--secondary)">−2.8%</span>
+          </div>
+        </div>
+      </div>
+      <!-- 04 -->
+      <div class="bento-card card-3d bento-7 fu">
+        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
+          <span class="bento-num" style="color:var(--primary-container)">04</span>
+          <div style="height:1px;flex-grow:1;background:rgba(82,69,52,.3)"></div>
+          <span class="material-symbols-outlined" style="font-size:2rem;color:var(--primary-container)">trophy</span>
+        </div>
+        <h3 class="font-headline" style="font-size:1.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.75rem">Win Real Things</h3>
+        <p style="color:var(--on-surface-var);line-height:1.7;margin-bottom:1.25rem">Top performers unlock premium gear, Cult.fit gym passes, Myntra vouchers, and whey protein. Not points. Not badges.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.5rem">
+          <span style="background:rgba(245,166,35,.1);color:var(--primary-container);font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;font-weight:700;padding:.35rem .85rem;border-radius:9999px;border:1px solid rgba(245,166,35,.2)">👟 Running Shoes</span>
+          <span style="background:rgba(245,166,35,.1);color:var(--primary-container);font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;font-weight:700;padding:.35rem .85rem;border-radius:9999px;border:1px solid rgba(245,166,35,.2)">💪 Cult.fit Pass</span>
+          <span style="background:rgba(245,166,35,.1);color:var(--primary-container);font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;font-weight:700;padding:.35rem .85rem;border-radius:9999px;border:1px solid rgba(245,166,35,.2)">🎽 Arena Gear</span>
+          <span style="background:rgba(245,166,35,.1);color:var(--primary-container);font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;font-weight:700;padding:.35rem .85rem;border-radius:9999px;border:1px solid rgba(245,166,35,.2)">💊 Elite Whey</span>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- HOW IT WORKS -->
-<section class="sec how" id="how">
-  <div class="how-in">
-    <div class="how-h fu">
-      <span class="ey" style="color:var(--gold);display:block;text-align:center">How It Works</span>
-      <h2 class="sh" style="text-align:center">Simple enough<br>to start today.</h2>
-    </div>
-    <div class="steps">
-      <div class="step fu d1">
-        <div class="sn">01</div>
-        <div class="si">🏙️</div>
-        <h3 class="st">Pick Your Group</h3>
-        <p class="sd">Join a Bangalore challenge — gym crew, running club, office team, or start your own. Challenges are small, local, and personal.</p>
-      </div>
-      <div class="step fu d2">
-        <div class="sn">02</div>
-        <div class="si">📸</div>
-        <h3 class="st">Weigh In Weekly</h3>
-        <p class="sd">Live photo on the scale every week. No screenshots. No manual entry. Miss it, your streak breaks and your group gets notified.</p>
-      </div>
-      <div class="step fu d3">
-        <div class="sn">03</div>
-        <div class="si">🏆</div>
-        <h3 class="st">Climb the Board</h3>
-        <p class="sd">Every Monday your % change is ranked publicly inside your group. Streaks, rank movements, and slip-ups — all visible.</p>
-      </div>
-      <div class="step fu d4">
-        <div class="sn">04</div>
-        <div class="si">🎁</div>
-        <h3 class="st">Win Real Things</h3>
-        <p class="sd">Top performers earn actual brand vouchers — gear, supplements, gym passes. Not points. Not badges. Things you'd actually want.</p>
+<!-- ══════════════════════════════════════
+     NOWHERE TO HIDE
+══════════════════════════════════════ -->
+<section class="section acc-section" id="mechanic">
+  <div class="section-inner">
+    <div class="acc-wrap">
+      <div style="position:absolute;top:0;right:0;width:50%;height:100%;background:linear-gradient(to left,rgba(245,166,35,.05),transparent);pointer-events:none"></div>
+      <div class="acc-grid" style="position:relative;z-index:1">
+        <div class="fu">
+          <span style="color:var(--secondary);font-family:'DM Mono',monospace;font-size:.75rem;text-transform:uppercase;letter-spacing:.15em;display:block;margin-bottom:1rem">The Accountability Layer</span>
+          <h2 class="font-headline" style="font-size:clamp(2.8rem,5vw,5rem);line-height:1;font-weight:700;letter-spacing:-.025em;margin-bottom:2rem">NOWHERE<br><span style="color:var(--primary-container);font-style:italic">TO HIDE.</span></h2>
+          <p style="color:var(--on-surface-var);font-size:1.1rem;line-height:1.7">Social pressure is the world's oldest fitness hack. We made it digital, automated, and weekly. Your group will know before you've had your morning coffee.</p>
+          <div class="rules-grid">
+            <div class="rule-card">
+              <span class="material-symbols-outlined" style="color:var(--primary-container);display:block;margin-bottom:.75rem;font-variation-settings:'FILL' 1">add_a_photo</span>
+              <h4 class="font-headline" style="font-size:.875rem;font-weight:700;text-transform:uppercase;margin-bottom:.35rem">Photo Proof, Every Time</h4>
+              <p style="font-size:.8rem;color:#64748b;line-height:1.6">Live scale photo. Metadata checked. Old screenshots rejected.</p>
+            </div>
+            <div class="rule-card">
+              <span class="material-symbols-outlined" style="color:var(--secondary);display:block;margin-bottom:.75rem;font-variation-settings:'FILL' 1">bolt</span>
+              <h4 class="font-headline" style="font-size:.875rem;font-weight:700;text-transform:uppercase;margin-bottom:.35rem">Streaks Break Publicly</h4>
+              <p style="font-size:.8rem;color:#64748b;line-height:1.6">Miss a week? Streak resets. Your group sees it instantly.</p>
+            </div>
+            <div class="rule-card">
+              <span class="material-symbols-outlined" style="color:var(--tertiary);display:block;margin-bottom:.75rem;font-variation-settings:'FILL' 1">balance</span>
+              <h4 class="font-headline" style="font-size:.875rem;font-weight:700;text-transform:uppercase;margin-bottom:.35rem">% Change — Fair for All</h4>
+              <p style="font-size:.8rem;color:#64748b;line-height:1.6">Ranked by percentage, not kg. Equal at 60kg or 120kg.</p>
+            </div>
+            <div class="rule-card">
+              <span class="material-symbols-outlined" style="color:var(--primary-container);display:block;margin-bottom:.75rem;font-variation-settings:'FILL' 1">lock</span>
+              <h4 class="font-headline" style="font-size:.875rem;font-weight:700;text-transform:uppercase;margin-bottom:.35rem">Weight Stays Private</h4>
+              <p style="font-size:.8rem;color:#64748b;line-height:1.6">Only your % change is public. Actual numbers are yours alone.</p>
+            </div>
+          </div>
+        </div>
+        <!-- 3D scroll card -->
+        <div class="fu" id="acc-scene" style="perspective:1300px">
+          <div id="acc-card" class="acc-card-3d">
+            <div style="background:var(--surface-c-lowest);padding:.75rem 1.25rem;border-bottom:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;align-items:center">
+              <span style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:#64748b">Monday Reveal · Week 8</span>
+              <span style="display:flex;align-items:center;gap:.4rem;font-family:'DM Mono',monospace;font-size:10px;color:var(--secondary)"><span class="live-dot"></span>Live · Bangalore</span>
+            </div>
+            <div style="padding:.9rem 1.25rem;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:.75rem;border-left:3px solid var(--primary-container);background:rgba(245,166,35,.02)">
+              <span style="font-family:'DM Mono',monospace;font-size:1rem;width:2rem">🥇</span>
+              <div style="width:2rem;height:2rem;border-radius:50%;background:var(--primary-container);display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--on-primary-container);font-size:.8rem;flex-shrink:0">P</div>
+              <div style="flex:1">
+                <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Pranith</div>
+                <div style="font-family:'DM Mono',monospace;font-size:10px;color:#64748b;margin-top:.15rem">Verified · −4.2% · 🔥 8 week streak</div>
+              </div>
+              <span style="font-family:'DM Mono',monospace;font-size:.75rem;color:var(--secondary);font-weight:700">↑ #1</span>
+            </div>
+            <div style="padding:.9rem 1.25rem;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:.75rem;opacity:.55">
+              <span style="font-family:'DM Mono',monospace;font-size:.85rem;width:2rem;color:#64748b">4</span>
+              <div style="width:2rem;height:2rem;border-radius:50%;background:var(--surface-c-highest);display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:700;color:#94a3b8;font-size:.8rem;flex-shrink:0">R</div>
+              <div style="flex:1">
+                <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Rahul</div>
+                <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--error);margin-top:.15rem">Missed 2 weeks. No streak. Group notified.</div>
+              </div>
+              <span style="font-family:'DM Mono',monospace;font-size:.75rem;color:var(--error);font-weight:700">↓ Drop</span>
+            </div>
+            <div style="margin:.5rem .9rem .75rem;background:rgba(255,180,171,.05);border:1px solid rgba(255,180,171,.15);border-radius:.65rem;padding:.6rem .9rem;font-family:'DM Mono',monospace;font-size:10px;color:var(--error)">
+              😬 Rahul skipped. The group got the notification 6 minutes ago.
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ACCOUNTABILITY — 3D SCROLL CARD -->
-<section class="sec acc" id="mechanic">
-  <div class="acc-in">
-    <div class="fu">
-      <span class="ey" style="color:var(--lime);display:block;text-align:center">The Accountability Layer</span>
-      <h2 class="sh" style="text-align:center">Nowhere<br><span style="color:var(--lime)">to hide.</span></h2>
-      <p class="sp" style="max-width:420px;margin:0 auto">Social pressure is the world's oldest fitness hack. We just made it digital, automated, and weekly. Your group will know before you've had your morning coffee.</p>
+<!-- ══════════════════════════════════════
+     TERRITORY
+══════════════════════════════════════ -->
+<section class="section" style="background:var(--surface);border-top:1px solid rgba(255,255,255,.05)" id="territory">
+  <div class="section-inner">
+    <div style="text-align:center;margin-bottom:4rem" class="fu">
+      <span style="color:var(--secondary);font-family:'DM Mono',monospace;font-size:.75rem;text-transform:uppercase;letter-spacing:.15em;display:block;margin-bottom:.75rem">Expansion Module</span>
+      <h2 class="font-headline" style="font-size:clamp(2.4rem,5vw,5rem);line-height:1;font-weight:700;letter-spacing:-.025em;margin-bottom:1rem">TERRITORY <span style="color:var(--secondary)">MODE</span></h2>
+      <p style="color:var(--on-surface-var);font-size:1.1rem;max-width:40rem;margin:0 auto">Claim Bangalore piece by piece. Run loops, close the GPS path — that zone is yours. Dominating Indiranagar grants 2× bounty multipliers.</p>
     </div>
-    <div class="acc-scene" id="acc-scene">
-      <div class="acc-card" id="acc-card">
-        <div class="acc-top">
-          <span class="acc-t">Monday Reveal · Week 8</span>
-          <span class="acc-live"><span></span>Live · Bangalore</span>
-        </div>
-        <div class="lbr g1" style="background:rgba(245,166,35,.02)">
-          <span class="lbr-rk">🥇</span>
-          <div class="lbr-av" style="background:var(--gold)">P</div>
-          <div class="lbr-inf"><div class="lbr-nm">Pranith</div><div class="lbr-mt">Verified · −4.2% · 🔥 8 week streak</div></div>
-          <span class="lbr-pct" style="color:var(--lime)">↑ #1</span>
-        </div>
-        <div class="lbr" style="opacity:.55">
-          <span class="lbr-rk" style="color:var(--t3)">4</span>
-          <div class="lbr-av" style="background:var(--s3)">R</div>
-          <div class="lbr-inf"><div class="lbr-nm">Rahul</div><div class="lbr-mt" style="color:var(--red)">Missed 2 weeks. No streak. Group notified.</div></div>
-          <span class="lbr-pct" style="color:var(--red)">↓ Drop</span>
-        </div>
-        <div class="lb-alert">😬 Rahul skipped. The group got the notification 6 minutes ago.</div>
-      </div>
-    </div>
-    <div class="rules fu d1">
-      <div class="rule"><span class="rule-ic">📸</span><div><h4>Photo proof, every time</h4><p>Live scale photo. Metadata checked. Old screenshots rejected.</p></div></div>
-      <div class="rule"><span class="rule-ic">🔥</span><div><h4>Streaks break publicly</h4><p>Gain or miss a week? Your streak resets. Your group sees it.</p></div></div>
-      <div class="rule"><span class="rule-ic">⚖️</span><div><h4>% change — fair for all</h4><p>Ranked by percentage, not kg. Equal at 60kg or 120kg.</p></div></div>
-      <div class="rule"><span class="rule-ic">🔒</span><div><h4>Your weight stays private</h4><p>Only the % change is public. Actual numbers are only yours.</p></div></div>
-    </div>
-  </div>
-</section>
-
-<!-- TERRITORY MODE -->
-<section class="sec territory" id="territory">
-  <div class="terr-in">
-    <div class="fu">
-      <span class="ey" style="color:var(--lime)">Territory Mode</span>
-      <h2 class="sh">Run loops.<br>Own your <span style="color:var(--lime)">city.</span></h2>
-      <p class="sp" style="margin-bottom:22px">Trace a GPS route through any Bangalore streets. Close it — that zone is yours on the shared city map, in your colour. Rivals can contest your territory. 7 days to defend or lose it.</p>
-      <div class="terr-pts">
-        <div class="tp fu d1">
-          <div class="tpn" style="background:rgba(0,232,122,.1);color:var(--lime)">①</div>
-          <div><h4>GPS validates every metre</h4><p>You must physically run the boundary. No shortcuts.</p></div>
-        </div>
-        <div class="tp fu d2">
-          <div class="tpn" style="background:rgba(245,166,35,.1);color:var(--gold)">②</div>
-          <div><h4>Monthly km² leaderboard</h4><p>Most territory at month-end wins gear. Resets every 1st.</p></div>
-        </div>
-        <div class="tp fu d3">
-          <div class="tpn" style="background:rgba(77,166,255,.1);color:#4DA6FF">③</div>
-          <div><h4>Run more, claim more</h4><p>Coins are earned through verified activity. Spend them on territory.</p></div>
+    <div class="terr-grid">
+      <!-- map -->
+      <div class="fu" style="order:2">
+        <div class="map-wrap">
+          <div class="map-hud"><div class="map-hud-badge"><span class="live-dot"></span>Live · Indiranagar</div></div>
+          <div id="tmap" style="width:100%;height:100%"></div>
         </div>
       </div>
-    </div>
-    <div class="fu d2">
-      <div class="terr-map">
-        <div class="tmap-hud"><div class="tmap-b"><span></span>Live · Indiranagar</div></div>
-        <div id="tmap"></div>
+      <!-- points -->
+      <div class="fu" style="order:1">
+        <div style="display:flex;flex-direction:column;gap:1.5rem" id="terr-pts">
+          <div class="terr-point">
+            <div class="terr-num" style="background:rgba(124,255,163,.1);color:var(--secondary)">①</div>
+            <div><h4 class="font-headline" style="font-weight:700;margin-bottom:.35rem">GPS validates every metre</h4><p style="color:var(--on-surface-var);font-size:.875rem;line-height:1.7">You must physically run the boundary. No shortcuts, no faking.</p></div>
+          </div>
+          <div class="terr-point">
+            <div class="terr-num" style="background:rgba(245,166,35,.1);color:var(--primary-container)">②</div>
+            <div><h4 class="font-headline" style="font-weight:700;margin-bottom:.35rem">Monthly km² leaderboard</h4><p style="color:var(--on-surface-var);font-size:.875rem;line-height:1.7">Most territory at month-end wins gear. Resets every 1st.</p></div>
+          </div>
+          <div class="terr-point">
+            <div class="terr-num" style="background:rgba(77,166,255,.1);color:#4DA6FF">③</div>
+            <div><h4 class="font-headline" style="font-weight:700;margin-bottom:.35rem">Run more, claim more</h4><p style="color:var(--on-surface-var);font-size:.875rem;line-height:1.7">Coins earned through verified activity. Spend them on territory.</p></div>
+          </div>
+        </div>
+        <div class="conquerors glass" style="margin-top:2rem;border-radius:.75rem;padding:1.25rem">
+          <h3 style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:#64748b;margin-bottom:1rem">Top Conquerors</h3>
+          <div style="display:flex;flex-direction:column;gap:.5rem">
+            <div class="conq-row" style="background:var(--surface-c-lowest)">
+              <div style="display:flex;align-items:center;gap:.75rem"><div style="width:.5rem;height:.5rem;border-radius:50%;background:var(--primary-container);box-shadow:0 0 8px rgba(245,166,35,.8)"></div><span style="font-size:.875rem">@NAMMA_SQUAD</span></div>
+              <span style="font-family:'DM Mono',monospace;font-size:.75rem;color:var(--primary-container)">12.4 km²</span>
+            </div>
+            <div class="conq-row" style="opacity:.75">
+              <div style="display:flex;align-items:center;gap:.75rem"><div style="width:.5rem;height:.5rem;border-radius:50%;background:var(--secondary);box-shadow:0 0 8px rgba(0,231,121,.8)"></div><span style="font-size:.875rem">@VortexRunner</span></div>
+              <span style="font-family:'DM Mono',monospace;font-size:.75rem;color:var(--secondary)">8.9 km²</span>
+            </div>
+            <div class="conq-row" style="opacity:.6">
+              <div style="display:flex;align-items:center;gap:.75rem"><div style="width:.5rem;height:.5rem;border-radius:50%;background:var(--tertiary);box-shadow:0 0 8px rgba(208,205,252,.8)"></div><span style="font-size:.875rem">@Indiranagar_King</span></div>
+              <span style="font-family:'DM Mono',monospace;font-size:.75rem;color:var(--tertiary)">5.2 km²</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- VOUCHER MARQUEE -->
-<section class="vouchers" id="vouchers">
-  <div class="v-head fu">
-    <span class="ey" style="color:var(--gold);display:block;text-align:center;margin-bottom:10px">What You Win</span>
-    <h2 class="sh" style="font-size:clamp(1.7rem,4vw,3.2rem);text-align:center;line-height:1">Not XP. Not badges.<br><span style="color:var(--gold)">Actual vouchers.</span></h2>
+<!-- ══════════════════════════════════════
+     VOUCHERS MARQUEE
+══════════════════════════════════════ -->
+<section class="vouchers-section">
+  <div style="text-align:center;padding:0 1.5rem;margin-bottom:2.5rem" class="fu">
+    <span style="color:var(--primary-container);font-family:'DM Mono',monospace;font-size:.75rem;text-transform:uppercase;letter-spacing:.15em;display:block;margin-bottom:.75rem">What You Win</span>
+    <h2 class="font-headline" style="font-size:clamp(1.8rem,4vw,3.5rem);line-height:1;font-weight:700;letter-spacing:-.025em">Not XP. Not badges.<br><span style="color:var(--primary-container)">Actual vouchers.</span></h2>
   </div>
-  <div class="mq-wrap">
-    <div class="mq-t">
-      <div class="chip"><span class="chip-ico">👟</span><div><div class="chip-b">Running Shoes</div><div class="chip-t">Footwear Voucher</div></div></div>
-      <div class="chip"><span class="chip-ico">🏋️</span><div><div class="chip-b">Sports Equipment</div><div class="chip-t">Gear Voucher</div></div></div>
-      <div class="chip"><span class="chip-ico">💊</span><div><div class="chip-b">Protein Bundle</div><div class="chip-t">Nutrition Pack</div></div></div>
-      <div class="chip"><span class="chip-ico">⌚</span><div><div class="chip-b">Fitness Tracker</div><div class="chip-t">Wearable Voucher</div></div></div>
-      <div class="chip"><span class="chip-ico">🎽</span><div><div class="chip-b">Sportswear</div><div class="chip-t">Apparel Voucher</div></div></div>
-      <div class="chip"><span class="chip-ico">💪</span><div><div class="chip-b">Cult.fit Pass</div><div class="chip-t">Studio Sessions</div></div></div>
-      <div class="chip"><span class="chip-ico">🏃</span><div><div class="chip-b">Trail Shoes</div><div class="chip-t">Footwear Voucher</div></div></div>
-      <div class="chip"><span class="chip-ico">🥗</span><div><div class="chip-b">Healthy Meals</div><div class="chip-t">Delivery Credits</div></div></div>
-      <div class="chip"><span class="chip-ico">🧴</span><div><div class="chip-b">Whey Protein</div><div class="chip-t">Supplement Pack</div></div></div>
-      <div class="chip"><span class="chip-ico">🩺</span><div><div class="chip-b">Health Checkup</div><div class="chip-t">Wellness Voucher</div></div></div>
+  <div class="mq-wrap" style="--fade-bg:var(--surface-c-lowest)">
+    <div style="position:absolute;inset-y:0;left:0;width:6rem;pointer-events:none;z-index:2;background:linear-gradient(to right,var(--surface-c-lowest),transparent)"></div>
+    <div style="position:absolute;inset-y:0;right:0;width:6rem;pointer-events:none;z-index:2;background:linear-gradient(to left,var(--surface-c-lowest),transparent)"></div>
+    <div class="mq-track" style="gap:.75rem">
+      <div class="chip"><span style="font-size:1rem">👟</span><div><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Running Shoes</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:#64748b">Footwear Voucher</div></div></div>
+      <div class="chip"><span style="font-size:1rem">🏋️</span><div><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Sports Equipment</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:#64748b">Gear Voucher</div></div></div>
+      <div class="chip"><span style="font-size:1rem">💊</span><div><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Protein Bundle</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:#64748b">Nutrition Pack</div></div></div>
+      <div class="chip"><span style="font-size:1rem">⌚</span><div><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Fitness Tracker</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:#64748b">Wearable Voucher</div></div></div>
+      <div class="chip"><span style="font-size:1rem">🎽</span><div><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Sportswear</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:#64748b">Apparel Voucher</div></div></div>
+      <div class="chip"><span style="font-size:1rem">💪</span><div><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Cult.fit Pass</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:#64748b">Studio Sessions</div></div></div>
+      <div class="chip"><span style="font-size:1rem">🥗</span><div><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Healthy Meals</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:#64748b">Delivery Credits</div></div></div>
+      <div class="chip"><span style="font-size:1rem">🩺</span><div><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Health Checkup</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:#64748b">Wellness Voucher</div></div></div>
       <!-- dup -->
-      <div class="chip"><span class="chip-ico">👟</span><div><div class="chip-b">Running Shoes</div><div class="chip-t">Footwear Voucher</div></div></div>
-      <div class="chip"><span class="chip-ico">🏋️</span><div><div class="chip-b">Sports Equipment</div><div class="chip-t">Gear Voucher</div></div></div>
-      <div class="chip"><span class="chip-ico">💊</span><div><div class="chip-b">Protein Bundle</div><div class="chip-t">Nutrition Pack</div></div></div>
-      <div class="chip"><span class="chip-ico">⌚</span><div><div class="chip-b">Fitness Tracker</div><div class="chip-t">Wearable Voucher</div></div></div>
-      <div class="chip"><span class="chip-ico">🎽</span><div><div class="chip-b">Sportswear</div><div class="chip-t">Apparel Voucher</div></div></div>
-      <div class="chip"><span class="chip-ico">💪</span><div><div class="chip-b">Cult.fit Pass</div><div class="chip-t">Studio Sessions</div></div></div>
-      <div class="chip"><span class="chip-ico">🏃</span><div><div class="chip-b">Trail Shoes</div><div class="chip-t">Footwear Voucher</div></div></div>
-      <div class="chip"><span class="chip-ico">🥗</span><div><div class="chip-b">Healthy Meals</div><div class="chip-t">Delivery Credits</div></div></div>
-      <div class="chip"><span class="chip-ico">🧴</span><div><div class="chip-b">Whey Protein</div><div class="chip-t">Supplement Pack</div></div></div>
-      <div class="chip"><span class="chip-ico">🩺</span><div><div class="chip-b">Health Checkup</div><div class="chip-t">Wellness Voucher</div></div></div>
+      <div class="chip"><span style="font-size:1rem">👟</span><div><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Running Shoes</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:#64748b">Footwear Voucher</div></div></div>
+      <div class="chip"><span style="font-size:1rem">🏋️</span><div><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Sports Equipment</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:#64748b">Gear Voucher</div></div></div>
+      <div class="chip"><span style="font-size:1rem">💊</span><div><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Protein Bundle</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:#64748b">Nutrition Pack</div></div></div>
+      <div class="chip"><span style="font-size:1rem">⌚</span><div><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Fitness Tracker</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:#64748b">Wearable Voucher</div></div></div>
+      <div class="chip"><span style="font-size:1rem">🎽</span><div><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Sportswear</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:#64748b">Apparel Voucher</div></div></div>
+      <div class="chip"><span style="font-size:1rem">💪</span><div><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Cult.fit Pass</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:#64748b">Studio Sessions</div></div></div>
+      <div class="chip"><span style="font-size:1rem">🥗</span><div><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Healthy Meals</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:#64748b">Delivery Credits</div></div></div>
+      <div class="chip"><span style="font-size:1rem">🩺</span><div><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Health Checkup</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:#64748b">Wellness Voucher</div></div></div>
     </div>
   </div>
 </section>
 
-<!-- SOCIAL PROOF -->
-<section class="sec social" id="social">
-  <div class="social-in">
-    <div class="social-h fu">
-      <span class="ey" style="color:var(--gold);display:block;text-align:center">Early Testers</span>
-      <h2 class="sh" style="text-align:center;font-size:clamp(2rem,4vw,3.8rem)">The board doesn't lie.</h2>
+<!-- ══════════════════════════════════════
+     SOCIAL PROOF
+══════════════════════════════════════ -->
+<section class="section" style="background:var(--surface);border-top:1px solid rgba(255,255,255,.05)">
+  <div class="section-inner">
+    <div style="text-align:center;margin-bottom:3.5rem" class="fu">
+      <span style="color:var(--primary-container);font-family:'DM Mono',monospace;font-size:.75rem;text-transform:uppercase;letter-spacing:.15em;display:block;margin-bottom:.75rem">Early Testers</span>
+      <h2 class="font-headline" style="font-size:clamp(2.2rem,4.5vw,4.5rem);line-height:1;font-weight:700;letter-spacing:-.025em">The board doesn't lie.</h2>
     </div>
-    <div class="quotes">
-      <div class="quote fu d1">
-        <p class="q-text">"I've tried five fitness apps. None of them made me actually scared to skip a workout. Knowing my office group would see my missed weigh-in on Monday — that's different."</p>
-        <div class="q-foot">
-          <div class="q-av" style="background:var(--gold)">A</div>
-          <div><div class="q-name">Aditya R.</div><div class="q-role">Software Engineer, Koramangala</div></div>
-          <span class="q-result">−5.1%</span>
+    <div class="quotes-grid">
+      <div class="quote-card">
+        <p style="color:var(--on-surface-var);font-size:.875rem;line-height:1.8;font-style:italic;margin-bottom:1.25rem">"I've tried five fitness apps. None of them made me actually scared to skip a workout. Knowing my office group would see my missed weigh-in on Monday — that's different."</p>
+        <div style="display:flex;align-items:center;gap:.75rem">
+          <div style="width:2.25rem;height:2.25rem;border-radius:50%;background:var(--primary-container);display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--on-primary-container);font-size:.875rem;flex-shrink:0">A</div>
+          <div><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Aditya R.</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:#475569;margin-top:.15rem">Software Engineer, Koramangala</div></div>
+          <span style="font-family:'DM Mono',monospace;font-size:.75rem;font-weight:700;color:var(--secondary);margin-left:auto">−5.1%</span>
         </div>
       </div>
-      <div class="quote fu d2">
-        <p class="q-text">"The territory mode got me running routes I'd never have done otherwise. Seeing someone take my zone in Indiranagar was genuinely annoying. Which meant I went out and took it back."</p>
-        <div class="q-foot">
-          <div class="q-av" style="background:var(--lime);color:#05050D">N</div>
-          <div><div class="q-name">Nisha K.</div><div class="q-role">Product Manager, HSR Layout</div></div>
-          <span class="q-result">+8 km²</span>
+      <div class="quote-card">
+        <p style="color:var(--on-surface-var);font-size:.875rem;line-height:1.8;font-style:italic;margin-bottom:1.25rem">"The territory mode got me running routes I'd never have done otherwise. Seeing someone take my zone in Indiranagar was genuinely annoying. Which meant I went out and took it back."</p>
+        <div style="display:flex;align-items:center;gap:.75rem">
+          <div style="width:2.25rem;height:2.25rem;border-radius:50%;background:var(--secondary);display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--on-secondary);font-size:.875rem;flex-shrink:0">N</div>
+          <div><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Nisha K.</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:#475569;margin-top:.15rem">Product Manager, HSR Layout</div></div>
+          <span style="font-family:'DM Mono',monospace;font-size:.75rem;font-weight:700;color:var(--secondary);margin-left:auto">+8 km²</span>
         </div>
       </div>
-      <div class="quote fu d3">
-        <p class="q-text">"I came last in week one. My friends wouldn't let me forget it. By week six I was #2. The embarrassment is the feature — not a bug."</p>
-        <div class="q-foot">
-          <div class="q-av" style="background:#9B6DFF">V</div>
-          <div><div class="q-name">Vikram S.</div><div class="q-role">Gym Owner, JP Nagar</div></div>
-          <span class="q-result">−6.3%</span>
+      <div class="quote-card">
+        <p style="color:var(--on-surface-var);font-size:.875rem;line-height:1.8;font-style:italic;margin-bottom:1.25rem">"I came last in week one. My friends wouldn't let me forget it. By week six I was #2. The embarrassment is the feature — not a bug."</p>
+        <div style="display:flex;align-items:center;gap:.75rem">
+          <div style="width:2.25rem;height:2.25rem;border-radius:50%;background:#9B6DFF;display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:700;color:#fff;font-size:.875rem;flex-shrink:0">V</div>
+          <div><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Vikram S.</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:#475569;margin-top:.15rem">Gym Owner, JP Nagar</div></div>
+          <span style="font-family:'DM Mono',monospace;font-size:.75rem;font-weight:700;color:var(--secondary);margin-left:auto">−6.3%</span>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     WAITLIST CTA
+══════════════════════════════════════ -->
+<section class="section" style="background:var(--surface-c-lowest)" id="waitlist">
+  <div style="max-width:56rem;margin:0 auto">
+    <div class="cta-border-wrap">
+      <div class="cta-inner">
+
+        <div class="cta-counter-badge fu">
+          <span id="spots-left" style="font-weight:700;color:var(--primary)">347</span>&nbsp;spots left in the Bangalore beta
+        </div>
+
+        <h2 class="font-headline fu" style="font-size:clamp(2.6rem,6vw,6rem);line-height:1;font-weight:700;letter-spacing:-.04em;text-transform:uppercase;margin-bottom:1.5rem">
+          Your Arena<br>Awaits.
+        </h2>
+        <p style="color:var(--on-surface-var);font-size:1.1rem;margin-bottom:3rem;max-width:32rem;margin-left:auto;margin-right:auto" class="fu">
+          Season 1 (Bangalore Launch) — secure your spot. No credit card. No fluff.
+        </p>
+
+        <div class="fu" id="waitlist-form">
+          <div class="cta-form-grid" style="margin-bottom:1.25rem">
+            <div>
+              <div class="form-field-wrap">
+                <input id="email-in" type="email" autocomplete="email" placeholder="Email Address" class="cta-input">
+                <span class="inp-icon"><span class="material-symbols-outlined" style="font-size:1.25rem">alternate_email</span></span>
+              </div>
+              <p class="field-err" id="email-err"></p>
+            </div>
+            <div>
+              <div class="form-field-wrap">
+                <input id="phone-in" type="tel" autocomplete="tel" placeholder="Mobile Number (+91)" class="cta-input">
+                <span class="inp-icon"><span class="material-symbols-outlined" style="font-size:1.25rem">call</span></span>
+              </div>
+              <p class="field-err" id="phone-err"></p>
+            </div>
+          </div>
+          <button id="claim-btn" onclick="claim()" class="btn-arena">
+            <span class="btn-label">ENTER THE ARENA</span>
+            <span class="btn-spinner"></span>
+          </button>
+          <p style="margin-top:1rem;font-family:'DM Mono',monospace;font-size:11px;color:#475569">Bangalore only for now · No spam · Unsubscribe any time</p>
+        </div>
+
       </div>
     </div>
   </div>
 </section>
 
-<!-- WAITLIST CTA -->
-<section class="sec cta" id="waitlist">
-  <div class="cta-in">
-    <div class="fu">
-      <div class="cta-counter"><span id="spots-left">347</span> spots left in the Bangalore beta</div>
-      <h2 class="sh" style="text-align:center;font-size:clamp(2.4rem,6vw,5.5rem)">Your board<br>is waiting.</h2>
-      <p class="sp" style="text-align:center;max-width:400px;margin:0 auto">Beta members get early access and first pick of challenges when we launch. No credit card. No fluff.</p>
-      <div class="cta-form" id="waitlist-form">
-        <input class="cta-inp" type="email" id="email-in" placeholder="your@email.com" autocomplete="email">
-        <span class="cta-field-err" id="email-err"></span>
-        <input class="cta-inp" type="tel" id="phone-in" placeholder="+91 98765 43210" autocomplete="tel">
-        <span class="cta-field-err" id="phone-err"></span>
-        <button class="cta-btn" id="claim-btn" onclick="claim()">
-          <span class="btn-label">Claim My Spot →</span>
-          <span class="btn-spinner"></span>
-        </button>
-      </div>
-      <p class="cta-note">Bangalore only for now. No spam. Unsubscribe any time.</p>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <a class="logo" href="#" style="text-decoration:none">
-    <div class="logo-m" style="width:26px;height:26px;font-size:.85rem">F</div>
-    <span class="logo-t" style="font-size:.9rem;color:var(--t2)">FITBOUNTY</span>
-  </a>
-  <div class="fl">
-    <a href="#">Privacy</a>
+<!-- ══════════════════════════════════════
+     FOOTER
+══════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="logo-text">FitBounty India</div>
+  <div class="footer-links">
     <a href="#">Terms</a>
-    <a href="/cdn-cgi/l/email-protection#84ece1e8e8ebc4e2edf0e6ebf1eaf0fdaaedea"><span class="__cf_email__" data-cfemail="533b363f3f3c13353a27313c263d272a7d3a3d">[email&#160;protected]</span></a>
+    <a href="#">Privacy</a>
+    <a href="#">Discord</a>
+    <a href="#">Support</a>
   </div>
-  <span class="fr">© 2025 FitBounty · Bangalore</span>
+  <p style="font-family:'DM Mono',monospace;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#475569">© 2025 FitBounty India · Bangalore</p>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-/* ─ CURSOR ─ */
+<!-- ══════════════════════════════════════
+     MOBILE BOTTOM NAV
+══════════════════════════════════════ -->
+<nav class="bottom-nav">
+  <a href="#compete" class="bnav-item">
+    <span class="material-symbols-outlined" style="font-size:1.5rem">leaderboard</span>
+    <span class="lbl">Compete</span>
+  </a>
+  <a href="#territory" class="bnav-item">
+    <span class="material-symbols-outlined" style="font-size:1.5rem">map</span>
+    <span class="lbl">Territory</span>
+  </a>
+  <a href="#how" class="bnav-item bnav-active">
+    <span class="material-symbols-outlined" style="font-size:1.5rem;font-variation-settings:'FILL' 1">fitness_center</span>
+    <span class="lbl">How</span>
+  </a>
+  <a href="#waitlist" class="bnav-item">
+    <span class="material-symbols-outlined" style="font-size:1.5rem">person_add</span>
+    <span class="lbl">Join</span>
+  </a>
+</nav>
+
+<!-- ══════════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════ -->
+<script>
+/* ── CURSOR ── */
 const cur=document.getElementById('cur');
 let mx=0,my=0;
 document.addEventListener('mousemove',e=>{
   mx=e.clientX;my=e.clientY;
   cur.style.left=mx+'px';cur.style.top=my+'px';
 });
-document.querySelectorAll('a,button,.lb-card,.step,.quote,.rule,.chip').forEach(el=>{
+document.querySelectorAll('a,button,.card-3d,.chip,.quote-card,.rule-card').forEach(el=>{
   el.addEventListener('mouseenter',()=>document.body.classList.add('cur-big'));
   el.addEventListener('mouseleave',()=>document.body.classList.remove('cur-big'));
 });
 
-/* ─ NAV SCROLL ─ */
-window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('s',scrollY>10),{passive:true});
+/* ── NAV SCROLL ── */
+window.addEventListener('scroll',()=>{
+  const nav=document.getElementById('main-nav');
+  if(scrollY>10){nav.style.background='rgba(19,18,28,.95)'}
+  else{nav.style.background='rgba(19,18,28,.6)'}
+},{passive:true});
 
-/* ─ SCROLL REVEAL ─ */
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v')}),{threshold:.1});
-document.querySelectorAll('.fu').forEach(el=>io.observe(el));
-
-/* ─ 3D LEADERBOARD — MOUSE TILT ─ */
-const lbWrap=document.querySelector('.lb-wrap'),lbc=document.getElementById('lbc');
-if(lbWrap){
-  lbWrap.addEventListener('mousemove',e=>{
-    const r=lbWrap.getBoundingClientRect();
+/* ── 3D LEADERBOARD TILT ── */
+const lbPerspective=document.querySelector('.lb-perspective');
+const lbc=document.getElementById('lbc');
+if(lbPerspective&&lbc){
+  lbPerspective.addEventListener('mousemove',e=>{
+    const r=lbPerspective.getBoundingClientRect();
     const x=(e.clientX-r.left)/r.width-.5;
     const y=(e.clientY-r.top)/r.height-.5;
-    lbc.style.transform=`rotateY(${-14+x*12}deg) rotateX(${5-y*7}deg)`;
+    lbc.style.transform=`rotateY(${-10+x*12}deg) rotateX(${4-y*7}deg)`;
   });
-  lbWrap.addEventListener('mouseleave',()=>{lbc.style.transform='rotateY(-14deg) rotateX(5deg)'});
+  lbPerspective.addEventListener('mouseleave',()=>{lbc.style.transform='rotateY(-10deg) rotateX(4deg)'});
 }
 
-/* ─ 3D ACCOUNTABILITY — SCROLL DRIVEN ─ */
+/* ── 3D ACC SCROLL ── */
 function update3d(){
   const card=document.getElementById('acc-card'),scene=document.getElementById('acc-scene');
   if(!card||!scene)return;
   const r=scene.getBoundingClientRect(),vh=window.innerHeight;
   const p=Math.max(0,Math.min(1,(vh-r.top)/(vh+r.height*.5)));
-  card.style.transform=`rotateX(${(20*(1-p)).toFixed(2)}deg) scale(${(.93+p*.07).toFixed(3)})`;
+  card.style.transform=`rotateX(${(18*(1-p)).toFixed(2)}deg) scale(${(.93+p*.07).toFixed(3)})`;
 }
 window.addEventListener('scroll',update3d,{passive:true});
 update3d();
 
-/* ─ SPOTS COUNTER (ticks down slowly for FOMO, just cosmetic) ─ */
+/* ── SPOTS COUNTER ── */
 let spots=347;
 setInterval(()=>{
   if(spots>280&&Math.random()<.15){
@@ -625,103 +1395,79 @@ setInterval(()=>{
   }
 },8000);
 
-/* ─ SUPABASE CONFIG — replace these two values ─ */
-/* ─ EDGE FUNCTION URL — only thing you need to change ─ */
-const FUNCTION_URL = 'https://vobomlzhqrmpgdnqbrvv.supabase.co/functions/v1/clever-api';
+/* ── SUPABASE ── */
+const FUNCTION_URL='https://vobomlzhqrmpgdnqbrvv.supabase.co/functions/v1/clever-api';
 
-/* ─ WAITLIST SUBMIT ─ */
 async function claim(){
-  const emailEl = document.getElementById('email-in');
-  const phoneEl = document.getElementById('phone-in');
-  const emailErr= document.getElementById('email-err');
-  const phoneErr= document.getElementById('phone-err');
-  const btn     = document.getElementById('claim-btn');
+  const emailEl=document.getElementById('email-in');
+  const phoneEl=document.getElementById('phone-in');
+  const emailErr=document.getElementById('email-err');
+  const phoneErr=document.getElementById('phone-err');
+  const btn=document.getElementById('claim-btn');
 
-  const email = emailEl.value.trim();
-  const phone = phoneEl.value.trim().replace(/\s+/g,'');
+  const email=emailEl.value.trim();
+  const phone=phoneEl.value.trim().replace(/\s+/g,'');
 
-  // ── client-side validation ──
-  let valid = true;
+  emailEl.classList.remove('inp-error');emailErr.classList.remove('show');
+  phoneEl.classList.remove('inp-error');phoneErr.classList.remove('show');
 
-  emailEl.classList.remove('error'); emailErr.classList.remove('show');
-  phoneEl.classList.remove('error'); phoneErr.classList.remove('show');
-
-  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const phoneOk = /^\+?[0-9]{8,15}$/.test(phone);
-
-  if(!emailOk){
-    emailEl.classList.add('error');
-    emailErr.textContent = email ? 'Enter a valid email address.' : 'Email is required.';
-    emailErr.classList.add('show');
-    valid = false;
+  let valid=true;
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    emailEl.classList.add('inp-error');
+    emailErr.textContent=email?'Enter a valid email address.':'Email is required.';
+    emailErr.classList.add('show');valid=false;
   }
-  if(!phoneOk){
-    phoneEl.classList.add('error');
-    phoneErr.textContent = phone ? 'Enter a valid phone number (e.g. +91 98765 43210).' : 'Phone number is required.';
-    phoneErr.classList.add('show');
-    valid = false;
+  if(!/^\+?[0-9]{8,15}$/.test(phone)){
+    phoneEl.classList.add('inp-error');
+    phoneErr.textContent=phone?'Enter a valid phone number (e.g. +91 98765 43210).':'Phone number is required.';
+    phoneErr.classList.add('show');valid=false;
   }
-  if(!valid) return;
+  if(!valid)return;
 
-  // ── loading state ──
-  btn.classList.add('loading');
-  btn.disabled = true;
+  btn.classList.add('loading');btn.disabled=true;
 
-  try {
-    const res = await fetch(FUNCTION_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, phone })
+  try{
+    const res=await fetch(FUNCTION_URL,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,phone})
     });
-
-    const body = await res.json().catch(()=>({}));
-
+    const body=await res.json().catch(()=>({}));
     if(res.ok){
-      showToast('🎉 You\'re in, ' + email.split('@')[0] + '. See you on the board.', 'success');
-      emailEl.value = '';
-      phoneEl.value = '';
-      const counter = document.getElementById('spots-left');
-      if(counter) counter.textContent = Math.max(0, parseInt(counter.textContent) - 1);
-
-    } else if(res.status === 409){
-      // duplicate — edge function returns "duplicate_email" or "duplicate_phone"
-      if(body?.error === 'duplicate_phone'){
-        phoneEl.classList.add('error');
-        phoneErr.textContent = 'This phone number is already on the list.';
-        phoneErr.classList.add('show');
-      } else {
-        emailEl.classList.add('error');
-        emailErr.textContent = 'This email is already on the list.';
-        emailErr.classList.add('show');
+      showToast('🎉 You\'re in, '+email.split('@')[0]+'. See you on the board.','success');
+      emailEl.value='';phoneEl.value='';
+      const counter=document.getElementById('spots-left');
+      if(counter)counter.textContent=Math.max(0,parseInt(counter.textContent)-1);
+    }else if(res.status===409){
+      if(body?.error==='duplicate_phone'){
+        phoneEl.classList.add('inp-error');phoneErr.textContent='This phone number is already on the list.';phoneErr.classList.add('show');
+      }else{
+        emailEl.classList.add('inp-error');emailErr.textContent='This email is already on the list.';emailErr.classList.add('show');
       }
-    } else {
-      showToast('Something went wrong. Please try again.', 'error');
+    }else{
+      showToast('Something went wrong. Please try again.','error');
     }
-
-  } catch(e){
-    showToast('Network error. Check your connection and try again.', 'error');
-  } finally {
-    btn.classList.remove('loading');
-    btn.disabled = false;
+  }catch(e){
+    showToast('Network error. Check your connection and try again.','error');
+  }finally{
+    btn.classList.remove('loading');btn.disabled=false;
   }
 }
 
-function showToast(msg, type){
-  const toast = document.getElementById('toast');
-  toast.textContent = msg;
-  toast.style.borderColor = type === 'error' ? 'rgba(255,64,64,.3)' : '';
-  toast.style.color       = type === 'error' ? 'var(--red)'         : '';
-  toast.classList.add('on');
-  setTimeout(()=>{ toast.classList.remove('on'); toast.style.borderColor=''; toast.style.color=''; }, 3600);
+function showToast(msg,type){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.style.borderColor=type==='error'?'rgba(255,180,171,.3)':'';
+  t.style.color=type==='error'?'var(--error)':'';
+  t.classList.add('on');
+  setTimeout(()=>{t.classList.remove('on');t.style.borderColor='';t.style.color=''},3600);
 }
 
-/* Enter key on inputs */
 ['email-in','phone-in'].forEach(id=>{
-  const el = document.getElementById(id);
-  if(el) el.addEventListener('keydown', e=>{ if(e.key==='Enter') claim(); });
+  const el=document.getElementById(id);
+  if(el)el.addEventListener('keydown',e=>{if(e.key==='Enter')claim()});
 });
 
-/* ─ TERRITORY MAP ─ */
+/* ── TERRITORY MAP ── */
 function initMap(){
   const el=document.getElementById('tmap');
   if(!el||typeof L==='undefined')return;
@@ -740,7 +1486,7 @@ function initMap(){
       r.poly=L.polygon([],{color:r.bc,fillColor:r.fc,weight:2,fillOpacity:1}).addTo(map);
       r.closed=false;
       const d=document.createElement('div');
-      d.style.cssText=`width:20px;height:20px;background:${r.col};border-radius:50%;border:2.5px solid rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;color:#05050D;font-family:'Syne',sans-serif;box-shadow:0 0 12px ${r.col}66`;
+      d.style.cssText=`width:20px;height:20px;background:${r.col};border-radius:50%;border:2.5px solid rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;color:#050d12;font-family:'Space Grotesk',sans-serif;box-shadow:0 0 12px ${r.col}66`;
       d.textContent=r.n;
       r.marker=L.marker(r.route[0],{icon:L.divIcon({html:d,className:'',iconSize:[20,20],iconAnchor:[10,10]}),zIndexOffset:1000}).addTo(map);
       r.pts=[];
@@ -771,140 +1517,111 @@ const mio=new IntersectionObserver(es=>{
     s.src='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js';
     s.onload=initMap;document.head.appendChild(s);
   }
-},{ threshold:.1 });
+},{threshold:.1});
 const mapEl=document.getElementById('tmap');
 if(mapEl)mio.observe(mapEl);
 </script>
 
+<!-- Motion One -->
 <script src="https://cdn.jsdelivr.net/npm/motion@11.11.9/dist/motion.js"></script>
 <script>
-/* ─ FRAMER MOTION (Motion One) ─ */
-/* Safety: if Motion fails for any reason, unhide everything */
-function showAll(){
-  document.querySelectorAll('[data-m]').forEach(el=>{
-    el.style.opacity='';el.style.transform='';
-  });
-}
-const motionGuard=setTimeout(showAll,2500);
+const motionGuard=setTimeout(()=>{
+  document.querySelectorAll('.fu').forEach(el=>{el.style.opacity='1';el.style.transform='none';});
+},2500);
 
-window.addEventListener('load',function(){
+window.addEventListener('load',()=>{
   const M=window.Motion;
-  if(!M){clearTimeout(motionGuard);showAll();return;}
+  if(!M){clearTimeout(motionGuard);document.querySelectorAll('.fu').forEach(el=>{el.style.opacity='1';el.style.transform='none';});return;}
   const {animate,inView,stagger,spring}=M;
 
-  const sSnap  = spring({stiffness:300,damping:24,mass:1});
-  const sSmooth= spring({stiffness:200,damping:22,mass:1});
-  const sBouncy= spring({stiffness:260,damping:16,mass:0.9});
-  const sBar   = spring({stiffness:70, damping:18,mass:1});
+  const sSnap  =spring({stiffness:300,damping:24,mass:1});
+  const sSmooth=spring({stiffness:200,damping:22,mass:1});
+  const sBouncy=spring({stiffness:260,damping:16,mass:.9});
+  const sBar   =spring({stiffness:70, damping:18,mass:1});
 
-  /* Helper: hide then animate in */
-  function reveal(sel,props,opts){
-    const els=document.querySelectorAll(sel);
-    if(!els.length)return;
-    try{ animate(sel,props,opts); }catch(e){ els.forEach(el=>{el.style.opacity=1;el.style.transform='none';}); }
-  }
+  /* NAV */
+  const nav=document.getElementById('main-nav');
+  if(nav){nav.style.opacity='0';animate(nav,{opacity:[0,1],y:[-12,0]},{easing:sBouncy,delay:.05});}
 
-  /* ── HERO staggered entrance ── */
+  /* HERO */
   [
-    ['.badge',     0.08],
-    ['h1.hero-h',  0.22],
-    ['.hero-sub',  0.40],
-    ['.hero-ctas', 0.54],
-    ['.scroll-cue',1.30],
+    ['.badge',.10],['h1.hero-h',.24],['.hero-sub',.42],['.hero-ctas',.56],['.scroll-cue',1.3]
   ].forEach(([sel,delay])=>{
     const el=document.querySelector(sel);
     if(!el)return;
-    el.style.opacity='0';
-    el.style.transform='translateY(36px)';
+    el.style.opacity='0';el.style.transform='translateY(36px)';
     animate(el,{opacity:[0,1],y:[36,0]},{easing:sSmooth,delay});
   });
 
-  /* ── NAV entrance ── */
-  const nav=document.getElementById('nav');
-  if(nav){nav.style.opacity='0';animate(nav,{opacity:[0,1],y:[-12,0]},{easing:sBouncy,delay:0});}
-
-  /* ── Underline spring ── */
-  const ul=document.querySelector('h1.hero-h span::after');
-  // CSS ::after can't be targeted by Motion; leave CSS animation for it
-
-  /* ── Generic .fu scroll reveals ── */
+  /* Generic .fu */
   document.querySelectorAll('.fu').forEach(el=>{
-    // Skip elements handled by group stagger
-    if(el.closest('.steps')||el.closest('.quotes')||el.closest('.rules')||el.closest('.terr-pts'))return;
-    el.style.opacity='0';
-    el.style.transform='translateY(36px)';
-    inView(el,()=>{
-      animate(el,{opacity:[0,1],y:[36,0]},{easing:sSmooth});
-    },{amount:0.1});
+    if(el.matches('.badge')||el.closest('#hero'))return;
+    if(el.closest('.quotes-grid')||el.closest('#terr-pts'))return;
+    el.style.opacity='0';el.style.transform='translateY(32px)';
+    inView(el,()=>animate(el,{opacity:[0,1],y:[32,0]},{easing:sSmooth}),{amount:.1});
   });
 
-  /* ── STEPS stagger ── */
-  document.querySelectorAll('.step').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(48px) scale(0.97)';});
-  inView('.steps',()=>{
-    animate('.step',{opacity:[0,1],y:[48,0],scale:[0.97,1]},{easing:sBouncy,delay:stagger(0.09,{start:0.05})});
-  },{amount:0.1});
-
-  /* ── QUOTES stagger ── */
-  document.querySelectorAll('.quote').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(44px)';});
-  inView('.quotes',()=>{
-    animate('.quote',{opacity:[0,1],y:[44,0]},{easing:sSmooth,delay:stagger(0.12,{start:0.05})});
-  },{amount:0.1});
-
-  /* ── LEADERBOARD ROWS ── */
-  document.querySelectorAll('.lbr').forEach(el=>{el.style.opacity='0';el.style.transform='translateX(-24px)';});
+  /* LB rows */
+  document.querySelectorAll('.lbr').forEach(el=>{el.style.opacity='0';el.style.transform='translateX(-20px)';});
   inView('#lbc',()=>{
-    animate('.lbr',{opacity:[0,1],x:[-24,0]},{easing:sSnap,delay:stagger(0.07,{start:0.15})});
-    // Progress bars
+    animate('.lbr',{opacity:[0,1],x:[-20,0]},{easing:sSnap,delay:stagger(.07,{start:.15})});
     document.querySelectorAll('.lb-bar-f').forEach((bar,i)=>{
       const w=bar.style.width||'100%';bar.style.width='0%';
-      animate(bar,{width:w},{easing:sBar,delay:0.6+i*0.18});
+      animate(bar,{width:w},{easing:sBar,delay:.6+i*.18});
     });
-  },{amount:0.2});
+  },{amount:.2});
 
-  /* ── RULES stagger ── */
-  document.querySelectorAll('.rule').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(32px)';});
-  inView('.rules',()=>{
-    animate('.rule',{opacity:[0,1],y:[32,0]},{easing:sSmooth,delay:stagger(0.1,{start:0.05})});
-  },{amount:0.15});
-
-  /* ── TERRITORY POINTS stagger ── */
-  document.querySelectorAll('.tp').forEach(el=>{el.style.opacity='0';el.style.transform='translateX(-28px)';});
-  inView('.terr-pts',()=>{
-    animate('.tp',{opacity:[0,1],x:[-28,0]},{easing:sSnap,delay:stagger(0.11,{start:0.05})});
-  },{amount:0.15});
-
-  /* ── VOUCHER CHIPS ── */
-  document.querySelectorAll('.chip').forEach(el=>{el.style.opacity='0';el.style.transform='scale(0.88)';});
-  inView('.mq-wrap',()=>{
-    animate('.chip',{opacity:[0,1],scale:[0.88,1]},{easing:sBouncy,delay:stagger(0.04)});
-  },{amount:0.1});
-
-  /* ── CTA SECTION ── */
-  const ctaEls=['.cta-counter','.cta-in .sh','.cta-in .sp','.cta-form','.cta-note'];
-  ctaEls.forEach(sel=>{ const el=document.querySelector(sel); if(el){el.style.opacity='0';el.style.transform='translateY(24px)';} });
-  inView('.cta-in',()=>{
-    ctaEls.forEach((sel,i)=>{ const el=document.querySelector(sel); if(el)animate(el,{opacity:[0,1],y:[24,0]},{easing:sSmooth,delay:i*0.12}); });
-  },{amount:0.2});
-
-  /* ── FOOTER ── */
-  const footer=document.querySelector('footer');
-  if(footer){footer.style.opacity='0';inView(footer,()=>animate(footer,{opacity:[0,1],y:[20,0]},{easing:sSmooth}),{amount:0.3});}
-
-  /* ── MAGNETIC PRIMARY BUTTONS ── */
-  document.querySelectorAll('.btn-p,.nav-btn').forEach(btn=>{
-    btn.addEventListener('mousemove',e=>{
-      const r=btn.getBoundingClientRect();
-      const dx=(e.clientX-(r.left+r.width/2))*0.22;
-      const dy=(e.clientY-(r.top+r.height/2))*0.22;
-      animate(btn,{x:dx,y:dy},{easing:spring({stiffness:500,damping:28})});
-    });
-    btn.addEventListener('mouseleave',()=>animate(btn,{x:0,y:0},{easing:spring({stiffness:400,damping:26})}));
+  /* Bento cards */
+  document.querySelectorAll('.bento-card').forEach((el,i)=>{
+    el.style.opacity='0';el.style.transform='translateY(40px) scale(.97)';
+    inView(el,()=>animate(el,{opacity:[0,1],y:[40,0],scale:[.97,1]},{easing:sBouncy,delay:i*.08}),{amount:.1});
   });
 
-  /* ── GHOST BUTTON spring ── */
-  document.querySelectorAll('.btn-g').forEach(btn=>{
-    btn.addEventListener('mouseenter',()=>animate(btn,{scale:1.04},{easing:spring({stiffness:500,damping:24})}));
-    btn.addEventListener('mouseleave',()=>animate(btn,{scale:1},{easing:spring({stiffness:400,damping:26})}));
+  /* Rule cards */
+  document.querySelectorAll('.rule-card').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(28px)';});
+  inView('.rules-grid',()=>{
+    animate('.rule-card',{opacity:[0,1],y:[28,0]},{easing:sSmooth,delay:stagger(.1,{start:.05})});
+  },{amount:.15});
+
+  /* Territory points */
+  document.querySelectorAll('#terr-pts .terr-point').forEach(el=>{el.style.opacity='0';el.style.transform='translateX(-24px)';});
+  inView('#terr-pts',()=>{
+    document.querySelectorAll('#terr-pts .terr-point').forEach((el,i)=>{
+      animate(el,{opacity:[0,1],x:[-24,0]},{easing:sSnap,delay:i*.11+.05});
+    });
+  },{amount:.15});
+
+  /* Quote cards */
+  document.querySelectorAll('.quote-card').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(36px)';});
+  inView('.quotes-grid',()=>{
+    animate('.quote-card',{opacity:[0,1],y:[36,0]},{easing:sSmooth,delay:stagger(.12,{start:.05})});
+  },{amount:.1});
+
+  /* Chips */
+  document.querySelectorAll('.chip').forEach(el=>{el.style.opacity='0';el.style.transform='scale(.88)';});
+  inView('.mq-wrap',()=>{
+    animate('.chip',{opacity:[0,1],scale:[.88,1]},{easing:sBouncy,delay:stagger(.04)});
+  },{amount:.1});
+
+  /* CTA */
+  ['#waitlist .cta-counter-badge','#waitlist h2','#waitlist p','#waitlist-form'].forEach((sel,i)=>{
+    const el=document.querySelector(sel);
+    if(!el)return;
+    el.style.opacity='0';el.style.transform='translateY(20px)';
+    inView('#waitlist',()=>animate(el,{opacity:[0,1],y:[20,0]},{easing:sSmooth,delay:i*.12}),{amount:.15});
+  });
+
+  /* Footer */
+  const footer=document.querySelector('.site-footer');
+  if(footer){footer.style.opacity='0';inView(footer,()=>animate(footer,{opacity:[0,1],y:[16,0]},{easing:sSmooth}),{amount:.3});}
+
+  /* Magnetic buttons */
+  document.querySelectorAll('.btn-primary,.btn-join,.btn-arena').forEach(btn=>{
+    btn.addEventListener('mousemove',e=>{
+      const r=btn.getBoundingClientRect();
+      animate(btn,{x:(e.clientX-(r.left+r.width/2))*.2,y:(e.clientY-(r.top+r.height/2))*.2},{easing:spring({stiffness:500,damping:28})});
+    });
+    btn.addEventListener('mouseleave',()=>animate(btn,{x:0,y:0},{easing:spring({stiffness:400,damping:26})}));
   });
 
   clearTimeout(motionGuard);
