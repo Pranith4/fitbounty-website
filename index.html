@@ -8,8 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Be+Vietnam+Pro:wght@400;500;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
 <style>
 /* ─────────────────────────────────────────
    RESET
@@ -25,7 +24,7 @@ img{display:block;max-width:100%}
 /* ─────────────────────────────────────────
    COLOR TOKENS
 ───────────────────────────────────────── */
-: root{
+:root{
   --primary:              #ffc880;
   --primary-container:    #f5a623;
   --on-primary:           #452b00;
@@ -53,10 +52,10 @@ img{display:block;max-width:100%}
 /* ─────────────────────────────────────────
    TYPOGRAPHY
 ───────────────────────────────────────── */
-.font-headline{font-family:'Space Grotesk', sans-serif}
+.font-headline{font-family:'Space Grotesk',sans-serif}
 .font-body    {font-family:'Inter',sans-serif}
-.font-label   {font-family:'Be Vietnam Pro', sans-serif}
-.font-mono    {font-family:'DM Mono', monospace}
+.font-label   {font-family:'Be Vietnam Pro',sans-serif}
+.font-mono    {font-family:'DM Mono',monospace}
 
 .text-xs  {font-size:.75rem;line-height:1rem}
 .text-sm  {font-size:.875rem;line-height:1.25rem}
@@ -76,7 +75,7 @@ img{display:block;max-width:100%}
 .font-medium{font-weight:500}
 .font-bold  {font-weight:700}
 .font-black {font-weight:900}
-.italic     {font-style: italic}
+.italic     {font-style:italic}
 
 .tracking-tighter{letter-spacing:-.05em}
 .tracking-tight  {letter-spacing:-.025em}
@@ -90,10 +89,10 @@ img{display:block;max-width:100%}
 .leading-relaxed{line-height:1.625}
 .leading-loose  {line-height:2}
 
-.uppercase  {text-transform: uppercase}
+.uppercase  {text-transform:uppercase}
 .whitespace-nowrap{white-space:nowrap}
-.text-center{text-align: center}
-.text-right {text-align: right}
+.text-center{text-align:center}
+.text-right {text-align:right}
 
 /* ─────────────────────────────────────────
    COLOR UTILITIES
@@ -165,7 +164,7 @@ img{display:block;max-width:100%}
 .border-secondary-20{border-color:rgba(124,255,163,.2)}
 .border-secondary-22{border-color:rgba(124,255,163,.22)}
 .border-error-15    {border-color:rgba(255,180,171,.15)}
-.border-transparent {border-color: transparent}
+.border-transparent {border-color:transparent}
 
 .rounded    {border-radius:1rem}
 .rounded-sm {border-radius:.5rem}
@@ -181,27 +180,27 @@ img{display:block;max-width:100%}
 /* ─────────────────────────────────────────
    LAYOUT
 ───────────────────────────────────────── */
-.block   {display: block}
-.flex    {display: flex}
-.grid    {display: grid}
-.hidden  {display: none}
+.block   {display:block}
+.flex    {display:flex}
+.grid    {display:grid}
+.hidden  {display:none}
 .inline-flex{display:inline-flex}
 .inline-block{display:inline-block}
 
-.flex-col  {flex-direction: column}
-.flex-wrap {flex-wrap: wrap}
+.flex-col  {flex-direction:column}
+.flex-wrap {flex-wrap:wrap}
 .flex-1    {flex:1 1 0%}
 .flex-grow {flex-grow:1}
 .shrink-0  {flex-shrink:0}
 
 .items-start  {align-items:flex-start}
-.items-center {align-items: center}
+.items-center {align-items:center}
 .items-end    {align-items:flex-end}
 .justify-start{justify-content:flex-start}
-.justify-center{justify-content: center}
+.justify-center{justify-content:center}
 .justify-end  {justify-content:flex-end}
 .justify-between{justify-content:space-between}
-.place-items-center{place-items: center}
+.place-items-center{place-items:center}
 
 .grid-1{grid-template-columns:1fr}
 .grid-2{grid-template-columns:1fr 1fr}
@@ -221,10 +220,10 @@ img{display:block;max-width:100%}
 /* ─────────────────────────────────────────
    POSITIONING
 ───────────────────────────────────────── */
-.relative {position: relative}
-.absolute {position: absolute}
-.fixed    {position: fixed}
-.sticky   {position: sticky}
+.relative {position:relative}
+.absolute {position:absolute}
+.fixed    {position:fixed}
+.sticky   {position:sticky}
 
 .inset-0   {inset:0}
 .inset-y-0 {top:0;bottom:0}
@@ -244,8 +243,8 @@ img{display:block;max-width:100%}
 .z-1000  {z-index:1000}
 .z-9999  {z-index:9999}
 
-.overflow-hidden  {overflow: hidden}
-.overflow-x-hidden{overflow-x: hidden}
+.overflow-hidden  {overflow:hidden}
+.overflow-x-hidden{overflow-x:hidden}
 
 /* ─────────────────────────────────────────
    SIZING
@@ -319,8 +318,8 @@ img{display:block;max-width:100%}
 .backdrop-blur{backdrop-filter:blur(24px)}
 .backdrop-blur-xl{backdrop-filter:blur(20px)}
 
-.pointer-events-none{pointer-events: none}
-.select-none{user-select: none}
+.pointer-events-none{pointer-events:none}
+.select-none{user-select:none}
 .antialiased{-webkit-font-smoothing:antialiased}
 
 /* ─────────────────────────────────────────
@@ -370,7 +369,7 @@ img{display:block;max-width:100%}
 ───────────────────────────────────────── */
 .material-symbols-outlined{
   font-family:'Material Symbols Outlined';
-  font-variation-settings:'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
   vertical-align:middle;display:inline-block;line-height:1
 }
 
@@ -403,7 +402,7 @@ nav#main-nav{
   backdrop-filter:blur(20px);
   background-image:linear-gradient(to bottom,#1b1b24,transparent);
   box-shadow:0 12px 40px rgba(245,166,35,.06);
-  transition: background .3s;
+  transition:background .3s;
 }
 nav#main-nav .nav-inner{
   display:flex;justify-content:space-between;align-items:center;
@@ -413,20 +412,20 @@ nav#main-nav .nav-inner{
 .nav-links{display:none;gap:2.5rem}
 @media(min-width:768px){.nav-links{display:flex}}
 .nav-links a{
-  font-family:'Space Grotesk', sans-serif;font-weight:700;
+  font-family:'Space Grotesk',sans-serif;font-weight:700;
   text-transform:uppercase;letter-spacing:.05em;font-size:.8rem;
   color:#94a3b8;transition:color .2s;
 }
 .nav-links a:hover{color:#fff}
 .logo-text{
-  font-family:'Space Grotesk', sans-serif;font-size:1.4rem;
+  font-family:'Space Grotesk',sans-serif;font-size:1.4rem;
   font-weight:900;font-style:italic;letter-spacing:-.05em;
   color:var(--primary-container);
 }
 .btn-join{
   background:var(--primary-container);color:var(--on-primary-container);
   padding:.45rem 1.4rem;border-radius:9999px;border:none;
-  font-family:'Be Vietnam Pro', sans-serif;font-weight:700;
+  font-family:'Be Vietnam Pro',sans-serif;font-weight:700;
   text-transform:uppercase;letter-spacing:.08em;font-size:.75rem;
   transition:transform .2s;cursor:none;
 }
@@ -468,7 +467,7 @@ nav#main-nav .nav-inner{
   margin-bottom:2rem;
 }
 .hero-h{
-  font-family:'Space Grotesk', sans-serif;font-weight:700;
+  font-family:'Space Grotesk',sans-serif;font-weight:700;
   font-size:clamp(3.2rem,11vw,9rem);line-height:.88;
   letter-spacing:-.03em;margin-bottom:2rem;
 }
@@ -487,7 +486,7 @@ nav#main-nav .nav-inner{
 .btn-primary{
   background:var(--primary-container);color:var(--on-primary-container);
   padding:1.1rem 2.5rem;border-radius:9999px;border:none;
-  font-family:'Be Vietnam Pro', sans-serif;font-weight:900;
+  font-family:'Be Vietnam Pro',sans-serif;font-weight:900;
   font-size:1rem;text-transform:uppercase;letter-spacing:.12em;
   box-shadow:0 0 24px rgba(245,166,35,.25),0 8px 0 0 var(--shadow-press);
   transition:transform .2s;cursor:none;
@@ -498,7 +497,7 @@ nav#main-nav .nav-inner{
   background:transparent;border:1px solid rgba(159,142,122,.3);
   color:var(--on-surface);
   padding:1.1rem 2.5rem;border-radius:9999px;
-  font-family:'Be Vietnam Pro', sans-serif;font-weight:700;
+  font-family:'Be Vietnam Pro',sans-serif;font-weight:700;
   font-size:1rem;text-transform:uppercase;letter-spacing:.12em;
   transition:all .2s;cursor:none;
 }
@@ -520,7 +519,7 @@ nav#main-nav .nav-inner{
 .mq-wrap:hover .mq-track{animation-play-state:paused}
 .mq-item{
   display:flex;align-items:center;gap:1rem;padding:0 1.75rem;
-  font-family:'Space Grotesk', sans-serif;font-size:.82rem;
+  font-family:'Space Grotesk',sans-serif;font-size:.82rem;
   letter-spacing:.05em;color:var(--on-primary-container);
   font-weight:700;white-space:nowrap;
 }
@@ -587,8 +586,8 @@ nav#main-nav .nav-inner{
 /* Bento grid */
 .bento{display:grid;grid-template-columns:1fr;gap:1rem}
 @media(min-width:768px){.bento{grid-template-columns:repeat(12,1fr)}}
-.bento-7{grid-column: span 1}
-.bento-5{grid-column: span 1}
+.bento-7{grid-column:span 1}
+.bento-5{grid-column:span 1}
 @media(min-width:768px){.bento-7{grid-column:span 7}.bento-5{grid-column:span 5}}
 .bento-card{
   background:var(--surface-c-low);border-radius:1.5rem;
@@ -680,12 +679,12 @@ nav#main-nav .nav-inner{
   max-width:42rem;margin:0 auto;
 }
 @media(min-width:768px){.cta-form-grid{grid-template-columns:1fr 1fr}}
-.form-field-wrap{position: relative}
+.form-field-wrap{position:relative}
 .cta-input{
   width:100%;background:var(--surface-c-high);
   border:2px solid rgba(245,166,35,.3);color:var(--on-surface);
   padding:1.1rem 1.25rem;border-radius:.75rem;
-  font-family:'Be Vietnam Pro', sans-serif;font-size:.9rem;
+  font-family:'Be Vietnam Pro',sans-serif;font-size:.9rem;
   outline:none;transition:all .2s;
   box-shadow:0 4px 0 0 var(--shadow-press);
 }
@@ -701,7 +700,7 @@ nav#main-nav .nav-inner{
 .btn-arena{
   width:100%;padding:1.2rem 2rem;background:var(--primary);color:var(--on-primary);
   border-radius:9999px;border:none;cursor:none;
-  font-family:'Be Vietnam Pro', sans-serif;font-weight:900;
+  font-family:'Be Vietnam Pro',sans-serif;font-weight:900;
   font-size:1rem;text-transform:uppercase;letter-spacing:.12em;
   box-shadow:0 0 24px rgba(245,166,35,.25),0 8px 0 0 var(--shadow-press);
   transition:transform .2s;position:relative;overflow:hidden;
@@ -710,7 +709,7 @@ nav#main-nav .nav-inner{
 .btn-arena:hover{transform:scale(1.05)}
 .btn-arena:active{box-shadow:none;transform:translateY(4px)}
 .btn-arena:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
-.btn-label{display: block}
+.btn-label{display:block}
 .btn-spinner{display:none;width:18px;height:18px;border:2px solid rgba(69,43,0,.3);border-top-color:var(--on-primary);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto}
 .loading .btn-label{display:none}
 .loading .btn-spinner{display:block}
@@ -803,7 +802,7 @@ nav#main-nav .nav-inner{
 /* ─────────────────────────────────────────
    LEAFLET OVERRIDE
 ───────────────────────────────────────── */
-
+.leaflet-container{background:#0d0d17!important}
 </style>
 </head>
 <body>
@@ -891,12 +890,12 @@ nav#main-nav .nav-inner{
         <p style="color:var(--on-surface-var);margin-top:1rem;max-width:28rem;font-size:.875rem;line-height:1.7">Every Monday 6 AM, your weekly % change goes public to your group. Streak. Rank. Name. No opt-out once you're in.</p>
       </div>
       <div class="stat-card">
-        <div style="text-align: center">
+        <div style="text-align:center">
           <p style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;color:#64748b;margin-bottom:.25rem">Prize Pool</p>
           <p class="font-headline" style="font-weight:700;color:var(--secondary);font-size:1.25rem">₹10,24,500</p>
         </div>
         <div class="stat-div"></div>
-        <div style="text-align: center">
+        <div style="text-align:center">
           <p style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;color:#64748b;margin-bottom:.25rem">Next Reveal</p>
           <p class="font-headline" style="font-weight:700;font-size:1.25rem">Monday 6AM</p>
         </div>
@@ -915,7 +914,7 @@ nav#main-nav .nav-inner{
           <span style="font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:700;color:var(--primary-container);width:2rem">🥇</span>
           <div class="lb-avatar" style="background:var(--primary-container);color:var(--on-primary-container)">P</div>
           <div style="flex:1;min-width:0">
-            <div style="display:flex;align-items:center;gap:.5rem;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Brijesh <span style="font-family:'DM Mono',monospace;font-size:10px;background:rgba(245,166,35,.1);color:var(--primary-container);padding:.1rem .4rem;border-radius:.2rem">🔥 8 wks</span></div>
+            <div style="display:flex;align-items:center;gap:.5rem;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Pranith <span style="font-family:'DM Mono',monospace;font-size:10px;background:rgba(245,166,35,.1);color:var(--primary-container);padding:.1rem .4rem;border-radius:.2rem">🔥 8 wks</span></div>
             <div style="font-family:'DM Mono',monospace;font-size:11px;color:#475569;margin-top:.2rem">8 weigh-ins · photo verified</div>
           </div>
           <span style="font-family:'DM Mono',monospace;font-weight:700;color:var(--secondary)">−4.2%</span>
@@ -926,7 +925,7 @@ nav#main-nav .nav-inner{
           <span style="font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:700;color:#94a3b8;width:2rem">🥈</span>
           <div class="lb-avatar" style="background:#475569;color:#fff">S</div>
           <div style="flex:1;min-width:0">
-            <div style="display:flex;align-items:center;gap:.5rem;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Srikanth <span style="font-family:'DM Mono',monospace;font-size:10px;background:rgba(245,166,35,.1);color:var(--primary-container);padding:.1rem .4rem;border-radius:.2rem">🔥 5 wks</span></div>
+            <div style="display:flex;align-items:center;gap:.5rem;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Shreyas <span style="font-family:'DM Mono',monospace;font-size:10px;background:rgba(245,166,35,.1);color:var(--primary-container);padding:.1rem .4rem;border-radius:.2rem">🔥 5 wks</span></div>
             <div style="font-family:'DM Mono',monospace;font-size:11px;color:#475569;margin-top:.2rem">7 weigh-ins · photo verified</div>
           </div>
           <span style="font-family:'DM Mono',monospace;font-weight:700;color:var(--secondary)">−3.8%</span>
@@ -948,13 +947,13 @@ nav#main-nav .nav-inner{
           <span style="font-family:'DM Mono',monospace;font-size:.9rem;color:#64748b;width:2rem">4</span>
           <div class="lb-avatar" style="background:var(--surface-c-highest);color:#94a3b8">R</div>
           <div style="flex:1;min-width:0">
-            <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Ashish</div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Rahul</div>
             <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--error);margin-top:.2rem">⚠ Missed last 2 weigh-ins</div>
           </div>
           <span style="font-family:'DM Mono',monospace;font-weight:700;color:#475569">−1.1%</span>
         </div>
 
-        <div class="lb-alert">😬 The group was notified that Ashish missed this week. Streak gone.</div>
+        <div class="lb-alert">😬 The group was notified Rahul missed this week. Streak gone.</div>
 
         <div class="lb-foot">
           <span style="font-family:'DM Mono',monospace;font-size:11px;color:#94a3b8">Next reveal: Monday 6 AM</span>
@@ -1026,10 +1025,10 @@ nav#main-nav .nav-inner{
           <span class="material-symbols-outlined" style="font-size:2rem;color:var(--tertiary)">leaderboard</span>
         </div>
         <h3 class="font-headline" style="font-size:1.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.75rem">Climb the Board</h3>
-        <p style="color:var(--on-surface-var);line-height:1.7;margin-bottom:1.25rem">Ranked strictly by % body weight change. Fair at 60kg or 120kg. Every Monday, your change goes public.</p>
+        <p style="color:var(--on-surface-var);line-height:1.7;margin-bottom:1.25rem">Ranked strictly by % body weight change. Fair at 60kg or 120kg. Every Monday your change goes public.</p>
         <div style="display:flex;flex-direction:column;gap:.5rem">
           <div style="background:var(--surface-c-lowest);padding:.75rem 1rem;border-radius:.75rem;display:flex;align-items:center;justify-content:space-between">
-            <span style="font-family:'DM Mono',monospace;font-size:.75rem;color:var(--tertiary)">#01 Akash M.</span>
+            <span style="font-family:'DM Mono',monospace;font-size:.75rem;color:var(--tertiary)">#01 PRANITH M.</span>
             <span style="font-family:'DM Mono',monospace;font-size:.75rem;color:var(--secondary)">−4.2%</span>
           </div>
           <div style="background:var(--surface-bright);padding:.75rem 1rem;border-radius:.75rem;border-left:2px solid var(--primary-container);display:flex;align-items:center;justify-content:space-between">
@@ -1046,7 +1045,7 @@ nav#main-nav .nav-inner{
           <span class="material-symbols-outlined" style="font-size:2rem;color:var(--primary-container)">trophy</span>
         </div>
         <h3 class="font-headline" style="font-size:1.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.75rem">Win Real Things</h3>
-        <p style="color: var(--on-surface-var);line-height:1.7;margin-bottom:1.25rem">Top performers unlock premium gear, Cult.fit gym passes, Myntra vouchers, and whey protein. Not points. Not badges.</p>
+        <p style="color:var(--on-surface-var);line-height:1.7;margin-bottom:1.25rem">Top performers unlock premium gear, Cult.fit gym passes, Myntra vouchers, and whey protein. Not points. Not badges.</p>
         <div style="display:flex;flex-wrap:wrap;gap:.5rem">
           <span style="background:rgba(245,166,35,.1);color:var(--primary-container);font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;font-weight:700;padding:.35rem .85rem;border-radius:9999px;border:1px solid rgba(245,166,35,.2)">👟 Running Shoes</span>
           <span style="background:rgba(245,166,35,.1);color:var(--primary-container);font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;font-weight:700;padding:.35rem .85rem;border-radius:9999px;border:1px solid rgba(245,166,35,.2)">💪 Cult.fit Pass</span>
@@ -1129,212 +1128,58 @@ nav#main-nav .nav-inner{
 </section>
 
 <!-- ══════════════════════════════════════
-     INFLUENCE ZONES  (was: territory)
+     TERRITORY
 ══════════════════════════════════════ -->
-<style>
-/* ── Influence Zone section layout ── */
-.iz-section{
-  background:var(--surface-c-lowest);
-  border-top:1px solid rgba(255,255,255,.05);
-  position:relative;overflow:hidden;
-}
-.iz-grid{
-  display: grid;grid-template-columns:1fr;
-  min-height:600px;
-}
-@media(min-width:900px){
-  .iz-grid{grid-template-columns:420px 1fr}
-}
-
-/* Left info panel */
-.iz-panel{
-  padding:clamp(2rem,5vw,4rem);
-  display:flex;flex-direction:column;justify-content:center;gap:2rem;
-  background:var(--surface-c-lowest);
-  border-right:1px solid rgba(255,255,255,.05);
-  position: relative;z-index:2;
-}
-
-/* Map pane */
-.iz-map-pane{
-  position:relative;min-height:420px;
-}
-#iz-map{width:100%;height:100%;min-height:420px}
-
-/* Map top bar */
-.iz-map-bar{
-  position:absolute;top:.75rem;left:.75rem;right:.75rem;
-  z-index:500;display:flex;align-items:center;justify-content:space-between;gap:.5rem;
-}
-
-/* Team runner chips — horizontal bottom strip */
-.iz-runners{
-  position:absolute;bottom:.75rem;left:.75rem;right:.75rem;
-  z-index:500;display:flex;flex-wrap:wrap;gap:.5rem;
-}
-.iz-runner-chip{
-  display:flex;align-items:center;gap:.5rem;
-  background:rgba(8,8,18,.88);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:.5rem;padding:.4rem .75rem;
-  backdrop-filter:blur(10px);
-  transition:border-color .4s;
-  flex:1;min-width:120px;
-}
-
-/* Zone mechanics pills */
-.iz-mechanic-pill{
-  display:flex;align-items:flex-start;gap:.75rem;
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.06);
-  border-radius:.75rem;padding:.875rem 1rem;
-}
-.iz-mechanic-icon{
-  width:2rem;height:2rem;border-radius:.5rem;
-  display:grid;place-items:center;
-  font-size:.85rem;flex-shrink:0;
-}
-
-/* Influence bar */
-.iz-bar-track{
-  height:6px;border-radius:3px;
-  background:rgba(255,255,255,.07);
-  overflow: hidden;margin-top:.35rem;
-}
-.iz-bar-fill{
-  height:100%;border-radius:3px;
-  transition:width 1.8s cubic-bezier(.22,1,.36,1);
-}
-</style>
-
-<section class="iz-section" id="territory">
-  <div class="iz-grid">
-
-    <!-- ── Left info panel ── -->
-    <div class="iz-panel fu">
-
-      <div>
-        <span style="color:var(--secondary);font-family:'DM Mono',monospace;font-size:.7rem;text-transform:uppercase;letter-spacing:.2em;display:block;margin-bottom:.6rem">Neighbourhood Mode</span>
-        <h2 class="font-headline" style="font-size:clamp(2rem,4vw,3.2rem);line-height:1.05;font-weight:700;letter-spacing:-.025em">
-          Compete for<br><span style="color:var(--primary-container)">Local Dominance.</span>
-        </h2>
-        <p style="color:var(--on-surface-var);font-size:.875rem;line-height:1.75;margin-top:.875rem">
-          Every kilometre your team logs builds <em>influence</em> across Bangalore's localities. Zones shift gradually — dominate your area by showing up more consistently than anyone else.
-        </p>
-      </div>
-
-      <!-- Live zone leaderboard card -->
-      <div style="background:var(--surface-c);border:1px solid rgba(255,255,255,.07);border-radius:1rem;overflow:hidden">
-        <div style="padding:.7rem 1rem;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;align-items:center">
-          <span style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:#64748b">Indiranagar · Zone Influence</span>
-          <span style="display:flex;align-items:center;gap:.35rem;font-family:'DM Mono',monospace;font-size:10px;color:var(--secondary)"><span class="live-dot"></span>Live</span>
-        </div>
-        <!-- team rows with influence bars -->
-        <div style="padding:.75rem 1rem;display:flex;flex-direction:column;gap:.6rem">
-          <div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem">
-              <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.8rem;display:flex;align-items:center;gap:.4rem">
-                <span style="width:8px;height:8px;border-radius:50%;background:#F5A623;display:inline-block"></span>Pranith's Crew
-              </span>
-              <span id="iz-pct-P" style="font-family:'DM Mono',monospace;font-size:.75rem;font-weight:700;color:#F5A623">74%</span>
-            </div>
-            <div class="iz-bar-track"><div class="iz-bar-fill" id="iz-bar-P" style="width:74%;background:#F5A623"></div></div>
-          </div>
-          <div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem">
-              <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.8rem;display:flex;align-items:center;gap:.4rem">
-                <span style="width:8px;height:8px;border-radius:50%;background:#00E87A;display:inline-block"></span>Kiran's Squad
-              </span>
-              <span id="iz-pct-K" style="font-family:'DM Mono',monospace;font-size:.75rem;font-weight:700;color:#00E87A">51%</span>
-            </div>
-            <div class="iz-bar-track"><div class="iz-bar-fill" id="iz-bar-K" style="width:51%;background:#00E87A"></div></div>
-          </div>
-          <div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem">
-              <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.8rem;display:flex;align-items:center;gap:.4rem">
-                <span style="width:8px;height:8px;border-radius:50%;background:#9B6DFF;display:inline-block"></span>Vikram's Pack
-              </span>
-              <span id="iz-pct-V" style="font-family:'DM Mono',monospace;font-size:.75rem;font-weight:700;color:#9B6DFF">38%</span>
-            </div>
-            <div class="iz-bar-track"><div class="iz-bar-fill" id="iz-bar-V" style="width:38%;background:#9B6DFF"></div></div>
-          </div>
-        </div>
-        <div style="padding:.5rem 1rem .75rem;font-family:'DM Mono',monospace;font-size:10px;color:#475569;border-top:1px solid rgba(255,255,255,.04)">
-          ⏱ Influence decays if your team stops logging. Last active: 4 min ago.
-        </div>
-      </div>
-
-      <!-- 3 mechanic pills -->
-      <div id="terr-pts" style="display:flex;flex-direction:column;gap:.6rem">
-        <div class="iz-mechanic-pill terr-point">
-          <div class="iz-mechanic-icon" style="background:rgba(124,255,163,.12);color:var(--secondary)">📍</div>
-          <div>
-            <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.8rem;margin-bottom:.2rem">GPS-logged kilometres build influence</div>
-            <div style="font-family:'Inter', sans-serif;font-size:.75rem; colour:#64748b;line-height:1.5">Every run your team logs in a neighbourhood adds to your influence score — not a one-tap claim.</div>
-          </div>
-        </div>
-        <div class="iz-mechanic-pill terr-point">
-          <div class="iz-mechanic-icon" style="background:rgba(245,166,35,.12);color:var(--primary-container)">📉</div>
-          <div>
-            <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.8rem;margin-bottom:.2rem">Zones weaken when teams go quiet</div>
-            <div style="font-family:'Inter',sans-serif;font-size:.75rem;color:#64748b;line-height:1.5">Influence decays daily. Showing up consistently beats one big effort — you have to keep earning it.</div>
-          </div>
-        </div>
-        <div class="iz-mechanic-pill terr-point">
-          <div class="iz-mechanic-icon" style="background:rgba(77,166,255,.12);color:#4DA6FF">🏙️</div>
-          <div>
-            <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.8rem;margin-bottom:.2rem">Top zone earns the season bounty</div>
-            <div style="font-family:'Inter', sans-serif;font-size:.75rem; colour:#64748b;line-height:1.5">Dominant team in the highest-value zone each month splits a real prize pool — runs contribute, weigh-ins multiply.</div>
-          </div>
-        </div>
-      </div>
-
+<section class="section" style="background:var(--surface);border-top:1px solid rgba(255,255,255,.05)" id="territory">
+  <div class="section-inner">
+    <div style="text-align:center;margin-bottom:4rem" class="fu">
+      <span style="color:var(--secondary);font-family:'DM Mono',monospace;font-size:.75rem;text-transform:uppercase;letter-spacing:.15em;display:block;margin-bottom:.75rem">Expansion Module</span>
+      <h2 class="font-headline" style="font-size:clamp(2.4rem,5vw,5rem);line-height:1;font-weight:700;letter-spacing:-.025em;margin-bottom:1rem">TERRITORY <span style="color:var(--secondary)">MODE</span></h2>
+      <p style="color:var(--on-surface-var);font-size:1.1rem;max-width:40rem;margin:0 auto">Claim Bangalore piece by piece. Run loops, close the GPS path — that zone is yours. Dominating Indiranagar grants 2× bounty multipliers.</p>
     </div>
-
-    <!-- ── Right: live map pane ── -->
-    <div class="iz-map-pane">
-      <!-- MapLibre map -->
-      <div id="iz-map"></div>
-
-      <!-- Map top HUD -->
-      <div class="iz-map-bar">
-        <div style="display:inline-flex;align-items:center;gap:.5rem;background:rgba(4,6,14,.88);border:1px solid rgba(124,255,163,.2);border-radius:.5rem;padding:.3rem .75rem;font-family:'DM Mono',monospace;font-size:10px;color:var(--secondary);backdrop-filter:blur(8px)">
-          <span class="live-dot"></span>LIVE · INDIRANAGAR
-        </div>
-        <div style="display:inline-flex;align-items:center;gap:.5rem;background:rgba(4,6,14,.88);border:1px solid rgba(255,255,255,.08);border-radius:.5rem;padding:.3rem .75rem;font-family:'DM Mono',monospace;font-size:10px;color:#94a3b8;backdrop-filter:blur(8px)">
-          🏃 3 teams active now
+    <div class="terr-grid">
+      <!-- map -->
+      <div class="fu" style="order:2">
+        <div class="map-wrap">
+          <div class="map-hud"><div class="map-hud-badge"><span class="live-dot"></span>Live · Indiranagar</div></div>
+          <div id="tmap" style="width:100%;height:100%"></div>
         </div>
       </div>
-
-      <!-- Runner trail chips at bottom -->
-      <div class="iz-runners">
-        <div class="iz-runner-chip" id="iz-chip-P" style="border-color:rgba(245,166,35,.25)">
-          <div style="width:7px;height:7px;border-radius:50%;background:#F5A623;box-shadow:0 0 6px #F5A623;flex-shrink:0"></div>
-          <div style="flex:1;min-width:0">
-            <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.72rem;color:#fff">Pranith</div>
-            <div style="font-family:'DM Mono',monospace;font-size:9px;color:#64748b" id="iz-stat-P">logging…</div>
+      <!-- points -->
+      <div class="fu" style="order:1">
+        <div style="display:flex;flex-direction:column;gap:1.5rem" id="terr-pts">
+          <div class="terr-point">
+            <div class="terr-num" style="background:rgba(124,255,163,.1);color:var(--secondary)">①</div>
+            <div><h4 class="font-headline" style="font-weight:700;margin-bottom:.35rem">GPS validates every metre</h4><p style="color:var(--on-surface-var);font-size:.875rem;line-height:1.7">You must physically run the boundary. No shortcuts, no faking.</p></div>
           </div>
-          <span style="font-family:'DM Mono',monospace;font-size:.68rem;font-weight:700;color:#F5A623" id="iz-km-P">0.0</span>
+          <div class="terr-point">
+            <div class="terr-num" style="background:rgba(245,166,35,.1);color:var(--primary-container)">②</div>
+            <div><h4 class="font-headline" style="font-weight:700;margin-bottom:.35rem">Monthly km² leaderboard</h4><p style="color:var(--on-surface-var);font-size:.875rem;line-height:1.7">Most territory at month-end wins gear. Resets every 1st.</p></div>
+          </div>
+          <div class="terr-point">
+            <div class="terr-num" style="background:rgba(77,166,255,.1);color:#4DA6FF">③</div>
+            <div><h4 class="font-headline" style="font-weight:700;margin-bottom:.35rem">Run more, claim more</h4><p style="color:var(--on-surface-var);font-size:.875rem;line-height:1.7">Coins earned through verified activity. Spend them on territory.</p></div>
+          </div>
         </div>
-        <div class="iz-runner-chip" id="iz-chip-K" style="border-color:rgba(0,232,122,.15)">
-          <div style="width:7px;height:7px;border-radius:50%;background:#00E87A;box-shadow:0 0 6px #00E87A;flex-shrink:0"></div>
-          <div style="flex:1;min-width:0">
-            <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.72rem;color:#fff">Kiran</div>
-            <div style="font-family:'DM Mono',monospace;font-size:9px;color:#64748b" id="iz-stat-K">logging…</div>
+        <div class="conquerors glass" style="margin-top:2rem;border-radius:.75rem;padding:1.25rem">
+          <h3 style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:#64748b;margin-bottom:1rem">Top Conquerors</h3>
+          <div style="display:flex;flex-direction:column;gap:.5rem">
+            <div class="conq-row" style="background:var(--surface-c-lowest)">
+              <div style="display:flex;align-items:center;gap:.75rem"><div style="width:.5rem;height:.5rem;border-radius:50%;background:var(--primary-container);box-shadow:0 0 8px rgba(245,166,35,.8)"></div><span style="font-size:.875rem">@NAMMA_SQUAD</span></div>
+              <span style="font-family:'DM Mono',monospace;font-size:.75rem;color:var(--primary-container)">12.4 km²</span>
+            </div>
+            <div class="conq-row" style="opacity:.75">
+              <div style="display:flex;align-items:center;gap:.75rem"><div style="width:.5rem;height:.5rem;border-radius:50%;background:var(--secondary);box-shadow:0 0 8px rgba(0,231,121,.8)"></div><span style="font-size:.875rem">@VortexRunner</span></div>
+              <span style="font-family:'DM Mono',monospace;font-size:.75rem;color:var(--secondary)">8.9 km²</span>
+            </div>
+            <div class="conq-row" style="opacity:.6">
+              <div style="display:flex;align-items:center;gap:.75rem"><div style="width:.5rem;height:.5rem;border-radius:50%;background:var(--tertiary);box-shadow:0 0 8px rgba(208,205,252,.8)"></div><span style="font-size:.875rem">@Indiranagar_King</span></div>
+              <span style="font-family:'DM Mono',monospace;font-size:.75rem;color:var(--tertiary)">5.2 km²</span>
+            </div>
           </div>
-          <span style="font-family:'DM Mono',monospace;font-size:.68rem;font-weight:700;color:#00E87A" id="iz-km-K">0.0</span>
-        </div>
-        <div class="iz-runner-chip" id="iz-chip-V" style="border-color:rgba(155,109,255,.15)">
-          <div style="width:7px;height:7px;border-radius:50%;background:#9B6DFF;box-shadow:0 0 6px #9B6DFF;flex-shrink:0"></div>
-          <div style="flex:1;min-width:0">
-            <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.72rem;color:#fff">Vikram</div>
-            <div style="font-family:'DM Mono',monospace;font-size:9px;color:#64748b" id="iz-stat-V">logging…</div>
-          </div>
-          <span style="font-family:'DM Mono',monospace;font-size:.68rem;font-weight:700;color:#9B6DFF" id="iz-km-V">0.0</span>
         </div>
       </div>
     </div>
-
   </div>
 </section>
 
@@ -1390,7 +1235,7 @@ nav#main-nav .nav-inner{
         </div>
       </div>
       <div class="quote-card">
-        <p style="color: var(--on-surface-var);font-size:.875rem;line-height:1.8;font-style: italic;margin-bottom:1.25rem">"The territory mode got me running routes I'd never have done otherwise. Seeing someone take my zone in Indiranagar was genuinely annoying. Which meant I went out and took it back."</p>
+        <p style="color:var(--on-surface-var);font-size:.875rem;line-height:1.8;font-style:italic;margin-bottom:1.25rem">"The territory mode got me running routes I'd never have done otherwise. Seeing someone take my zone in Indiranagar was genuinely annoying. Which meant I went out and took it back."</p>
         <div style="display:flex;align-items:center;gap:.75rem">
           <div style="width:2.25rem;height:2.25rem;border-radius:50%;background:var(--secondary);display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--on-secondary);font-size:.875rem;flex-shrink:0">N</div>
           <div><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.875rem">Nisha K.</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:#475569;margin-top:.15rem">Product Manager, HSR Layout</div></div>
@@ -1569,12 +1414,12 @@ async function claim(){
   let valid=true;
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
     emailEl.classList.add('inp-error');
-    emailErr.textContent=email?'Enter a valid email address.' Email is required.';
+    emailErr.textContent=email?'Enter a valid email address.':'Email is required.';
     emailErr.classList.add('show');valid=false;
   }
   if(!/^\+?[0-9]{8,15}$/.test(phone)){
     phoneEl.classList.add('inp-error');
-    phoneErr.textContent=phone?'Enter a valid phone number (e.g., +91 98765 43210).''Phone number is required.';
+    phoneErr.textContent=phone?'Enter a valid phone number (e.g. +91 98765 43210).':'Phone number is required.';
     phoneErr.classList.add('show');valid=false;
   }
   if(!valid)return;
@@ -1617,319 +1462,64 @@ function showToast(msg,type){
   setTimeout(()=>{t.classList.remove('on');t.style.borderColor='';t.style.color=''},3600);
 }
 
-['email-in', 'phone-in'].forEach(id=>{
+['email-in','phone-in'].forEach(id=>{
   const el=document.getElementById(id);
   if(el)el.addEventListener('keydown',e=>{if(e.key==='Enter')claim()});
 });
 
-/* ── INFLUENCE ZONE MAP — Pure Canvas, zero network requests ── */
-(function initInfluenceMap() {
-
-  const container = document.getElementById('iz-map');
-  if (!container) return;
-
-  // Replace div with canvas
-  const canvas = document.createElement('canvas');
-  canvas.style.cssText = 'width:100%;height:100%;display:block;';
-  container.appendChild(canvas);
-
-  const ctx = canvas.getContext('2d');
-
-  // ── Resize handler ──
-  function resize() {
-    const r = container.getBoundingClientRect();
-    canvas.width  = r.width  * devicePixelRatio;
-    canvas.height = r.height * devicePixelRatio;
-    canvas.style.width  = r.width  + 'px';
-    canvas.style.height = r.height + 'px';
-    ctx.scale(devicePixelRatio, devicePixelRatio);
-    W = r.width; H = r.height;
-  }
-  let W = 0, H = 0;
-  resize();
-  window.addEventListener('resize', () => { resize(); });
-
-  // ── Coordinate system: map lat/lng → canvas px ──
-  // Viewport centred on Indiranagar 12.9716, 77.6412
-  const CLAT = 12.9716, CLNG = 77.6412;
-  const SCALE = 14000; // px per degree (zoom ~14)
-
-  function toXY(lng, lat) {
-    return [
-      W/2 + (lng - CLNG) * SCALE,
-      H/2 - (lat - CLAT) * SCALE * 1.3  // slight mercator stretch
+/* ── TERRITORY MAP ── */
+function initMap(){
+  const el=document.getElementById('tmap');
+  if(!el||typeof L==='undefined')return;
+  try{
+    const map=L.map('tmap',{center:[12.9784,77.6408],zoom:16,zoomControl:false,dragging:false,scrollWheelZoom:false,doubleClickZoom:false,touchZoom:false,keyboard:false,attributionControl:false});
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
+    const runners=[
+      {n:'P',col:'#F5A623',fc:'rgba(245,166,35,.15)',bc:'#C87800',route:[[12.9784,77.6408],[12.9800,77.6408],[12.9800,77.6430],[12.9784,77.6430],[12.9784,77.6408]],spd:.22},
+      {n:'K',col:'#00E87A',fc:'rgba(0,232,122,.12)',bc:'#00A85A',route:[[12.9760,77.6415],[12.9760,77.6440],[12.9775,77.6440],[12.9775,77.6415],[12.9760,77.6415]],spd:.17},
+      {n:'V',col:'#9B6DFF',fc:'rgba(155,109,255,.12)',bc:'#6B3DDF',route:[[12.9795,77.6385],[12.9810,77.6385],[12.9810,77.6408],[12.9795,77.6408],[12.9795,77.6385]],spd:.19}
     ];
-  }
-
-  // ── Street grid (Indiranagar-flavoured) ──
-  // Major roads
-  const majorRoads = [
-    // 100 Feet Road (N-S spine)
-    [[77.641, 12.930],[77.641, 13.005]],
-    // 80 Feet Road (diagonal)
-    [[77.618, 12.940],[77.655, 12.980]],
-    // CMH Road (E-W)
-    [[77.610, 12.975],[77.660, 12.975]],
-    // Old Airport Road
-    [[77.648, 12.940],[77.648, 13.000]],
-    // Indiranagar Double Road
-    [[77.625, 12.965],[77.625, 12.998]],
-  ];
-
-  // Minor streets (dense local grid)
-  const minorRoads = [];
-  for (let lat = 12.935; lat < 13.002; lat += 0.004) {
-    minorRoads.push([[77.605, lat],[77.665, lat]]);
-  }
-  for (let lng = 77.607; lng < 77.664; lng += 0.005) {
-    minorRoads.push([[lng, 12.930],[lng, 13.005]]);
-  }
-
-  // Block fills (building blocks between streets)
-  const blocks = [];
-  for (let lat = 12.935; lat < 13.000; lat += 0.004) {
-    for (let lng = 77.608; lng < 77.662; lng += 0.005) {
-      blocks.push([lng, lat, lng+0.004, lat+0.003]);
-    }
-  }
-
-  // ── Influence zones (team-coloured polygons) ──
-  const zones = [
-    { pts:[[77.633,12.977],[77.641,12.977],[77.643,12.985],[77.637,12.987],[77.631,12.983]], col:'#F5A623', op:0.32 },
-    { pts:[[77.644,12.961],[77.654,12.961],[77.655,12.971],[77.647,12.972],[77.642,12.967]], col:'#00E87A', op:0.22 },
-    { pts:[[77.629,12.960],[77.641,12.960],[77.642,12.969],[77.634,12.971],[77.627,12.967]], col:'#9B6DFF', op:0.26 },
-    { pts:[[77.617,12.970],[77.629,12.970],[77.630,12.981],[77.619,12.983],[77.615,12.977]], col:'#F5A623', op:0.18 },
-    { pts:[[77.619,12.982],[77.633,12.982],[77.634,12.992],[77.622,12.995],[77.616,12.988]], col:'#00E87A', op:0.14 },
-    { pts:[[77.609,12.937],[77.635,12.937],[77.636,12.950],[77.619,12.955],[77.609,12.950]], col:'#9B6DFF', op:0.20 },
-  ];
-
-  // ── Labels for key localities ──
-  const labels = [
-    { txt:'INDIRANAGAR', lng:77.638, lat:12.971 },
-    { txt:"100 FEET RD",  lng:77.643, lat:12.956 },
-    { txt:'CMH ROAD',     lng:77.622, lat:12.977 },
-    { txt:'DOMLUR',       lng:77.617, lat:12.956 },
-  ];
-
-  // ── Runner paths ──
-  function lerp(a, b, t) { return [a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t]; }
-  function interpRoute(pts, steps) {
-    const out = [];
-    for (let i = 0; i < pts.length-1; i++)
-      for (let s = 0; s < steps; s++) out.push(lerp(pts[i], pts[i+1], s/steps));
-    out.push(pts[pts.length-1]);
-    return out;
-  }
-
-  const runners = [
-    { id:'P', color:'#F5A623', km:1.8, delay:0,
-      route:[[77.631,12.978],[77.634,12.978],[77.637,12.978],[77.641,12.978],
-             [77.641,12.976],[77.641,12.974],[77.638,12.974],[77.634,12.974],
-             [77.631,12.974],[77.631,12.976],[77.631,12.978]] },
-    { id:'K', color:'#00E87A', km:1.4, delay:2200,
-      route:[[77.644,12.966],[77.648,12.966],[77.650,12.966],[77.650,12.963],
-             [77.650,12.960],[77.647,12.960],[77.644,12.960],
-             [77.643,12.963],[77.644,12.966]] },
-    { id:'V', color:'#9B6DFF', km:1.2, delay:1100,
-      route:[[77.644,12.981],[77.648,12.981],[77.650,12.981],[77.650,12.979],
-             [77.650,12.977],[77.647,12.976],[77.644,12.976],
-             [77.643,12.979],[77.644,12.981]] },
-  ];
-
-  runners.forEach(r => {
-    r.path  = interpRoute(r.route, 80);
-    r.pidx  = 0; r.drawn = []; r.closed = false;
-    r.startTime = null; r.fillOpacity = 0;
-    r.fillAnim  = false; r.fillStart = null;
-  });
-
-  // ── Draw helpers ──
-  function drawPolyline(pts, strokeStyle, lineWidth, alpha, dashed) {
-    if (pts.length < 2) return;
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.strokeStyle = strokeStyle;
-    ctx.lineWidth   = lineWidth;
-    ctx.lineCap     = 'round';
-    ctx.lineJoin    = 'round';
-    if (dashed) ctx.setLineDash([5,4]);
-    ctx.beginPath();
-    const [x0,y0] = toXY(pts[0][0],pts[0][1]);
-    ctx.moveTo(x0,y0);
-    for (let i=1;i<pts.length;i++) {
-      const [x,y]=toXY(pts[i][0],pts[i][1]);
-      ctx.lineTo(x,y);
-    }
-    ctx.stroke();
-    ctx.restore();
-  }
-
-  function drawPolygon(pts, fillStyle, fillAlpha, strokeStyle, strokeAlpha, dashed) {
-    if (pts.length < 3) return;
-    ctx.save();
-    ctx.beginPath();
-    const [x0,y0] = toXY(pts[0][0],pts[0][1]);
-    ctx.moveTo(x0,y0);
-    for (let i=1;i<pts.length;i++){
-      const [x,y]=toXY(pts[i][0],pts[i][1]);
-      ctx.lineTo(x,y);
-    }
-    ctx.closePath();
-    ctx.globalAlpha = fillAlpha;
-    ctx.fillStyle   = fillStyle;
-    ctx.fill();
-    if (strokeStyle) {
-      ctx.globalAlpha = strokeAlpha;
-      ctx.strokeStyle = strokeStyle;
-      ctx.lineWidth   = 1.5;
-      if (dashed) ctx.setLineDash([5,4]);
-      ctx.stroke();
-    }
-    ctx.restore();
-  }
-
-  // ── Main draw function ──
-  function draw(ts) {
-    ctx.clearRect(0, 0, W, H);
-
-    // Background
-    ctx.fillStyle = '#050d14';
-    ctx.fillRect(0, 0, W, H);
-
-    // Subtle grid texture
-    ctx.save();
-    ctx.globalAlpha = 0.03;
-    ctx.strokeStyle = '#7af';
-    ctx.lineWidth = 0.5;
-    for (let x=0; x<W; x+=20) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
-    for (let y=0; y<H; y+=20) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
-    ctx.restore();
-
-    // Building blocks
-     blocks.forEach(([lng1,lat1,lng2,lat2]) => {
-      const [x1,y1]=toXY(lng1,lat1), [x2,y2]=toXY(lng2,lat2);
-      const bx=Math.min(x1,x2)+1, by=Math.min(y1,y2)+1;
-      const bw=Math.abs(x2-x1)-2, bh=Math.abs(y2-y1)-2;
-      if (bw<1||bh<1) return;
-      ctx.save();
-      ctx.globalAlpha=0.28;
-      ctx.fillStyle='#0d1a24';
-      ctx.fillRect(bx,by,bw,bh);
-      ctx.restore();
+    function buildPath(wps,steps){const pts=[];for(let i=0;i<wps.length-1;i++){const a=wps[i],b=wps[i+1];for(let s=0;s<steps;s++)pts.push([a[0]+(b[0]-a[0])*s/steps,a[1]+(b[1]-a[1])*s/steps]);}pts.push(wps[wps.length-1]);return pts;}
+    runners.forEach(r=>{
+      r.path=buildPath(r.route,100);r.pidx=0;
+      r.trail=L.polyline([],{color:r.col,weight:3,opacity:.9,dashArray:'7 4'}).addTo(map);
+      r.poly=L.polygon([],{color:r.bc,fillColor:r.fc,weight:2,fillOpacity:1}).addTo(map);
+      r.closed=false;
+      const d=document.createElement('div');
+      d.style.cssText=`width:20px;height:20px;background:${r.col};border-radius:50%;border:2.5px solid rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;color:#050d12;font-family:'Space Grotesk',sans-serif;box-shadow:0 0 12px ${r.col}66`;
+      d.textContent=r.n;
+      r.marker=L.marker(r.route[0],{icon:L.divIcon({html:d,className:'',iconSize:[20,20],iconAnchor:[10,10]}),zIndexOffset:1000}).addTo(map);
+      r.pts=[];
     });
-
-    // Minor roads
-    minorRoads.forEach(r => drawPolyline(r, '#1e2d3a', 1, 0.7, false));
-
-    // Major roads
-    majorRoads.forEach(r => drawPolyline(r, '#243447', 3.5, 0.9, false));
-    // Major road centre lines
-    majorRoads.forEach(r => drawPolyline(r, '#2e4560', 1, 0.5, true));
-
-    // Locality labels
-    ctx.save();
-    ctx.font = '500 9px "DM Mono", monospace';
-    ctx.fillStyle = '#2a3d52';
-    ctx.textAlign = 'center';
-    ctx.globalAlpha = 0.85;
-    labels.forEach(l => {
-      const [x,y] = toXY(l.lng, l.lat);
-      ctx.letterSpacing = '0.1em';
-      ctx.fillText(l.txt.toUpperCase(), x, y);
-    });
-    ctx.restore();
-
-    // ── Influence zones (static) ──
-    zones.forEach(z => {
-      drawPolygon(z.pts, z.col, z.op * 0.55, z.col, z.op * 0.9, true);
-    });
-
-    // ── Runner animation ──
-    if (!draw._start) draw._start = ts;
-    const elapsed = ts - draw._start;
-
-    runners.forEach(r => {
-      if (elapsed < r.delay) return;
-      if (!r.startTime) r.startTime = ts;
-
-      const dur      = 11000;
-      const progress = Math.min((ts - r.startTime) / dur, 1);
-      const newIdx   = Math.floor(progress * (r.path.length - 1));
-
-      if (!r.closed) {
-        r.pidx = newIdx;
-        r.drawn = r.path.slice(0, r.pidx + 1);
-      }
-
-      // Fill polygon fade-in after close
-      if (r.closed) {
-        if (!r.fillStart) r.fillStart = ts;
-        const ft = Math.min((ts - r.fillStart) / 900, 1);
-        r.fillOpacity = (1 - Math.pow(1-ft,3)) * 0.30;
-        // Draw a filled closed polygon
-        drawPolygon(r.route, r.color, r.fillOpacity, r.color, Math.min(r.fillOpacity*2.8, 0.85), false);
-      }
-
-      if (r.drawn.length > 1) {
-        // Glow
-        drawPolyline(r.drawn, r.color, 18, 0.07, false);
-        // Trail
-        drawPolyline(r.drawn, r.color, 2.8, 0.95, false);
-
-        // Pulsing dot at head
-        if (!r.closed) {
-          const head = r.drawn[r.drawn.length-1];
-          const [hx,hy] = toXY(head[0], head[1]);
-          const pulse = 0.5 + 0.5 * Math.sin(ts / 300);
-
-          ctx.save();
-          // Outer ring
-          ctx.globalAlpha = 0.35 * pulse;
-          ctx.strokeStyle = r.color;
-          ctx.lineWidth   = 1.5;
-          ctx.beginPath();
-          ctx.arc(hx, hy, 10 + pulse*6, 0, Math.PI*2);
-          ctx.stroke();
-          // Inner dot
-          ctx.globalAlpha = 1;
-          ctx.fillStyle   = r.color;
-          ctx.shadowColor = r.color;
-          ctx.shadowBlur  = 12;
-          ctx.beginPath();
-          ctx.arc(hx, hy, 5, 0, Math.PI*2);
-          ctx.fill();
-          ctx.restore();
-
-          // Update km chip
-          const kmEl = document.getElementById('iz-km-'+r.id);
-          if (kmEl) kmEl.textContent = (r.km * progress).toFixed(2);
-        }
-      }
-
-      // Trigger close
-      if (progress >= 1 && !r.closed) {
-        r.closed = true;
-        const stEl = document.getElementById('iz-stat-'+r.id);
-        const chEl = document.getElementById('iz-chip-'+r.id);
-        const kmEl = document.getElementById('iz-km-'+r.id);
-        if (stEl) { stEl.textContent = '+influence logged ✓'; stEl.style.color = r.color; }
-        if (chEl) chEl.style.borderColor = r.color + '88';
-        if (kmEl) kmEl.textContent = r.km.toFixed(1) + ' km';
-      }
-    });
-
-    requestAnimationFrame(draw);
+    let last=null;
+    function tick(ts){
+      if(!last)last=ts;
+      const dt=Math.min((ts-last)/1000,.04);last=ts;
+      runners.forEach(r=>{
+        const steps=Math.max(1,Math.round(r.spd*60*dt));
+        for(let s=0;s<steps;s++){r.pidx=(r.pidx+1)%r.path.length;if(r.pidx===0)r.closed=true;}
+        const c=r.path[r.pidx];
+        r.marker.setLatLng(c);r.pts.push(c);
+        if(r.pts.length>400)r.pts.shift();
+        if(!r.closed)r.trail.setLatLngs(r.pts);
+        else{r.trail.setLatLngs([]);r.poly.setLatLngs(r.route.slice(0,-1));}
+      });
+      requestAnimationFrame(tick);
+    }
+    map.whenReady(()=>setTimeout(()=>requestAnimationFrame(tick),400));
+  }catch(e){console.warn(e)}
+}
+const mio=new IntersectionObserver(es=>{
+  if(es[0].isIntersecting){
+    mio.disconnect();
+    if(typeof L!=='undefined'){initMap();return;}
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js';
+    s.onload=initMap;document.head.appendChild(s);
   }
-
-  // Lazy-start when scrolled into view
-  const obs = new IntersectionObserver(es => {
-    if (!es[0].isIntersecting) return;
-    obs.disconnect();
-    requestAnimationFrame(draw);
-  }, { threshold: 0.05 });
-  obs.observe(container);
-
-})();
+},{threshold:.1});
+const mapEl=document.getElementById('tmap');
+if(mapEl)mio.observe(mapEl);
 </script>
 
 <!-- Motion One -->
@@ -1942,7 +1532,7 @@ const motionGuard=setTimeout(()=>{
 window.addEventListener('load',()=>{
   const M=window.Motion;
   if(!M){clearTimeout(motionGuard);document.querySelectorAll('.fu').forEach(el=>{el.style.opacity='1';el.style.transform='none';});return;}
-  const {animate,inView, stagger, spring}=M;
+  const {animate,inView,stagger,spring}=M;
 
   const sSnap  =spring({stiffness:300,damping:24,mass:1});
   const sSmooth=spring({stiffness:200,damping:22,mass:1});
@@ -1993,13 +1583,13 @@ window.addEventListener('load',()=>{
     animate('.rule-card',{opacity:[0,1],y:[28,0]},{easing:sSmooth,delay:stagger(.1,{start:.05})});
   },{amount:.15});
 
-  /* Territory pills */
-  document.querySelectorAll('#terr-pts .terr-point').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(16px)';});
+  /* Territory points */
+  document.querySelectorAll('#terr-pts .terr-point').forEach(el=>{el.style.opacity='0';el.style.transform='translateX(-24px)';});
   inView('#terr-pts',()=>{
     document.querySelectorAll('#terr-pts .terr-point').forEach((el,i)=>{
-      animate(el,{opacity:[0,1],y:[16,0]},{easing:sSnap,delay:i*.1+.05});
+      animate(el,{opacity:[0,1],x:[-24,0]},{easing:sSnap,delay:i*.11+.05});
     });
-  },{amount:.1});
+  },{amount:.15});
 
   /* Quote cards */
   document.querySelectorAll('.quote-card').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(36px)';});
