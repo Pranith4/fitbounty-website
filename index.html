@@ -25,7 +25,7 @@ img{display:block;max-width:100%}
 /* ─────────────────────────────────────────
    COLOR TOKENS
 ───────────────────────────────────────── */
-:root{
+: root{
   --primary:              #ffc880;
   --primary-container:    #f5a623;
   --on-primary:           #452b00;
@@ -53,10 +53,10 @@ img{display:block;max-width:100%}
 /* ─────────────────────────────────────────
    TYPOGRAPHY
 ───────────────────────────────────────── */
-.font-headline{font-family:'Space Grotesk',sans-serif}
+.font-headline{font-family:'Space Grotesk', sans-serif}
 .font-body    {font-family:'Inter',sans-serif}
-.font-label   {font-family:'Be Vietnam Pro',sans-serif}
-.font-mono    {font-family:'DM Mono',monospace}
+.font-label   {font-family:'Be Vietnam Pro', sans-serif}
+.font-mono    {font-family:'DM Mono', monospace}
 
 .text-xs  {font-size:.75rem;line-height:1rem}
 .text-sm  {font-size:.875rem;line-height:1.25rem}
@@ -76,7 +76,7 @@ img{display:block;max-width:100%}
 .font-medium{font-weight:500}
 .font-bold  {font-weight:700}
 .font-black {font-weight:900}
-.italic     {font-style:italic}
+.italic     {font-style: italic}
 
 .tracking-tighter{letter-spacing:-.05em}
 .tracking-tight  {letter-spacing:-.025em}
@@ -90,10 +90,10 @@ img{display:block;max-width:100%}
 .leading-relaxed{line-height:1.625}
 .leading-loose  {line-height:2}
 
-.uppercase  {text-transform:uppercase}
+.uppercase  {text-transform: uppercase}
 .whitespace-nowrap{white-space:nowrap}
-.text-center{text-align:center}
-.text-right {text-align:right}
+.text-center{text-align: center}
+.text-right {text-align: right}
 
 /* ─────────────────────────────────────────
    COLOR UTILITIES
@@ -1617,7 +1617,7 @@ function showToast(msg,type){
   setTimeout(()=>{t.classList.remove('on');t.style.borderColor='';t.style.color=''},3600);
 }
 
-['email-in','phone-in'].forEach(id=>{
+['email-in', 'phone-in'].forEach(id=>{
   const el=document.getElementById(id);
   if(el)el.addEventListener('keydown',e=>{if(e.key==='Enter')claim()});
 });
