@@ -1414,12 +1414,12 @@ async function claim(){
   let valid=true;
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
     emailEl.classList.add('inp-error');
-    emailErr.textContent=email?'Enter a valid email address.':'Email is required.';
+    emailErr.textContent=email?'Enter a valid email address.' Email is required.';
     emailErr.classList.add('show');valid=false;
   }
   if(!/^\+?[0-9]{8,15}$/.test(phone)){
     phoneEl.classList.add('inp-error');
-    phoneErr.textContent=phone?'Enter a valid phone number (e.g. +91 98765 43210).':'Phone number is required.';
+    phoneErr.textContent=phone?'Enter a valid phone number (e.g., +91 98765 43210). 'Phone number is required.';
     phoneErr.classList.add('show');valid=false;
   }
   if(!valid)return;
