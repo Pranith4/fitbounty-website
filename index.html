@@ -719,10 +719,11 @@ nav#main-nav .nav-inner{
   position:fixed;bottom:1.75rem;left:50%;
   transform:translateX(-50%) translateY(80px);
   background:var(--surface-c-low);border:1px solid rgba(124,255,163,.3);
-  border-radius:9999px;padding:.75rem 1.75rem;
+  border-radius:1rem;padding:.75rem 1.75rem;
   font-family:'Be Vietnam Pro',sans-serif;font-size:.84rem;font-weight:600;
   color:var(--secondary);z-index:9999;opacity:0;
-  transition:all .38s cubic-bezier(.22,1,.36,1);pointer-events:none;white-space:nowrap;
+  transition:all .38s cubic-bezier(.22,1,.36,1);pointer-events:none;
+  max-width:90vw;text-align:center;
 }
 .toast.on{transform:translateX(-50%) translateY(0);opacity:1}
 
@@ -1432,6 +1433,11 @@ async function claim(){
       body:JSON.stringify({email,phone})
     });
     const body=await res.json().catch(()=>({}));
+
+    // Debug: log exact response to browser console
+    console.log('[FitBounty] Status:', res.status);
+    console.log('[FitBounty] Body:', body);
+
     if(res.ok){
       showToast('🎉 You\'re in, '+email.split('@')[0]+'. See you on the board.','success');
       emailEl.value='';phoneEl.value='';
@@ -1444,10 +1450,14 @@ async function claim(){
         emailEl.classList.add('inp-error');emailErr.textContent='This email is already on the list.';emailErr.classList.add('show');
       }
     }else{
-      showToast('Something went wrong. Please try again.','error');
+      // Show the actual server message so we can debug it
+      const serverMsg=body?.message||body?.error||body?.msg||JSON.stringify(body);
+      showToast('Error '+res.status+': '+serverMsg,'error');
+      console.error('[FitBounty] Server error:', res.status, body);
     }
   }catch(e){
-    showToast('Network error. Check your connection and try again.','error');
+    console.error('[FitBounty] Fetch error:', e);
+    showToast('Network error: '+e.message,'error');
   }finally{
     btn.classList.remove('loading');btn.disabled=false;
   }
