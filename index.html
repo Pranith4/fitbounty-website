@@ -1398,6 +1398,7 @@ setInterval(()=>{
 
 /* ── SUPABASE ── */
 const FUNCTION_URL='https://vobomlzhqrmpgdnqbrvv.supabase.co/functions/v1/clever-api';
+const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZvYm9tbHpocXJtcGdkbnFicnZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3MTcyNzIsImV4cCI6MjA4OTI5MzI3Mn0.P09_FOhJC_WxHW_-nTwiT0koP52D_rk13tdCSSrFuGA';
 
 async function claim(){
   const emailEl=document.getElementById('email-in');
@@ -1430,7 +1431,11 @@ async function claim(){
   try{
     const res=await fetch(FUNCTION_URL,{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{
+        'Content-Type':'application/json',
+        'apikey': SUPABASE_ANON,
+        'Authorization': 'Bearer '+SUPABASE_ANON
+      },
       body:JSON.stringify({email,phone})
     });
     const body=await res.json().catch(()=>({}));
